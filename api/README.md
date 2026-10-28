@@ -14,6 +14,18 @@ This folder documents the server-side boundary planned for the hackathon. GitHub
 
 Schemas live in `contracts/`; complete payloads live in `examples/`.
 
+## Supplied frontend mapping
+
+The canonical HTML uses presentation-oriented hazard keys. A thin frontend HTTP adapter should translate them at the API boundary:
+
+| HTML key | API `hazard` value |
+| --- | --- |
+| `wildfire` | `wildfire` |
+| `rain` | `flood` |
+| `hurricane` | `severe_storm` |
+
+Keep this translation in one adapter function. Do not rename values throughout the supplied dashboard.
+
 ## Proposed endpoints
 
 ### `POST /api/risk`
