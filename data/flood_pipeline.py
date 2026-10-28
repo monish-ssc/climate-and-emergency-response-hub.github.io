@@ -37,6 +37,8 @@ REGION_CENTRES = {
     "vancouver": (49.2827, -123.1207),
     "calgary": (51.0447, -114.0719),
     "halifax": (44.6488, -63.5752),
+    "clinton": (51.0903, -121.5911),  # wildfire replay region (Pear Lake fire)
+    "west-kelowna": (49.8625, -119.5833),  # wildfire replay region (McDougall Creek fire)
 }
 
 FLOOD_ALERT_WORDS = ("rain", "flood", "storm surge")
