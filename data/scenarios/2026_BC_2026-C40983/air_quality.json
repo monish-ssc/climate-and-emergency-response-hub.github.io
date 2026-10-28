@@ -1,0 +1,2856 @@
+{
+  "scenarioId": "replay-2026_BC_2026-C40983",
+  "fireId": "2026_BC_2026-C40983",
+  "region": {
+    "id": "clinton",
+    "label": "Clinton, BC",
+    "lat": 51.0903,
+    "lon": -121.5911
+  },
+  "hazard": "air_quality",
+  "metric": "AQHI+ (PM2.5), max hourly value in each replay step",
+  "stepHours": 12,
+  "stations": [
+    {
+      "ems_id": "0605008",
+      "name": "Kamloops Federal Building",
+      "lat": 50.67477,
+      "lon": -120.334016,
+      "distanceKm": 99.6
+    },
+    {
+      "ems_id": "0550502",
+      "name": "Williams Lake Columneetza School",
+      "lat": 52.14428,
+      "lon": -122.150391,
+      "distanceKm": 123.4
+    },
+    {
+      "ems_id": "E227431",
+      "name": "Whistler Meadow Park",
+      "lat": 50.144285,
+      "lon": -122.960402,
+      "distanceKm": 142.8
+    }
+  ],
+  "summary": {
+    "stepsWithData": 112,
+    "steps": 112,
+    "peak": {
+      "t": "2026-07-31T08:00:00Z",
+      "aqhiPlus": 41,
+      "display": "10+",
+      "pm25Max": 404.580719
+    },
+    "firstHighOrWorse": "2026-07-22T08:00:00Z"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "t": "2026-07-18T20:00:00Z",
+      "pm25Max": 4.8634162,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 4.8634162,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 11.8759937,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.9674339,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "t": "2026-07-19T08:00:00Z",
+      "pm25Max": 9.1333036,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 9.1333036,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.1912069,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.41747,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "t": "2026-07-19T20:00:00Z",
+      "pm25Max": 17.2452641,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 17.2452641,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.683012,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.6741471,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "t": "2026-07-20T08:00:00Z",
+      "pm25Max": 20.9890289,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 20.9890289,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.6820278,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.475307,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "t": "2026-07-20T20:00:00Z",
+      "pm25Max": 22.8609314,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 22.8609314,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 14.2022619,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 30.3517284,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "t": "2026-07-21T08:00:00Z",
+      "pm25Max": 23.8418312,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 23.8418312,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 39.860321,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 34.4715614,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "t": "2026-07-21T20:00:00Z",
+      "pm25Max": 10.5025816,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 10.5025816,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 55.9366226,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 46.7702789,
+          "aqhiPlus": 5
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "t": "2026-07-22T08:00:00Z",
+      "pm25Max": 68.1654434,
+      "aqhiPlus": 7,
+      "display": "7",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 68.1654434,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 36.9348145,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 23.8537388,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "t": "2026-07-22T20:00:00Z",
+      "pm25Max": 27.8956242,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 27.8956242,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 35.2327347,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 16.5189171,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "t": "2026-07-23T08:00:00Z",
+      "pm25Max": 146.7220612,
+      "aqhiPlus": 15,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 146.7220612,
+          "aqhiPlus": 15
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 53.9631348,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 11.7938147,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "t": "2026-07-23T20:00:00Z",
+      "pm25Max": 91.8658752,
+      "aqhiPlus": 10,
+      "display": "10",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 91.8658752,
+          "aqhiPlus": 10
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 47.1750221,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.2015009,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "t": "2026-07-24T08:00:00Z",
+      "pm25Max": 99.7775269,
+      "aqhiPlus": 10,
+      "display": "10",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 99.7775269,
+          "aqhiPlus": 10
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 15.334527,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.6190367,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "t": "2026-07-24T20:00:00Z",
+      "pm25Max": 163.1256256,
+      "aqhiPlus": 17,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 163.1256256,
+          "aqhiPlus": 17
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 34.3572235,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 10.5112429,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "t": "2026-07-25T08:00:00Z",
+      "pm25Max": 133.4068451,
+      "aqhiPlus": 14,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 133.4068451,
+          "aqhiPlus": 14
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 49.3089828,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 8.6438789,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "t": "2026-07-25T20:00:00Z",
+      "pm25Max": 89.7682114,
+      "aqhiPlus": 9,
+      "display": "9",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 89.7682114,
+          "aqhiPlus": 9
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 152.7791595,
+          "aqhiPlus": 16
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.7690868,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "t": "2026-07-26T08:00:00Z",
+      "pm25Max": 76.9434586,
+      "aqhiPlus": 8,
+      "display": "8",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 76.9434586,
+          "aqhiPlus": 8
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 228.3730927,
+          "aqhiPlus": 23
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.642503,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "t": "2026-07-26T20:00:00Z",
+      "pm25Max": 18.7632084,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.7632084,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 209.0296478,
+          "aqhiPlus": 21
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 0.501438,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "t": "2026-07-27T08:00:00Z",
+      "pm25Max": 17.3805008,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 17.3805008,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 68.3334503,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 0.52029,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "t": "2026-07-27T20:00:00Z",
+      "pm25Max": 15.417943,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 15.417943,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 155.4480286,
+          "aqhiPlus": 16
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 0.910857,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "t": "2026-07-28T08:00:00Z",
+      "pm25Max": 34.9425964,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 34.9425964,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 99.9588776,
+          "aqhiPlus": 10
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.215438,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "t": "2026-07-28T20:00:00Z",
+      "pm25Max": 19.0024586,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 19.0024586,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 126.0959702,
+          "aqhiPlus": 13
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.828045,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "t": "2026-07-29T08:00:00Z",
+      "pm25Max": 44.1123886,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 44.1123886,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.8216152,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.325417,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "t": "2026-07-29T20:00:00Z",
+      "pm25Max": 11.7733192,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 11.7733192,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 12.5633392,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.13782,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "t": "2026-07-30T08:00:00Z",
+      "pm25Max": 41.2325554,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 41.2325554,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 34.8901825,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.193574,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "t": "2026-07-30T20:00:00Z",
+      "pm25Max": 21.0631523,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 21.0631523,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 71.3934784,
+          "aqhiPlus": 8
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.36432,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "t": "2026-07-31T08:00:00Z",
+      "pm25Max": 404.580719,
+      "aqhiPlus": 41,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 404.580719,
+          "aqhiPlus": 41
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 41.873703,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.1730561,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "t": "2026-07-31T20:00:00Z",
+      "pm25Max": 219.3078918,
+      "aqhiPlus": 22,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 219.3078918,
+          "aqhiPlus": 22
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 63.9418526,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.5408878,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "t": "2026-08-01T08:00:00Z",
+      "pm25Max": 186.9434814,
+      "aqhiPlus": 19,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 186.9434814,
+          "aqhiPlus": 19
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 139.4695892,
+          "aqhiPlus": 14
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.3173871,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "t": "2026-08-01T20:00:00Z",
+      "pm25Max": 306.3486023,
+      "aqhiPlus": 31,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 306.3486023,
+          "aqhiPlus": 31
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 49.1845741,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.8606291,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "t": "2026-08-02T08:00:00Z",
+      "pm25Max": 23.4214001,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 23.4214001,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.02755,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.755133,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "t": "2026-08-02T20:00:00Z",
+      "pm25Max": 39.0694847,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 39.0694847,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.194694,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.514546,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "t": "2026-08-03T08:00:00Z",
+      "pm25Max": 84.3685379,
+      "aqhiPlus": 9,
+      "display": "9",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 84.3685379,
+          "aqhiPlus": 9
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 1.071792,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.3775249,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "t": "2026-08-03T20:00:00Z",
+      "pm25Max": 18.6299,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.6299,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 13.2479706,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 10.6117554,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "t": "2026-08-04T08:00:00Z",
+      "pm25Max": 10.7983475,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 10.7983475,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 11.9997616,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 11.0113335,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "t": "2026-08-04T20:00:00Z",
+      "pm25Max": 94.2680664,
+      "aqhiPlus": 10,
+      "display": "10",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 94.2680664,
+          "aqhiPlus": 10
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 34.316433,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 17.5215664,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 35,
+      "t": "2026-08-05T08:00:00Z",
+      "pm25Max": 74.8622665,
+      "aqhiPlus": 8,
+      "display": "8",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 74.8622665,
+          "aqhiPlus": 8
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 17.5168476,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.9881592,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 36,
+      "t": "2026-08-05T20:00:00Z",
+      "pm25Max": 83.4258575,
+      "aqhiPlus": 9,
+      "display": "9",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 83.4258575,
+          "aqhiPlus": 9
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 35.9450226,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 30.5614223,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "t": "2026-08-06T08:00:00Z",
+      "pm25Max": 113.1031952,
+      "aqhiPlus": 12,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 113.1031952,
+          "aqhiPlus": 12
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 129.6914673,
+          "aqhiPlus": 13
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 69.2738037,
+          "aqhiPlus": 7
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "t": "2026-08-06T20:00:00Z",
+      "pm25Max": 117.5706787,
+      "aqhiPlus": 12,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 117.5706787,
+          "aqhiPlus": 12
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 66.9953461,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 44.0358391,
+          "aqhiPlus": 5
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "t": "2026-08-07T08:00:00Z",
+      "pm25Max": 222.1438293,
+      "aqhiPlus": 23,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 222.1438293,
+          "aqhiPlus": 23
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.7789679,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.161356,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "t": "2026-08-07T20:00:00Z",
+      "pm25Max": 208.3153534,
+      "aqhiPlus": 21,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 208.3153534,
+          "aqhiPlus": 21
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 51.7265892,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 20.7753639,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "t": "2026-08-08T08:00:00Z",
+      "pm25Max": 232.2429657,
+      "aqhiPlus": 24,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 232.2429657,
+          "aqhiPlus": 24
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 9.3243151,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.1100721,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 42,
+      "t": "2026-08-08T20:00:00Z",
+      "pm25Max": 188.4782867,
+      "aqhiPlus": 19,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 188.4782867,
+          "aqhiPlus": 19
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.6278059,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 7.1362772,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 43,
+      "t": "2026-08-09T08:00:00Z",
+      "pm25Max": 337.8134766,
+      "aqhiPlus": 34,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 337.8134766,
+          "aqhiPlus": 34
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 1.820688,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 6.189311,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "t": "2026-08-09T20:00:00Z",
+      "pm25Max": 210.3391113,
+      "aqhiPlus": 22,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 210.3391113,
+          "aqhiPlus": 22
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.1872139,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.6484189,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 45,
+      "t": "2026-08-10T08:00:00Z",
+      "pm25Max": 238.7562561,
+      "aqhiPlus": 24,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 238.7562561,
+          "aqhiPlus": 24
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.247839,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.6263332,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "t": "2026-08-10T20:00:00Z",
+      "pm25Max": 151.9191742,
+      "aqhiPlus": 16,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 151.9191742,
+          "aqhiPlus": 16
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.8392692,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 6.0394802,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 47,
+      "t": "2026-08-11T08:00:00Z",
+      "pm25Max": 189.0509186,
+      "aqhiPlus": 19,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 189.0509186,
+          "aqhiPlus": 19
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.3678112,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.8736348,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "t": "2026-08-11T20:00:00Z",
+      "pm25Max": 30.1036797,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 30.1036797,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.6328621,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.442409,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "t": "2026-08-12T08:00:00Z",
+      "pm25Max": 53.0727921,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 53.0727921,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 3.0180039,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.6867681,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 50,
+      "t": "2026-08-12T20:00:00Z",
+      "pm25Max": 23.5966244,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 23.5966244,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.0274038,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 19.2746391,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "t": "2026-08-13T08:00:00Z",
+      "pm25Max": 6.83393,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 6.83393,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.9711161,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.6771259,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 52,
+      "t": "2026-08-13T20:00:00Z",
+      "pm25Max": 36.5051956,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 36.5051956,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 10.6161442,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 16.0299778,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 53,
+      "t": "2026-08-14T08:00:00Z",
+      "pm25Max": 12.3920975,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 12.3920975,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.7319841,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 17.4416561,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 54,
+      "t": "2026-08-14T20:00:00Z",
+      "pm25Max": 7.9498472,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 7.9498472,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.2549319,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 32.9503441,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 55,
+      "t": "2026-08-15T08:00:00Z",
+      "pm25Max": 61.9873581,
+      "aqhiPlus": 7,
+      "display": "7",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 61.9873581,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 41.8820839,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 38.2299652,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 56,
+      "t": "2026-08-15T20:00:00Z",
+      "pm25Max": 68.4373245,
+      "aqhiPlus": 7,
+      "display": "7",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 68.4373245,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 38.0553741,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.5854874,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 57,
+      "t": "2026-08-16T08:00:00Z",
+      "pm25Max": 55.6726532,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 55.6726532,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 11.3722363,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 29.2690716,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 58,
+      "t": "2026-08-16T20:00:00Z",
+      "pm25Max": 34.1247215,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 34.1247215,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.2555828,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 30.3403111,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 59,
+      "t": "2026-08-17T08:00:00Z",
+      "pm25Max": 41.4704552,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 41.4704552,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 15.1644239,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.4975281,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 60,
+      "t": "2026-08-17T20:00:00Z",
+      "pm25Max": 57.2032356,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 57.2032356,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.8045082,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 30.9313049,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 61,
+      "t": "2026-08-18T08:00:00Z",
+      "pm25Max": 45.510849,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 45.510849,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.7539682,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 32.2185555,
+          "aqhiPlus": 4
+        }
+      ]
+    },
+    {
+      "index": 62,
+      "t": "2026-08-18T20:00:00Z",
+      "pm25Max": 52.9296303,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 52.9296303,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.2403078,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 19.5294285,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 63,
+      "t": "2026-08-19T08:00:00Z",
+      "pm25Max": 105.1740799,
+      "aqhiPlus": 11,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 105.1740799,
+          "aqhiPlus": 11
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.5306311,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.7328444,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 64,
+      "t": "2026-08-19T20:00:00Z",
+      "pm25Max": 58.2097588,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 58.2097588,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 10.9856567,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 8.432313,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 65,
+      "t": "2026-08-20T08:00:00Z",
+      "pm25Max": 31.330164,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 31.330164,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 3.524792,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.935586,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 66,
+      "t": "2026-08-20T20:00:00Z",
+      "pm25Max": 15.5882206,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 15.5882206,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 14.491291,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.8308315,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 67,
+      "t": "2026-08-21T08:00:00Z",
+      "pm25Max": 39.1994438,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 39.1994438,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.5619149,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 29.2087402,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 68,
+      "t": "2026-08-21T20:00:00Z",
+      "pm25Max": 18.2725201,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.2725201,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.034966,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 22.0302391,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 69,
+      "t": "2026-08-22T08:00:00Z",
+      "pm25Max": 100.0921097,
+      "aqhiPlus": 11,
+      "display": "10+",
+      "category": "very high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 100.0921097,
+          "aqhiPlus": 11
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 40.1410713,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 17.7304115,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 70,
+      "t": "2026-08-22T20:00:00Z",
+      "pm25Max": 81.7190933,
+      "aqhiPlus": 9,
+      "display": "9",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 81.7190933,
+          "aqhiPlus": 9
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 58.7519379,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 14.4065008,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 71,
+      "t": "2026-08-23T08:00:00Z",
+      "pm25Max": 82.5841446,
+      "aqhiPlus": 9,
+      "display": "9",
+      "category": "high",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 82.5841446,
+          "aqhiPlus": 9
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 63.1721687,
+          "aqhiPlus": 7
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 9.8294268,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 72,
+      "t": "2026-08-23T20:00:00Z",
+      "pm25Max": 21.2289906,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 21.2289906,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.937592,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.689019,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 73,
+      "t": "2026-08-24T08:00:00Z",
+      "pm25Max": 15.8269634,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 15.8269634,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.3185072,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.7621059,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 74,
+      "t": "2026-08-24T20:00:00Z",
+      "pm25Max": 17.5957756,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 17.5957756,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 12.5258589,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.2801008,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 75,
+      "t": "2026-08-25T08:00:00Z",
+      "pm25Max": 16.4781952,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 16.4781952,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 10.6968164,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.0423651,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 76,
+      "t": "2026-08-25T20:00:00Z",
+      "pm25Max": 7.9445291,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 7.9445291,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 11.4021883,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 9.2496853,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 77,
+      "t": "2026-08-26T08:00:00Z",
+      "pm25Max": 38.2402,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 38.2402,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 27.7526798,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 28.3088284,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 78,
+      "t": "2026-08-26T20:00:00Z",
+      "pm25Max": 31.4145603,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 31.4145603,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 30.8198433,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 24.4041061,
+          "aqhiPlus": 3
+        }
+      ]
+    },
+    {
+      "index": 79,
+      "t": "2026-08-27T08:00:00Z",
+      "pm25Max": 43.8293762,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 43.8293762,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 24.6041107,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 10.1495123,
+          "aqhiPlus": 2
+        }
+      ]
+    },
+    {
+      "index": 80,
+      "t": "2026-08-27T20:00:00Z",
+      "pm25Max": 23.1945553,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 23.1945553,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 19.0107193,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.3956718,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 81,
+      "t": "2026-08-28T08:00:00Z",
+      "pm25Max": 10.6875811,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 10.6875811,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.736624,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.7081821,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 82,
+      "t": "2026-08-28T20:00:00Z",
+      "pm25Max": 8.5896873,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 8.5896873,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.2914076,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.750797,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 83,
+      "t": "2026-08-29T08:00:00Z",
+      "pm25Max": 11.7369432,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 11.7369432,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.3326511,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.1242449,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 84,
+      "t": "2026-08-29T20:00:00Z",
+      "pm25Max": 8.594924,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 8.594924,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 3.4076459,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.905763,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 85,
+      "t": "2026-08-30T08:00:00Z",
+      "pm25Max": 10.0849371,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 10.0849371,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.2148941,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.8702509,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 86,
+      "t": "2026-08-30T20:00:00Z",
+      "pm25Max": 11.7300682,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 11.7300682,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.4638031,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.208189,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 87,
+      "t": "2026-08-31T08:00:00Z",
+      "pm25Max": 53.9645042,
+      "aqhiPlus": 6,
+      "display": "6",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 53.9645042,
+          "aqhiPlus": 6
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": null,
+          "aqhiPlus": null
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.0296168,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 88,
+      "t": "2026-08-31T20:00:00Z",
+      "pm25Max": 6.775784,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 6.775784,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": null,
+          "aqhiPlus": null
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.1684699,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 89,
+      "t": "2026-09-01T08:00:00Z",
+      "pm25Max": 46.3980179,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 46.3980179,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.483511,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.203109,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 90,
+      "t": "2026-09-01T20:00:00Z",
+      "pm25Max": 18.2074661,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.2074661,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.0519114,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 7.382483,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 91,
+      "t": "2026-09-02T08:00:00Z",
+      "pm25Max": 37.6449318,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 37.6449318,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.636076,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 9.5679779,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 92,
+      "t": "2026-09-02T20:00:00Z",
+      "pm25Max": 29.1050797,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 29.1050797,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.3978243,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.8826301,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 93,
+      "t": "2026-09-03T08:00:00Z",
+      "pm25Max": 21.5864754,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 21.5864754,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.840476,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.647109,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 94,
+      "t": "2026-09-03T20:00:00Z",
+      "pm25Max": 6.133491,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 6.133491,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 8.1173544,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.349802,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 95,
+      "t": "2026-09-04T08:00:00Z",
+      "pm25Max": 18.6146049,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.6146049,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.911756,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.246516,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 96,
+      "t": "2026-09-04T20:00:00Z",
+      "pm25Max": 7.0468879,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 7.0468879,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.7154889,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 1.630856,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 97,
+      "t": "2026-09-05T08:00:00Z",
+      "pm25Max": 17.9484272,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 17.9484272,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.0724592,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 2.708492,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 98,
+      "t": "2026-09-05T20:00:00Z",
+      "pm25Max": 20.6411228,
+      "aqhiPlus": 3,
+      "display": "3",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 20.6411228,
+          "aqhiPlus": 3
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.699568,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.2120321,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 99,
+      "t": "2026-09-06T08:00:00Z",
+      "pm25Max": 9.8511229,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 9.8511229,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 4.4829068,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 7.363131,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 100,
+      "t": "2026-09-06T20:00:00Z",
+      "pm25Max": 8.3518534,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 8.3518534,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.0475712,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.2189069,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 101,
+      "t": "2026-09-07T08:00:00Z",
+      "pm25Max": 11.1410446,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 11.1410446,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.7673249,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 7.2206302,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 102,
+      "t": "2026-09-07T20:00:00Z",
+      "pm25Max": 6.1873922,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 6.1873922,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.9766049,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 3.1579311,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 103,
+      "t": "2026-09-08T08:00:00Z",
+      "pm25Max": 11.8321171,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 11.8321171,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.5299149,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 4.480916,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 104,
+      "t": "2026-09-08T20:00:00Z",
+      "pm25Max": 9.7802267,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 9.7802267,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 6.9259858,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.3034911,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 105,
+      "t": "2026-09-09T08:00:00Z",
+      "pm25Max": 42.1845589,
+      "aqhiPlus": 5,
+      "display": "5",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 42.1845589,
+          "aqhiPlus": 5
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.355463,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.2906132,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 106,
+      "t": "2026-09-09T20:00:00Z",
+      "pm25Max": 35.1982651,
+      "aqhiPlus": 4,
+      "display": "4",
+      "category": "moderate",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 35.1982651,
+          "aqhiPlus": 4
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 7.2743549,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.748631,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 107,
+      "t": "2026-09-10T08:00:00Z",
+      "pm25Max": 17.6253948,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 17.6253948,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 5.2583151,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 7.7068858,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 108,
+      "t": "2026-09-10T20:00:00Z",
+      "pm25Max": 18.8187199,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 18.8187199,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 3.831445,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.8983579,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 109,
+      "t": "2026-09-11T08:00:00Z",
+      "pm25Max": 16.2881985,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 16.2881985,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 3.709125,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.6708441,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 110,
+      "t": "2026-09-11T20:00:00Z",
+      "pm25Max": 6.2929749,
+      "aqhiPlus": 1,
+      "display": "1",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 6.2929749,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 9.7628927,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.5312939,
+          "aqhiPlus": 1
+        }
+      ]
+    },
+    {
+      "index": 111,
+      "t": "2026-09-12T08:00:00Z",
+      "pm25Max": 14.461729,
+      "aqhiPlus": 2,
+      "display": "2",
+      "category": "low",
+      "stations": [
+        {
+          "emsId": "0605008",
+          "pm25Max": 14.461729,
+          "aqhiPlus": 2
+        },
+        {
+          "emsId": "0550502",
+          "pm25Max": 2.766943,
+          "aqhiPlus": 1
+        },
+        {
+          "emsId": "E227431",
+          "pm25Max": 5.8241272,
+          "aqhiPlus": 1
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "BC Ministry of Environment hourly PM2.5",
+      "url": "/content/pm25_2026.csv"
+    }
+  ],
+  "disclaimer": "Station readings may not represent every neighbourhood. AQHI+ uses PM2.5 only. Replay data from BC is partly unverified. Not an official air quality advisory."
+}
