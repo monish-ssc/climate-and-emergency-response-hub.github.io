@@ -1,0 +1,64 @@
+{
+  "contractVersion": "1.0",
+  "requestId": "b43e1dd9-0132-4b03-ad1f-c96f937dc6d0",
+  "region": {
+    "id": "calgary",
+    "label": "Calgary, AB"
+  },
+  "hazard": "severe_storm",
+  "assessment": {
+    "score": 0,
+    "level": "low",
+    "summary": "0 active storm(s) with fresh forecast tracks within 300 km of Calgary, AB. 0 hurricane-related bulletin(s) affect the regional search area. No nearby active tracks returned; this does not establish no risk. This screening does not assess other severe-storm hazards.",
+    "factors": [
+      {
+        "key": "track_proximity",
+        "label": "Closest active forecast track",
+        "value": 300,
+        "unit": "km",
+        "contribution": 0,
+        "explanation": "No fresh active track within 300 km."
+      },
+      {
+        "key": "hurricane_alerts",
+        "label": "Official hurricane-related bulletins",
+        "value": 0,
+        "unit": "alerts",
+        "contribution": 0,
+        "explanation": "Highest bulletin: warning 30, watch 20, advisory 10, other 5 points."
+      },
+      {
+        "key": "historical_storms",
+        "label": "Historical storms with nearby recorded positions",
+        "value": 0,
+        "unit": "storms",
+        "contribution": 0,
+        "explanation": "Completed seasons 2023-2025, within 300 km; context only, not a risk contribution or a long-term climatology."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "name": "ECCC Canadian Hurricane Centre tracks",
+      "url": "https://api.weather.gc.ca/collections/hurricanes-track-realtime",
+      "observedAt": "2026-10-28T21:03:55Z",
+      "retrievedAt": "2026-10-28T21:03:55Z"
+    },
+    {
+      "name": "ECCC Weather alerts",
+      "url": "https://api.weather.gc.ca/collections/weather-alerts",
+      "observedAt": "2026-10-28T21:03:55Z",
+      "retrievedAt": "2026-10-28T21:03:55Z"
+    },
+    {
+      "name": "NOAA IBTrACS v04r01 historical storm tracks",
+      "url": "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.last3years.list.v04r01.csv",
+      "observedAt": "2026-10-27T00:00:00Z",
+      "retrievedAt": "2026-10-28T21:03:58Z"
+    }
+  ],
+  "dataMode": "live",
+  "generatedAt": "2026-10-28T21:03:55Z",
+  "expiresAt": "2026-10-28T22:03:55Z",
+  "disclaimer": "Unvalidated prototype screening from provisional ECCC tracks and alerts; not an official hurricane forecast or a measure of local wind, rain or surge. Historical NOAA tracks provide context only. Follow official ECCC guidance."
+}
