@@ -4,6 +4,8 @@ ClimateGuard AI is a two-day hackathon prototype for a **Climate & Emergency Res
 
 The supplied `ClimateGuard_AI_Interactive_Dashboard.html` is the canonical frontend and stays self-contained. The surrounding project skeleton adds backend integration boundaries, contracts, fixtures, documentation, and tests without replacing or restructuring that file. Its current weather values, risk scores, and recommendations are simulated and are not suitable for real emergency decisions.
 
+Developers continuing the project should start with the [developer guide](docs/developer-guide.md).
+
 ## MVP demo flow
 
 1. Select a Canadian region.
