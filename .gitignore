@@ -209,6 +209,9 @@ tempCodeRunnerFile.py
 data/raw/ibtracs/
 data/pipeline/hurricane_*.geojson
 
+# Downloaded population source and generated analysis
+data/population/
+
 # Ruff stuff:
 .ruff_cache/
 
