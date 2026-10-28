@@ -71,6 +71,16 @@ Keep provider-specific code inside `providers`. The rest of the backend should w
 
 `data/scenarios.json` is the offline fallback fixture. It lets the demo continue if a live provider is unavailable. Any screen using this file must clearly say that the data is simulated.
 
+The scripts in `data/` are separate data-exploration tools; they are not connected to the dashboard or backend yet. They fetch live, provisional data from ECCC and require internet access. Install the dependencies and run either script:
+
+```bash
+python -m pip install -r requirements.txt
+python data/explore_water_weather.py
+python data/flood_pipeline.py
+```
+
+The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The flood pipeline writes risk-response JSON and map layers under `data/pipeline/`. These outputs are not used by the frontend automatically; connect them through the backend/API before presenting them in the dashboard.
+
 ## Run the frontend
 
 The frontend does not need a build step or package install.
@@ -93,11 +103,11 @@ You can also open `ClimateGuard_AI_Interactive_Dashboard.html` directly, but a l
 
 The HTML and API use slightly different hazard names. Translate them in one small adapter function:
 
-| Dashboard value | API value |
-| --- | --- |
-| `wildfire` | `wildfire` |
-| `rain` | `flood` |
-| `hurricane` | `severe_storm` |
+| Dashboard value | API value      |
+| --------------- | -------------- |
+| `wildfire`      | `wildfire`     |
+| `rain`          | `flood`        |
+| `hurricane`     | `severe_storm` |
 
 A simple request flow should look like this:
 
