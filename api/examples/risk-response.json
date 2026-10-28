@@ -1,0 +1,22 @@
+{
+  "contractVersion": "1.0",
+  "requestId": "risk_demo_001",
+  "region": { "id": "vancouver", "label": "Vancouver, BC" },
+  "hazard": "wildfire",
+  "assessment": {
+    "score": 72,
+    "level": "high",
+    "summary": "Dry conditions and wind increase the illustrative wildfire risk.",
+    "factors": [
+      { "key": "temperature", "label": "Temperature", "value": 29, "unit": "celsius", "contribution": 38, "explanation": "Higher temperatures increase fuel drying." },
+      { "key": "wind_speed", "label": "Wind speed", "value": 38, "unit": "km/h", "contribution": 34, "explanation": "Wind can accelerate fire spread." }
+    ]
+  },
+  "sources": [
+    { "name": "ClimateGuard simulated fixture", "observedAt": "2026-10-28T12:00:00Z", "retrievedAt": "2026-10-28T12:01:00Z" }
+  ],
+  "dataMode": "simulated",
+  "generatedAt": "2026-10-28T12:01:00Z",
+  "expiresAt": "2026-10-28T13:01:00Z",
+  "disclaimer": "Prototype assessment; not an official emergency alert."
+}

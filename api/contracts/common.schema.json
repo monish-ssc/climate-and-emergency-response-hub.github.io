@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://climateguard.example/schemas/common.schema.json",
+  "title": "ClimateGuard common contract types",
+  "$defs": {
+    "hazardType": {
+      "type": "string",
+      "enum": ["wildfire", "flood", "severe_storm"]
+    },
+    "dataMode": {
+      "type": "string",
+      "enum": ["live", "cached", "simulated"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "observedAt", "retrievedAt"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "retrievedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "riskFactor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "value", "unit", "contribution"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "contribution": { "type": "number", "minimum": 0, "maximum": 100 },
+        "explanation": { "type": "string" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error", "requestId"],
+      "properties": {
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message"],
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": ["INVALID_REQUEST", "REGION_NOT_FOUND", "UPSTREAM_UNAVAILABLE", "STALE_DATA", "INTERNAL_ERROR"]
+            },
+            "message": { "type": "string" },
+            "details": { "type": "object" }
+          }
+        },
+        "requestId": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

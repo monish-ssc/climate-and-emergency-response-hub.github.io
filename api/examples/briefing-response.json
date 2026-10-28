@@ -1,0 +1,18 @@
+{
+  "contractVersion": "1.0",
+  "requestId": "brief_demo_001",
+  "title": "Vancouver wildfire preparedness briefing",
+  "situation": "The prototype indicates high wildfire risk driven by temperature and wind.",
+  "actions": [
+    { "priority": 1, "action": "Check current official fire-weather alerts.", "rationale": "The prototype cannot replace authoritative warnings." },
+    { "priority": 2, "action": "Review evacuation routes and vulnerable populations.", "rationale": "Advance review reduces delays if conditions worsen." },
+    { "priority": 3, "action": "Confirm staffing and communication channels.", "rationale": "Operational readiness supports a coordinated response." }
+  ],
+  "confidence": "low",
+  "requiresHumanReview": true,
+  "citations": [
+    { "title": "Example approved emergency guidance", "url": "https://example.org/emergency-guidance" }
+  ],
+  "generatedAt": "2026-10-28T12:02:00Z",
+  "disclaimer": "Draft prototype guidance requiring review by authorized personnel."
+}

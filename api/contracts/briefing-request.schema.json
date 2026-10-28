@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://climateguard.example/schemas/briefing-request.schema.json",
+  "title": "Preparedness briefing request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["region", "hazard", "assessment"],
+  "properties": {
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" }
+      }
+    },
+    "hazard": { "$ref": "common.schema.json#/$defs/hazardType" },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "level", "factors"],
+      "properties": {
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "level": { "type": "string", "enum": ["low", "moderate", "high", "critical"] },
+        "factors": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "common.schema.json#/$defs/riskFactor" }
+        }
+      }
+    },
+    "audience": {
+      "type": "string",
+      "enum": ["emergency_manager", "municipal_staff", "public_information_officer"],
+      "default": "emergency_manager"
+    },
+    "language": { "type": "string", "enum": ["en-CA", "fr-CA"], "default": "en-CA" }
+  }
+}

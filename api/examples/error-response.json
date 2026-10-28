@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "The hazard value is not supported.",
+    "details": { "field": "hazard" }
+  },
+  "requestId": "risk_demo_002"
+}

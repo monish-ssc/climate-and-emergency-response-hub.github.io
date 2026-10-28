@@ -28,6 +28,8 @@ Then visit `http://localhost:8000/ClimateGuard_AI_Interactive_Dashboard.html`.
 ├── index.html                              # GitHub Pages entry point
 ├── ClimateGuard_AI_Interactive_Dashboard.html
 ├── api/                                    # Serverless integration contract
+│   ├── contracts/                          # Versioned JSON Schemas
+│   └── examples/                           # Example request/response bodies
 ├── assets/
 │   ├── css/                                # Future extracted styles
 │   ├── images/                             # Maps, icons, and screenshots

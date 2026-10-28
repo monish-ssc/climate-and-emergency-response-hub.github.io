@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://climateguard.example/schemas/risk-request.schema.json",
+  "title": "Risk assessment request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["regionId", "hazard"],
+  "properties": {
+    "regionId": { "type": "string", "pattern": "^[a-z0-9-]{2,64}$" },
+    "hazard": { "$ref": "common.schema.json#/$defs/hazardType" },
+    "mode": { "$ref": "common.schema.json#/$defs/dataMode", "default": "live" }
+  }
+}
