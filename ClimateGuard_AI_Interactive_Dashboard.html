@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ClimateGuard AI hackathon prototype for climate emergency preparedness.">
+  <title>ClimateGuard AI — Emergency Intelligence Hub</title>
+  <style>
+    :root {
+      --ink: #eaf7f4;
+      --muted: #9bb5b2;
+      --bg: #06110f;
+      --surface: #0d201c;
+      --surface-2: #123029;
+      --line: #234b41;
+      --accent: #5ee4bd;
+      --warning: #ffc857;
+      --danger: #ff6b6b;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, sans-serif; }
+    button, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: auto; }
+    header { border-bottom: 1px solid var(--line); background: #081713; }
+    nav { min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { font-weight: 850; letter-spacing: -.02em; }
+    .brand span { color: var(--accent); }
+    .status { color: var(--muted); font-size: .85rem; }
+    .status::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--accent); }
+    main { padding: 44px 0 56px; }
+    .hero { display: grid; grid-template-columns: 1.35fr .65fr; gap: 32px; align-items: end; margin-bottom: 30px; }
+    .eyebrow { color: var(--accent); font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 8px 0 12px; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.02; letter-spacing: -.045em; }
+    .lede { max-width: 700px; margin: 0; color: var(--muted); font-size: 1.05rem; }
+    label { display: block; margin-bottom: 7px; color: var(--muted); font-size: .82rem; font-weight: 700; }
+    select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
+    .tabs { display: flex; gap: 9px; margin-bottom: 18px; overflow-x: auto; }
+    .tab { border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; color: var(--muted); background: transparent; white-space: nowrap; }
+    .tab[aria-selected="true"] { border-color: var(--accent); background: #12382e; color: var(--ink); }
+    .grid { display: grid; grid-template-columns: 1.5fr .8fr; gap: 18px; }
+    .card { border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, var(--surface-2), var(--surface)); padding: 22px; }
+    .card h2, .card h3 { margin: 0; }
+    .card-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+    .badge { border: 1px solid currentColor; border-radius: 999px; padding: 5px 9px; color: var(--warning); font-size: .72rem; font-weight: 800; text-transform: uppercase; }
+    .map { position: relative; min-height: 360px; margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: radial-gradient(circle at 30% 40%, #1e5c4a 0 3%, transparent 4%), radial-gradient(circle at 64% 56%, #905d31 0 3%, transparent 4%), radial-gradient(circle at 82% 36%, #783c42 0 3%, transparent 4%), linear-gradient(140deg, #102a2d, #09201d); }
+    .map::before { content: "CANADA · PROTOTYPE MAP"; position: absolute; inset: 0; display: grid; place-items: center; color: #d5f5eb20; font-size: clamp(1.4rem, 4vw, 3rem); font-weight: 900; letter-spacing: .12em; }
+    .map::after { content: "Live geospatial layer goes here"; position: absolute; left: 14px; bottom: 14px; padding: 7px 10px; border-radius: 8px; background: #05100dcc; color: var(--muted); font-size: .75rem; }
+    .stack { display: grid; gap: 18px; }
+    .score { display: flex; align-items: baseline; gap: 10px; margin: 22px 0 6px; }
+    .score strong { font-size: 3rem; line-height: 1; color: var(--warning); }
+    .score span, .hint { color: var(--muted); }
+    .meter { height: 8px; margin: 15px 0; border-radius: 99px; background: #1d3c35; overflow: hidden; }
+    .meter span { display: block; height: 100%; width: 72%; background: var(--warning); transition: width .2s; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #0b1c19; }
+    .metric small { display: block; color: var(--muted); }
+    .metric b { display: block; margin-top: 4px; font-size: 1.1rem; }
+    .recommendation { margin: 18px 0; padding: 14px; border-left: 3px solid var(--accent); border-radius: 0 9px 9px 0; background: #102c25; }
+    .primary { width: 100%; border: 0; border-radius: 10px; padding: 12px 16px; background: var(--accent); color: #062019; font-weight: 850; }
+    .primary:hover { filter: brightness(1.08); }
+    .disclaimer { margin: 26px 0 0; color: var(--muted); font-size: .78rem; text-align: center; }
+    dialog { max-width: 560px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); padding: 24px; }
+    dialog::backdrop { background: #000a; }
+    dialog h2 { margin-top: 0; }
+    dialog li { margin: 9px 0; color: var(--muted); }
+    dialog button { float: right; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; background: transparent; color: var(--ink); }
+    @media (max-width: 800px) { .hero, .grid { grid-template-columns: 1fr; } main { padding-top: 30px; } .metrics { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="shell" aria-label="Primary navigation">
+      <div class="brand"><span>◆</span> ClimateGuard AI</div>
+      <div class="status">Prototype · simulated data</div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Emergency intelligence hub</div>
+        <h1>See climate risk. Prepare sooner.</h1>
+        <p class="lede">A two-day hackathon MVP that turns weather and historical risk signals into a simple preparedness briefing for emergency teams.</p>
+      </div>
+      <div>
+        <label for="region">Community or region</label>
+        <select id="region">
+          <option value="vancouver">Vancouver, BC</option>
+          <option value="calgary">Calgary, AB</option>
+          <option value="halifax">Halifax, NS</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="Hazard type">
+      <button class="tab" role="tab" aria-selected="true" data-hazard="wildfire">🔥 Wildfire</button>
+      <button class="tab" role="tab" aria-selected="false" data-hazard="flood">🌧 Flood</button>
+      <button class="tab" role="tab" aria-selected="false" data-hazard="storm">🌀 Severe storm</button>
+    </div>
+
+    <section class="grid" aria-label="Risk dashboard">
+      <article class="card">
+        <div class="card-head">
+          <div><div class="eyebrow">Risk overview</div><h2 id="map-title">Wildfire readiness</h2></div>
+          <span class="badge">Mock data</span>
+        </div>
+        <div class="map" role="img" aria-label="Placeholder for a Canadian hazard map"></div>
+      </article>
+
+      <aside class="stack">
+        <article class="card">
+          <div class="eyebrow">Current scenario</div>
+          <h3 id="place">Vancouver, BC</h3>
+          <div class="score"><strong id="score">72</strong><span>/ 100 risk index</span></div>
+          <div class="meter" aria-hidden="true"><span id="meter"></span></div>
+          <p class="hint" id="summary">Dry conditions and wind increase the illustrative wildfire risk.</p>
+          <div class="metrics">
+            <div class="metric"><small>Temperature</small><b id="temperature">29°C</b></div>
+            <div class="metric"><small>Wind</small><b id="wind">38 km/h</b></div>
+            <div class="metric"><small>Confidence</small><b>Demo</b></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">AI preparedness advisor</div>
+          <h3>Recommended action</h3>
+          <p class="recommendation" id="recommendation">Review evacuation routes and confirm public alert templates.</p>
+          <button class="primary" id="briefing">Generate briefing</button>
+        </article>
+      </aside>
+    </section>
+
+    <p class="disclaimer">Hackathon prototype only. All values and recommendations are simulated and must not be used for real emergency decisions.</p>
+  </main>
+
+  <dialog id="briefing-dialog">
+    <button id="close-dialog" aria-label="Close briefing">Close</button>
+    <div class="eyebrow">Generated demo briefing</div>
+    <h2 id="briefing-title">Preparedness briefing</h2>
+    <p>This deterministic placeholder shows where an approved AI service can be connected.</p>
+    <ol id="briefing-list"></ol>
+  </dialog>
+
+  <script>
+    // MOCK DATA BOUNDARY: replace this object with normalized API responses on day two.
+    const scenarios = {
+      wildfire: { title: "Wildfire readiness", score: 72, summary: "Dry conditions and wind increase the illustrative wildfire risk.", action: "Review evacuation routes and confirm public alert templates.", steps: ["Check official fire-weather alerts.", "Review evacuation routes and vulnerable populations.", "Confirm staffing and public communication channels."] },
+      flood: { title: "Flood readiness", score: 58, summary: "A simulated rainfall outlook raises localized flood concerns.", action: "Inspect flood-prone roads and verify shelter readiness.", steps: ["Check official rainfall and river forecasts.", "Review drainage and road closure plans.", "Confirm shelter and transport contacts."] },
+      storm: { title: "Severe storm readiness", score: 81, summary: "A simulated wind event could disrupt power and transport.", action: "Confirm backup power and coordinate critical-facility checks.", steps: ["Check official storm warnings.", "Contact critical facilities and utilities.", "Prepare outage and public safety messaging."] }
+    };
+    const regions = {
+      vancouver: { label: "Vancouver, BC", temperature: "29°C", wind: "38 km/h", offset: 0 },
+      calgary: { label: "Calgary, AB", temperature: "24°C", wind: "52 km/h", offset: -7 },
+      halifax: { label: "Halifax, NS", temperature: "18°C", wind: "66 km/h", offset: 6 }
+    };
+
+    let activeHazard = "wildfire";
+    const $ = (selector) => document.querySelector(selector);
+
+    function render() {
+      const scenario = scenarios[activeHazard];
+      const region = regions[$("#region").value];
+      const score = Math.max(0, Math.min(100, scenario.score + region.offset));
+      $("#map-title").textContent = scenario.title;
+      $("#place").textContent = region.label;
+      $("#score").textContent = score;
+      $("#meter").style.width = `${score}%`;
+      $("#summary").textContent = scenario.summary;
+      $("#recommendation").textContent = scenario.action;
+      $("#temperature").textContent = region.temperature;
+      $("#wind").textContent = region.wind;
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => {
+      activeHazard = tab.dataset.hazard;
+      document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", item === tab));
+      render();
+    }));
+    $("#region").addEventListener("change", render);
+    $("#briefing").addEventListener("click", () => {
+      const scenario = scenarios[activeHazard];
+      $("#briefing-title").textContent = `${regions[$("#region").value].label}: ${scenario.title}`;
+      $("#briefing-list").innerHTML = scenario.steps.map((step) => `<li>${step}</li>`).join("");
+      $("#briefing-dialog").showModal();
+    });
+    $("#close-dialog").addEventListener("click", () => $("#briefing-dialog").close());
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "source": "ClimateGuard AI hackathon fixtures",
+    "generatedAt": "2026-10-28T00:00:00Z",
+    "isSimulated": true
+  },
+  "regions": [
+    {
+      "id": "vancouver",
+      "label": "Vancouver, BC",
+      "temperatureC": 29,
+      "windKmh": 38
+    },
+    {
+      "id": "calgary",
+      "label": "Calgary, AB",
+      "temperatureC": 24,
+      "windKmh": 52
+    },
+    {
+      "id": "halifax",
+      "label": "Halifax, NS",
+      "temperatureC": 18,
+      "windKmh": 66
+    }
+  ]
+}
