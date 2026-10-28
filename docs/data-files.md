@@ -6,17 +6,19 @@ The pipelines in `data/` write plain JSON files. The dashboard can load them wit
 
 | What | Path | Written by |
 | --- | --- | --- |
-| List of available risk files | `data/pipeline/risk/index.json` | `build_risk_index.py` |
-| Risk for one region + hazard | `data/pipeline/risk/<regionId>_<hazard>.json` | `flood_pipeline.py`, `wildfire_pipeline.py` |
+| List of available risk files (use this) | `data/pipeline/risk/index.json` | `build_risk_index.py` |
+| Flood and wildfire risk, one region | `data/pipeline/risk/<regionId>_flood.json`, `<regionId>_wildfire.json` | `flood_pipeline.py`, `wildfire_pipeline.py` |
+| Hurricane risk, one region | `data/samples/<regionId>_severe_storm.json` | `hurricane_pipeline.py` |
 | Wildfire map layers | `data/pipeline/active_fires.geojson`, `active_fire_extents.geojson`, `fire_weather_alerts.geojson` | `wildfire_pipeline.py` |
 | Flood map layers | `data/pipeline/stations.geojson`, `river_conditions_latest.geojson`, `active_alerts.geojson` | `flood_pipeline.py` |
+| Hurricane map layers | `data/pipeline/hurricane_tracks_latest.geojson`, `hurricane_historical_storms.geojson`, `hurricane_active_alerts.geojson` (git-ignored; regenerate) | `hurricane_pipeline.py` |
 | List of replays | `data/scenarios/index.json` | `build_replay.py` |
 | One replay (time steps) | `data/scenarios/<fireId>/timeline.json` | `build_replay.py` |
 | Regions | `data/scenarios.json` | edited by hand |
 
 ## Live risk (one file per region and tab)
 
-File name: `<regionId>_<hazard>.json`, for example `clinton_wildfire.json` or `calgary_flood.json`. Each file is a `risk-response` (see `api/contracts/risk-response.schema.json`), the same shape the planned `POST /api/risk` will return, so the frontend code won't change when a real API exists.
+File name: `<regionId>_<hazard>.json`, for example `clinton_wildfire.json` or `calgary_flood.json`. Flood and wildfire files are in `data/pipeline/risk/`; the hurricane pipeline writes `data/samples/<regionId>_severe_storm.json`. Don't build the folder into the frontend: look the file up in `data/pipeline/risk/index.json`, whose `path` field (relative to `data/`) covers both. Each file is a `risk-response` (see `api/contracts/risk-response.schema.json`), the same shape the planned `POST /api/risk` will return, so the frontend code won't change when a real API exists.
 
 Dashboard tab to `hazard` (from `api/README.md`):
 
@@ -24,7 +26,7 @@ Dashboard tab to `hazard` (from `api/README.md`):
 | --- | --- |
 | `wildfire` | `wildfire` |
 | `rain` | `flood` |
-| `hurricane` | `severe_storm` (no pipeline yet) |
+| `hurricane` | `severe_storm` |
 
 Region ids come from `data/scenarios.json`: `vancouver`, `calgary`, `halifax`, `clinton`, `west-kelowna`. Each region has `lat`/`lon` for the map.
 
@@ -40,7 +42,7 @@ What to show from a risk file:
 - `dataMode`: `live` for pipeline snapshots, `cached` for replays
 - `disclaimer`: show it near the score
 
-`data/pipeline/risk/index.json` lists every file with its region, hazard, score, level and time, so the dashboard can show what's available or colour a region list without loading every file.
+`data/pipeline/risk/index.json` lists every file with its region, hazard, score, level, time and `path`, so the dashboard can find any file, show what's available, or colour a region list without loading every file.
 
 ## Wildfire map layers
 
@@ -74,10 +76,15 @@ Two replays are built:
 ```js
 const HAZARD = { wildfire: 'wildfire', rain: 'flood', hurricane: 'severe_storm' };
 
+let riskIndex = null;
+
 async function loadRisk(regionId, tab) {
   try {
-    const r = await fetch(`data/pipeline/risk/${regionId}_${HAZARD[tab]}.json`);
-    return r.ok ? await r.json() : null;   // null -> keep the built-in mock data
+    riskIndex ??= await (await fetch('data/pipeline/risk/index.json')).json();
+    const entry = riskIndex.entries.find(e => e.regionId === regionId && e.hazard === HAZARD[tab]);
+    if (!entry) return null;                       // null -> keep the built-in mock data
+    const r = await fetch(`data/${entry.path}`);
+    return r.ok ? await r.json() : null;
   } catch {
     return null;
   }
@@ -96,13 +103,14 @@ If a file is missing or fails to load, keep the current mock values and show "De
 
 ## Refreshing the data
 
-From the `data/` folder:
+From the repository root (see `docs/developer-guide.md` for the `.venv` setup):
 
 ```bash
-python flood_pipeline.py
-python wildfire_pipeline.py
-python build_risk_index.py   # run after the pipelines
-python build_replay.py       # only when replays change; uses saved history, works offline
+.venv/bin/python data/flood_pipeline.py
+.venv/bin/python data/wildfire_pipeline.py
+.venv/bin/python data/hurricane_pipeline.py
+.venv/bin/python data/build_risk_index.py   # run after the pipelines
+.venv/bin/python data/build_replay.py       # only when replays change; uses saved history, works offline
 ```
 
 Then commit the updated files in `data/pipeline/` and `data/scenarios/`.
