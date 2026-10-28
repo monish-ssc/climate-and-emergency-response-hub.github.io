@@ -1,0 +1,429 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.58286,
+          49.85878
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "Royal LePage Place",
+        "address": "2760 Cameron Rd",
+        "city": "West Kelowna",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2023-08-17T07:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 4,
+        "pets": "animals: Alert Canada on site (Aug 18)",
+        "notes": "Evacuees south of Traders Cove sent here",
+        "distanceFromRegionKm": 0.4,
+        "distanceFromFireKm": 6.6,
+        "nearestHospitals": [
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 6.6
+          },
+          {
+            "name": "Summerland Health Centre",
+            "city": "Summerland",
+            "type": "extended care",
+            "lat": 49.601398,
+            "lon": -119.668653,
+            "distanceKm": 29.3
+          },
+          {
+            "name": "Penticton Regional Hospital",
+            "city": "Penticton",
+            "type": "general",
+            "lat": 49.4812182,
+            "lon": -119.577927,
+            "distanceKm": 42.0
+          }
+        ],
+        "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.2669,
+          50.27475
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "Kal Tire Place",
+        "address": "3445 43rd Ave",
+        "city": "Vernon",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2023-08-17T07:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 4,
+        "pets": null,
+        "notes": "Evacuees north of Traders Cove sent here",
+        "distanceFromRegionKm": 51.1,
+        "distanceFromFireKm": 48.4,
+        "nearestHospitals": [
+          {
+            "name": "Vernon Jubilee Hospital",
+            "city": "Vernon",
+            "type": "extended care",
+            "lat": 50.2556464,
+            "lon": -119.270432,
+            "distanceKm": 2.1
+          },
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 47.5
+          },
+          {
+            "name": "Shuswap Lake General Hospital",
+            "city": "Salmon Arm",
+            "type": "general",
+            "lat": 50.7045612,
+            "lon": -119.2743811,
+            "distanceKm": 47.8
+          }
+        ],
+        "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.46605,
+          49.8804
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "The Salvation Army",
+        "address": "1480 Sutherland Ave",
+        "city": "Kelowna",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2023-08-18T06:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 8,
+        "pets": "no pets",
+        "notes": "Opened 11 pm Aug 17 (Clifton/McKinley spot fires)",
+        "distanceFromRegionKm": 8.6,
+        "distanceFromFireKm": 12.3,
+        "nearestHospitals": [
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 2.1
+          },
+          {
+            "name": "Summerland Health Centre",
+            "city": "Summerland",
+            "type": "extended care",
+            "lat": 49.601398,
+            "lon": -119.668653,
+            "distanceKm": 34.3
+          },
+          {
+            "name": "Vernon Jubilee Hospital",
+            "city": "Vernon",
+            "type": "extended care",
+            "lat": 50.2556464,
+            "lon": -119.270432,
+            "distanceKm": 44.0
+          }
+        ],
+        "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.49488,
+          49.89344
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "Prospera Place",
+        "address": "1223 Water St",
+        "city": "Kelowna",
+        "role": "overnight_group_lodging",
+        "roleLabel": "Overnight group lodging",
+        "openedAt": "2023-08-18T09:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 9,
+        "pets": "small pets caged or leashed",
+        "notes": "Overnight shelter for evacuees with nowhere to go; opening time approximate (reported by 2:30 am)",
+        "distanceFromRegionKm": 7.2,
+        "distanceFromFireKm": 10.0,
+        "nearestHospitals": [
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 2.2
+          },
+          {
+            "name": "Summerland Health Centre",
+            "city": "Summerland",
+            "type": "extended care",
+            "lat": 49.601398,
+            "lon": -119.668653,
+            "distanceKm": 34.8
+          },
+          {
+            "name": "Vernon Jubilee Hospital",
+            "city": "Vernon",
+            "type": "extended care",
+            "lat": 50.2556464,
+            "lon": -119.270432,
+            "distanceKm": 43.3
+          }
+        ],
+        "source": "https://www.castanetkamloops.net/news/West-Kelowna/442161/West-Kelowna-s-Rose-Valley-being-evacuated-due-to-wildfire"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.58426,
+          49.85818
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "Mount Boucherie Secondary School",
+        "address": "Mount Boucherie Secondary School",
+        "city": "West Kelowna",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": null,
+        "closedAt": "2023-08-31T07:00:00Z",
+        "opensAtStep": 0,
+        "pets": null,
+        "notes": "Opening date not in source; moved to Louie Drive Sep 1",
+        "distanceFromRegionKm": 0.5,
+        "distanceFromFireKm": null,
+        "nearestHospitals": [
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 6.7
+          },
+          {
+            "name": "Summerland Health Centre",
+            "city": "Summerland",
+            "type": "extended care",
+            "lat": 49.601398,
+            "lon": -119.668653,
+            "distanceKm": 29.2
+          },
+          {
+            "name": "Penticton Regional Hospital",
+            "city": "Penticton",
+            "type": "general",
+            "lat": 49.4812182,
+            "lon": -119.577927,
+            "distanceKm": 41.9
+          }
+        ],
+        "source": "https://www.westkelownacity.ca/news/posts/city-of-west-kelowna-community-update-august-31-2023/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.61273,
+          49.83926
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2023_BC_2023-K52767",
+        "regionId": "west-kelowna",
+        "name": "ESS Reception Centre (Louie Drive)",
+        "address": "3041 Louie Dr",
+        "city": "West Kelowna",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2023-09-01T16:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 66,
+        "pets": null,
+        "notes": "Unit 523 on Westbank First Nation lands; next to Resiliency Centre",
+        "distanceFromRegionKm": 3.3,
+        "distanceFromFireKm": 7.8,
+        "nearestHospitals": [
+          {
+            "name": "Kelowna General Hospital",
+            "city": "Kelowna",
+            "type": "general",
+            "lat": 49.8735931,
+            "lon": -119.493866,
+            "distanceKm": 9.3
+          },
+          {
+            "name": "Summerland Health Centre",
+            "city": "Summerland",
+            "type": "extended care",
+            "lat": 49.601398,
+            "lon": -119.668653,
+            "distanceKm": 26.8
+          },
+          {
+            "name": "Penticton Regional Hospital",
+            "city": "Penticton",
+            "type": "general",
+            "lat": 49.4812182,
+            "lon": -119.577927,
+            "distanceKm": 39.9
+          }
+        ],
+        "source": "https://www.westkelownacity.ca/news/posts/city-of-west-kelowna-community-update-august-31-2023/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.37171,
+          50.69653
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2026_BC_2026-C40983",
+        "regionId": "clinton",
+        "name": "McArthur Island Sport and Event Centre",
+        "address": "1655 Island Pkwy",
+        "city": "Kamloops",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2026-07-24T07:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 11,
+        "pets": null,
+        "notes": "Village of Clinton evacuees (~650 people); buses on standby",
+        "distanceFromRegionKm": 96.1,
+        "distanceFromFireKm": 105.7,
+        "nearestHospitals": [
+          {
+            "name": "Royal Inland Hospital",
+            "city": "Kamloops",
+            "type": "general",
+            "lat": 50.6701949,
+            "lon": -120.3345924,
+            "distanceKm": 3.9
+          },
+          {
+            "name": "Ashcroft And District Hospital And Community Health Centre",
+            "city": "Ashcroft",
+            "type": "general",
+            "lat": 50.7347718,
+            "lon": -121.2801628,
+            "distanceKm": 64.1
+          },
+          {
+            "name": "Nicola Valley Hospital And Health Centre",
+            "city": "Merritt",
+            "type": "",
+            "lat": 50.122034,
+            "lon": -120.773011,
+            "distanceKm": 69.9
+          }
+        ],
+        "source": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.79879,
+          53.90732
+        ]
+      },
+      "properties": {
+        "scenarioFolder": "2026_BC_2026-C40983",
+        "regionId": "clinton",
+        "name": "ESS Reception Centre (Prince George)",
+        "address": "4249 18th Ave",
+        "city": "Prince George",
+        "role": "ess_reception_centre",
+        "roleLabel": "ESS reception centre",
+        "openedAt": "2026-07-31T07:00:00Z",
+        "closedAt": null,
+        "opensAtStep": 25,
+        "pets": null,
+        "notes": "Named for the Jul 31 CRD/TNRD orders (Green Lake / Loon Lake)",
+        "distanceFromRegionKm": 323.7,
+        "distanceFromFireKm": 332.4,
+        "nearestHospitals": [
+          {
+            "name": "Prince George Regional Hospital",
+            "city": "Prince George",
+            "type": "general",
+            "lat": 53.9113826,
+            "lon": -122.7644758,
+            "distanceKm": 2.3
+          },
+          {
+            "name": "St. John Hospital",
+            "city": "Vanderhoof",
+            "type": "general",
+            "lat": 54.0285333,
+            "lon": -124.0107233,
+            "distanceKm": 80.4
+          },
+          {
+            "name": "G.R. Baker Hospital",
+            "city": "Quesnel",
+            "type": "",
+            "lat": 52.981739,
+            "lon": -122.498817,
+            "distanceKm": 104.8
+          }
+        ],
+        "source": "https://cfjctoday.com/2026/07/31/hundreds-of-new-crd-tnrd-properties-under-evacuation-order-due-to-clinton-area-wildfire/"
+      }
+    }
+  ]
+}
