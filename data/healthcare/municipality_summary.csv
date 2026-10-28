@@ -1,0 +1,1603 @@
+province,city,facility_count
+ab,airdrie,2
+ab,athabasca,2
+ab,banff,2
+ab,barrhead,3
+ab,bashaw,1
+ab,bassano,1
+ab,beaverlodge,1
+ab,bentley,1
+ab,black diamond,1
+ab,blairmore,1
+ab,bonnyville,6
+ab,bow island,1
+ab,boyle,1
+ab,breton,1
+ab,brooks,1
+ab,calgary,66
+ab,camrose,7
+ab,canmore,2
+ab,cardston,1
+ab,carmangay,1
+ab,castor,2
+ab,claresholm,3
+ab,coaldale,1
+ab,cochrane,2
+ab,cold lake,1
+ab,consort,2
+ab,coronation,2
+ab,daysland,1
+ab,devon,1
+ab,didsbury,1
+ab,drayton valley,2
+ab,drumheller,2
+ab,edmonton,62
+ab,edson,1
+ab,elk point,1
+ab,evansburg,1
+ab,fairview,1
+ab,fort macleod,2
+ab,fort mcmurray,2
+ab,fort saskatchewan,3
+ab,fort vermilion,1
+ab,fox creek,1
+ab,galahad,1
+ab,grande cache,1
+ab,grande prairie,5
+ab,grimshaw,2
+ab,hanna,1
+ab,hardisty,1
+ab,high level,1
+ab,high prairie,1
+ab,high river,2
+ab,hinton,2
+ab,hythe,1
+ab,innisfail,1
+ab,jasper,2
+ab,killam,3
+ab,la crete,2
+ab,lac la biche,2
+ab,lacombe,1
+ab,lamont,1
+ab,leduc,3
+ab,lethbridge,6
+ab,linden,1
+ab,lloydminster,2
+ab,magrath,1
+ab,manning,1
+ab,mannville,1
+ab,mayerthorpe,2
+ab,mclennan,2
+ab,medicine hat,10
+ab,milk river,1
+ab,mundare,1
+ab,myrnham,1
+ab,okotoks,1
+ab,olds,1
+ab,oyen,2
+ab,peace river,2
+ab,picture butte,1
+ab,pincher creek,1
+ab,ponoka,3
+ab,provost,1
+ab,radway,1
+ab,rainbow lake,1
+ab,raymond,1
+ab,red deer,5
+ab,redwater,1
+ab,rimbey,1
+ab,rocky mountain house,2
+ab,sherwood park,3
+ab,slave lake,2
+ab,smoky lake,4
+ab,spirit river,1
+ab,st albert,4
+ab,st paul,3
+ab,stettler,1
+ab,stony plain,3
+ab,strathmore,2
+ab,sundre,1
+ab,swan hills,1
+ab,sylvan lake,2
+ab,taber,1
+ab,three hills,1
+ab,tofield,1
+ab,trochu,1
+ab,two hills,1
+ab,valleyview,1
+ab,vegreville,4
+ab,vermilion,1
+ab,viking,2
+ab,vulcan,2
+ab,wabasca,1
+ab,wainwright,1
+ab,westlock,1
+ab,wetaskiwin,1
+ab,whitecourt,1
+ab,willingdon,1
+bc,100 mile house,5
+bc,abbotsford,58
+bc,agassiz,4
+bc,aldergrove,3
+bc,alert bay,2
+bc,armstrong,4
+bc,ashcroft,3
+bc,barriere,1
+bc,bella bella,1
+bc,bella coola,2
+bc,bowen island,1
+bc,brentwood bay,5
+bc,burnaby,64
+bc,burns lake,2
+bc,campbell river,24
+bc,castlegar,9
+bc,chemainus,1
+bc,chetwynd,4
+bc,chilliwack,21
+bc,clearwater,3
+bc,cobble hill,3
+bc,coldstream,3
+bc,comox,4
+bc,coquitlam,34
+bc,courtenay,13
+bc,cranbrook,9
+bc,creston,9
+bc,dawson creek,11
+bc,delta,26
+bc,duncan,24
+bc,enderby,2
+bc,fernie,3
+bc,fort langley,1
+bc,fort nelson,3
+bc,fort st james,1
+bc,fort st john,6
+bc,fort steele,1
+bc,fruitvale,1
+bc,gibsons,3
+bc,golden,3
+bc,grand forks,6
+bc,hazelton,2
+bc,hope,3
+bc,houston,1
+bc,invermere,5
+bc,kamloops,39
+bc,kaslo,1
+bc,kelowna,43
+bc,keremeos,3
+bc,kimberley,1
+bc,kitimat,3
+bc,knutsford,1
+bc,ladysmith,4
+bc,lake country,4
+bc,langley,37
+bc,langley city,4
+bc,lillooet,3
+bc,lumby,2
+bc,mackenzie,1
+bc,maple ridge,26
+bc,masset,2
+bc,mcbride,1
+bc,merritt,4
+bc,mission,11
+bc,nakusp,2
+bc,nanaimo,40
+bc,nelson,12
+bc,new denver,1
+bc,new westminster,18
+bc,north saanich,6
+bc,north vancouver,52
+bc,oliver,6
+bc,osoyoos,3
+bc,parksville,7
+bc,penticton,16
+bc,pitt meadows,4
+bc,port alberni,12
+bc,port alice,1
+bc,port coquitlam,14
+bc,port hardy,1
+bc,port mcneill,2
+bc,port moody,3
+bc,powell river,15
+bc,prince george,26
+bc,prince rupert,2
+bc,princeton,3
+bc,qualicum beach,4
+bc,queen charlotte,2
+bc,quesnel,5
+bc,revelstoke,5
+bc,richmond,49
+bc,saanichton,6
+bc,salmon arm,16
+bc,salt spring island,3
+bc,sandspit,1
+bc,sechelt,9
+bc,shawinigan lake,1
+bc,shawnigan lake,1
+bc,sicamous,1
+bc,sidney,9
+bc,smithers,4
+bc,sooke,3
+bc,squamish,6
+bc,summerland,6
+bc,sun peaks,1
+bc,surrey,102
+bc,terrace,5
+bc,thornhill,1
+bc,tofino,1
+bc,trail,6
+bc,valemount,2
+bc,vancouver,196
+bc,vanderhoof,3
+bc,vernon,32
+bc,victoria,128
+bc,w vancouver,1
+bc,waglisla,1
+bc,warfield,1
+bc,west kelowna,7
+bc,west vancouver,12
+bc,westbank,4
+bc,whistler,3
+bc,white rock,10
+bc,williams lake,14
+bc,winfield,1
+mb,altona,2
+mb,arborg,2
+mb,ashern,3
+mb,baldur,1
+mb,beausejour,2
+mb,benito,2
+mb,birtle,1
+mb,boissevain,2
+mb,brandon,2
+mb,brochet,1
+mb,carberry,2
+mb,carman,1
+mb,cartwright,1
+mb,churchill,1
+mb,crystal city,1
+mb,dauphin,1
+mb,deloraine,1
+mb,e morris,1
+mb,emerson,2
+mb,erickson,2
+mb,eriksdale,3
+mb,flin flon,1
+mb,garden hill,1
+mb,gillam,1
+mb,gimli,3
+mb,gladstone,1
+mb,glenboro,2
+mb,grandview,1
+mb,hamiota,1
+mb,hartney,1
+mb,hodgson,1
+mb,killarney,2
+mb,lac brochet,1
+mb,lac du bonnet,1
+mb,leaf rapids,1
+mb,little grand rapids,1
+mb,lundar,1
+mb,lynn lake,1
+mb,macgregor,1
+mb,manitou,1
+mb,mccreary,1
+mb,melita,1
+mb,minnedosa,3
+mb,n reston,1
+mb,neepawa,3
+mb,norway house,2
+mb,notre-dame-de-lourdes,1
+mb,oakbank,1
+mb,pauingassi,1
+mb,pinawa,1
+mb,pine falls,2
+mb,portage la prairie,1
+mb,reston,1
+mb,rivers,1
+mb,roblin,1
+mb,rossburn,2
+mb,russell,1
+mb,s thompson,1
+mb,saint pierre-jolys,1
+mb,sainte anne,1
+mb,selkirk,8
+mb,shamattawa,1
+mb,shoal lake,1
+mb,snow lake,1
+mb,souris,1
+mb,south indian lake,1
+mb,st claude,1
+mb,st laurent,1
+mb,st pierre-jolys,1
+mb,st theresa point,1
+mb,ste rose du lac,1
+mb,ste-anne,1
+mb,steinbach,2
+mb,stonewall,3
+mb,swan lake,1
+mb,swan river,2
+mb,teulon,3
+mb,the pas,2
+mb,thicket portage,1
+mb,treherne,2
+mb,virden,2
+mb,vita,1
+mb,wasagamack,1
+mb,wawanesa,1
+mb,west st paul,1
+mb,whitemouth,1
+mb,winkler,2
+mb,winnipeg,58
+mb,winnipegosis,1
+mb,woodlands,1
+mb,york landing,1
+mb,,25
+nb,bathurst,3
+nb,campbellton,5
+nb,caraquet,3
+nb,edmundston,3
+nb,fredericton,3
+nb,grand falls,1
+nb,grand falls/grand-sault,1
+nb,grand manan,2
+nb,grand-sault,1
+nb,lamèque,2
+nb,miramichi,2
+nb,moncton,7
+nb,oromocto,2
+nb,perth-andover,2
+nb,plaster rock,1
+nb,sackville,2
+nb,saint john,7
+nb,saint-quentin,2
+nb,sainte-anne-de-kent,3
+nb,st stephen,2
+nb,sussex,2
+nb,tracadie,1
+nb,tracadie-sheila,2
+nb,waterville,2
+nb,,1
+nl,ambrose,1
+nl,badgers quay,1
+nl,baie verte,2
+nl,bell island,2
+nl,belleoram,1
+nl,bonavista,4
+nl,botwood,2
+nl,brookfield,2
+nl,buchans,1
+nl,burgeo,2
+nl,burin,1
+nl,carbonear,2
+nl,change islands,1
+nl,clarenville,3
+nl,corner brook,2
+nl,eastport,1
+nl,fogo,2
+nl,forteau,1
+nl,gambo,1
+nl,gander,3
+nl,gaultois,1
+nl,glovertown,1
+nl,grand bank,1
+nl,grand falls,1
+nl,grand falls-windsor,3
+nl,happy valley-goose bay,2
+nl,harbour breton,2
+nl,labrador city,3
+nl,lascie,1
+nl,lewisporte,3
+nl,mount carmel,1
+nl,mount pearl,1
+nl,musgrave harbour,1
+nl,norris point,1
+nl,old perlican,2
+nl,placentia,2
+nl,port aux basques,1
+nl,port saunders,2
+nl,rencontre east,1
+nl,robert's arm,1
+nl,roddickton,1
+nl,springdale,3
+nl,st albans,2
+nl,st anthony,3
+nl,st brendans,1
+nl,st johns,11
+nl,st lawrence,1
+nl,stephenville,1
+nl,stephenville crossing,1
+nl,stjohns,1
+nl,summerford,1
+nl,twillingate,1
+nl,victoria cove,1
+nl,whitbourne,1
+nl,,1
+ns,advocate harbour,2
+ns,amherst,6
+ns,annapolis royal,2
+ns,antgonish,1
+ns,antigonish,3
+ns,argyle,1
+ns,arichat,2
+ns,baddeck,2
+ns,barrington,1
+ns,barss corner,1
+ns,beaverbank,1
+ns,bedford,1
+ns,berwick,3
+ns,bible hill,2
+ns,bridgetown,1
+ns,bridgetown north,1
+ns,bridgewater,3
+ns,brookfield,1
+ns,caledonia,1
+ns,cambridge,1
+ns,canso,2
+ns,chester,1
+ns,cheticamp,2
+ns,cleveland,1
+ns,cole harbour,1
+ns,conway,1
+ns,dartmouth,11
+ns,dayton,1
+ns,debert,1
+ns,digby,1
+ns,dominion,1
+ns,dutch brook,1
+ns,eastern passage,1
+ns,enfield,2
+ns,fall river,1
+ns,glace bay,5
+ns,greenfield,1
+ns,greenwich,1
+ns,guysborough,2
+ns,halifax,19
+ns,hammonds plains,1
+ns,inverness,2
+ns,kentville,4
+ns,liverpool,2
+ns,lockeport,1
+ns,lower west pubnico,1
+ns,lunenburg,2
+ns,mahone bay,1
+ns,meteghan,3
+ns,middle musquodoboit,2
+ns,middleton,2
+ns,millbrook 27,1
+ns,musquodoboit harbour,2
+ns,neils harbour,3
+ns,new germany,1
+ns,new glasgow,5
+ns,new waterford,4
+ns,north sydney,6
+ns,overton,1
+ns,parrsboro,1
+ns,pictou,3
+ns,pleasnantville,1
+ns,port hawkesbury,1
+ns,port hood,1
+ns,pugwash,2
+ns,sackville,2
+ns,sandy point,1
+ns,seabright,1
+ns,sheet harbour,3
+ns,shelburne,2
+ns,sherbrooke,2
+ns,shubenacadie,1
+ns,springhill,2
+ns,st peters,1
+ns,stellarton,1
+ns,sydney,11
+ns,sydney mines,3
+ns,tatamagouche,2
+ns,trenton,1
+ns,truro,5
+ns,upper nine mile river,1
+ns,wilmot,1
+ns,windsor,5
+ns,wolfville,3
+ns,yarmouth,2
+nt,fort simpson,1
+nt,fort smith,1
+nt,hay river,2
+nt,inuvik,1
+nt,yellowknife,2
+nu,cambridge bay,1
+nu,iqaluit,1
+nu,rankin inlet,1
+on,acton,2
+on,ailsa craig,3
+on,ajax,12
+on,akwesasne,1
+on,alexandria,6
+on,alfred,2
+on,alliston,1
+on,almonte,2
+on,amherstburg,6
+on,amherstview,5
+on,ancaster,2
+on,arnprior,10
+on,arthur,4
+on,athens,1
+on,atikokan,3
+on,attawapiskat,2
+on,aurora,12
+on,aylmer,6
+on,bala,1
+on,bancroft,8
+on,barrie,46
+on,barrys bay,4
+on,barry’s bay,1
+on,beachburg,1
+on,beamsville,1
+on,beaverton,3
+on,beeton,1
+on,belleville,30
+on,birch island,1
+on,blenheim,2
+on,blind river,9
+on,blondeau,1
+on,bobcaygeon,2
+on,bolton,1
+on,bourget,1
+on,bowmanville,8
+on,bracebridge,10
+on,bradford,1
+on,bradford west gwillimbury,2
+on,brampton,57
+on,brant,7
+on,brantford,36
+on,breslau,1
+on,brighton,4
+on,britt,1
+on,brockville,25
+on,bruce mines,1
+on,brunner,2
+on,brussels,2
+on,burks falls,1
+on,burlington,39
+on,calabogie,1
+on,caledon,5
+on,caledonia,1
+on,cambridge,28
+on,campbellford,9
+on,cannington,2
+on,capreol,2
+on,cargill,1
+on,carleton place,7
+on,casselman,3
+on,cedar point,1
+on,chapleau,7
+on,chatham,5
+on,chatham-kent,36
+on,chatsworth,2
+on,chelmsford,1
+on,cherry valley,1
+on,chesley,7
+on,chesterville,1
+on,clarence creek,1
+on,clarence-rockland,6
+on,clinton,9
+on,cobden,2
+on,cobourg,13
+on,cochrane,8
+on,codrington,1
+on,collingwood,16
+on,corbeil,2
+on,cornwall,27
+on,courtice,2
+on,courtland,2
+on,creemore,2
+on,curran,1
+on,curve lake,1
+on,cutler,4
+on,dalles,1
+on,deep river,3
+on,delaware,2
+on,delhi,3
+on,deseronto,2
+on,devlin,1
+on,dokis,1
+on,dorchester,1
+on,dresden,2
+on,dryden,8
+on,dundas,2
+on,dunnville,7
+on,durham,5
+on,dutton,2
+on,ear falls,1
+on,east gwillimbury,1
+on,edward,9
+on,eganville,1
+on,elliot lake,7
+on,elmira,6
+on,elmvale,2
+on,elora,2
+on,embrun,3
+on,emo,3
+on,englehart,4
+on,erin,3
+on,espanola,4
+on,essex,8
+on,etobicoke,15
+on,exeter,4
+on,fenelon,1
+on,fergus,7
+on,fonthill,1
+on,fordwich,2
+on,forest,1
+on,fort albany,3
+on,fort erie,14
+on,fort frances,11
+on,fort william first nation,4
+on,french river,1
+on,gananoque,2
+on,garden river,2
+on,garden village,1
+on,georgetown,3
+on,georgina,4
+on,geraldton,3
+on,glenburnie,1
+on,goderich,10
+on,godfrey,1
+on,golden lake,2
+on,gore bay,2
+on,gravenhurst,6
+on,greater napanee,2
+on,green valley,1
+on,grimsby,15
+on,guelph,32
+on,hagersville,8
+on,haileybury,1
+on,haliburton,8
+on,halton hills,8
+on,hamilton,147
+on,hampton,1
+on,hanover,7
+on,harcourt,1
+on,harriston,1
+on,hawkesbury,12
+on,hearst,4
+on,hensall,1
+on,holland centre,1
+on,hornepayne,1
+on,huntsville,13
+on,ignace,1
+on,ingersoll,9
+on,innisfil,2
+on,iroquois falls,5
+on,jarvis,1
+on,jasper,2
+on,jogues,1
+on,kanata,2
+on,kapuskasing,6
+on,kawartha lakes,18
+on,keewatin,1
+on,keewaywin,1
+on,kemptville,7
+on,kenora,19
+on,keswick,1
+on,killarney,1
+on,kincardine,6
+on,king city,2
+on,kingston,46
+on,kingsville,5
+on,kirkland lake,6
+on,kitchener,56
+on,komoka,2
+on,lakefield,2
+on,lakeshore,4
+on,lakeside,2
+on,lambton shores,5
+on,lancaster,4
+on,leamington,16
+on,lefaivre,1
+on,limoges,2
+on,lincoln,5
+on,lindsay,3
+on,lions head,5
+on,listowel,9
+on,little britain,1
+on,little current,8
+on,lombardy,1
+on,londesborough,1
+on,london,95
+on,long sault,3
+on,loriginal,1
+on,lorignal,1
+on,lucan,2
+on,lucknow,4
+on,maberly,1
+on,madoc,6
+on,manitouwadge,3
+on,manitowaning,1
+on,maple,2
+on,marathon,5
+on,markdale,4
+on,markham,26
+on,marmora,2
+on,maryhill,2
+on,matheson,4
+on,mattawa,5
+on,maxville,2
+on,mchigeeng,1
+on,meaford,4
+on,merrickville,3
+on,midhurst,2
+on,midland,14
+on,millbrook,2
+on,milton,14
+on,milverton,2
+on,mindemoya,5
+on,minden,4
+on,minto,2
+on,mississauga,83
+on,mississippi mills,5
+on,mitchell,5
+on,mobert,1
+on,moonbeam,1
+on,moose factory,6
+on,moosonee,4
+on,morrisburg,2
+on,mount forest,8
+on,muncey,5
+on,muskrat dam,1
+on,napanee,6
+on,naughton,1
+on,nepean,1
+on,new hamburg,3
+on,new liskeard,1
+on,new tecumseth,7
+on,newbury,3
+on,newcastle,1
+on,newmarket,27
+on,niagara falls,32
+on,niagara on the lake,3
+on,niagara-on-the,1
+on,niagara-on-the-lake,7
+on,nipigon,5
+on,nobel,1
+on,noelville,1
+on,north bay,26
+on,north huntsville,2
+on,north york,9
+on,northbrook,3
+on,norwich,2
+on,norwood,3
+on,noã«lville,1
+on,oakville,46
+on,ohsweken,5
+on,opasatika,1
+on,orangeville,15
+on,orillia,30
+on,orléans,2
+on,oshawa,27
+on,osnaburgh,1
+on,ottawa,224
+on,owen sound,30
+on,pakenham,1
+on,palmerston,4
+on,paris,5
+on,parkhill,2
+on,parry sound,11
+on,pawitik,2
+on,peawanuck,1
+on,pelham,2
+on,pembroke,17
+on,penetanguishene,17
+on,perth,8
+on,perth road,1
+on,petawawa,2
+on,peterborough,39
+on,petrolia,8
+on,pickering,9
+on,picton,6
+on,plantagenet,3
+on,plat,1
+on,plympton-wyoming,2
+on,port colborne,7
+on,port dover,2
+on,port hope,11
+on,port perry,8
+on,port stanley,1
+on,portland,1
+on,powassan,5
+on,prescott,3
+on,puslinch,2
+on,quinte west,8
+on,rainy river,3
+on,red lake,7
+on,renfrew,10
+on,rexdale,1
+on,richards landing,4
+on,richmond hill,26
+on,ridgetown,1
+on,ripley,1
+on,rockland,1
+on,russell,1
+on,saint isidore,1
+on,saint jacobs,3
+on,saint marys,6
+on,saint thomas,16
+on,sarnia,31
+on,sauble beach,1
+on,saugeen shores,1
+on,sault ste marie,29
+on,scarborough,23
+on,schreiber,2
+on,seaforth,3
+on,seeleys bay,1
+on,selby,1
+on,shanty bay,1
+on,sharbot lake,2
+on,sheguiandah,1
+on,shelburne,7
+on,sheshegwaning,1
+on,simcoe,14
+on,sioux lookout,9
+on,slate falls,1
+on,smiths falls,8
+on,smithville,1
+on,smooth rock falls,2
+on,south woodslee,1
+on,southampton,6
+on,southwold,4
+on,st catharines,46
+on,st marys,1
+on,st thomas,6
+on,st-albert,1
+on,st. catharines,1
+on,stayner,4
+on,stirling,3
+on,stittsville,1
+on,stoney creek,3
+on,stouffville,1
+on,stoufville,1
+on,stratford,25
+on,strathroy,5
+on,sturgeon falls,1
+on,sudbury,53
+on,sunderland,1
+on,sundridge,1
+on,sutton,1
+on,sydenham,1
+on,tamworth,1
+on,tavistock,3
+on,tecumseh,3
+on,temagami,1
+on,temiskaming shores,10
+on,terrace bay,6
+on,thamesville,1
+on,the blue mountains,2
+on,thessalon,8
+on,thornbury,1
+on,thornhill,1
+on,thorold,7
+on,thunder bay,60
+on,tilbury,1
+on,tillsonburg,9
+on,timmins,28
+on,toronto,536
+on,townsend,2
+on,trenton,4
+on,tweed,3
+on,upsala,2
+on,uxbridge,6
+on,val caron,1
+on,vankleek hill,2
+on,vaughan,24
+on,vermilion bay,2
+on,walkerton,8
+on,wallaceburg,5
+on,wardsville,2
+on,warkworth,2
+on,wasaga beach,3
+on,waterdown,1
+on,waterford,1
+on,waterloo,25
+on,watford,3
+on,waubaushene,1
+on,wawa,5
+on,welland,23
+on,west drayton,1
+on,west dresden,1
+on,west elgin,1
+on,west nipissing,5
+on,weston,2
+on,whitby,21
+on,whitchurch-stouffville,5
+on,whitney,1
+on,wiarton,6
+on,wikwemikong,2
+on,williamsburg,2
+on,winchester,2
+on,windsor,65
+on,wingham,5
+on,woodbridge,3
+on,woodslee,1
+on,woodstock,15
+on,zurich,2
+on,,9
+pe,alberton,4
+pe,charlottetown,9
+pe,hunter river,1
+pe,kensington,1
+pe,montague,3
+pe,north rustico,1
+pe,oleary,4
+pe,souris,3
+pe,summerside,5
+pe,tyne valley,2
+pe,wellington,1
+pe,,1
+qc,acton vale,1
+qc,adstock,1
+qc,aguanish,1
+qc,albanel,1
+qc,alma,15
+qc,amherst,1
+qc,amos,13
+qc,amqui,10
+qc,armagh,1
+qc,asbestos,8
+qc,ayers cliff,1
+qc,baie-comeau,16
+qc,baie-des-sables,2
+qc,baie-johan-beetz,1
+qc,baie-saint-paul,6
+qc,baie-sainte-catherine,1
+qc,baie-trinité,1
+qc,barraute,1
+qc,beaconsfield,1
+qc,beauceville,7
+qc,beauharnois,1
+qc,beaulac-garthby,1
+qc,beauport,1
+qc,beaupré,5
+qc,bedford,4
+qc,belleterre,1
+qc,beloeil,10
+qc,berthier-sur-mer,2
+qc,berthierville,3
+qc,blainville,5
+qc,blanc-sablon,6
+qc,boisbriand,4
+qc,bonaventure,3
+qc,boucherville,5
+qc,brigham,1
+qc,bromont,5
+qc,brossard,5
+qc,bécancour,5
+qc,cacouna,1
+qc,campbells bay,1
+qc,candiac,3
+qc,cantley,2
+qc,cap-aux-meules,1
+qc,cap-chat,3
+qc,cap-saint-ignace,3
+qc,caplan,3
+qc,carleton-sur-mer,4
+qc,causapscal,2
+qc,chambly,1
+qc,chambord,1
+qc,chandler,10
+qc,charlemagne,1
+qc,charny,2
+qc,chelsea,1
+qc,chertsey,3
+qc,chevery côte-nord-du-golfe-du-saint-laurent,1
+qc,chibougamau,3
+qc,chicoutimi,4
+qc,chisasibi,3
+qc,chute-aux-outardes,1
+qc,châteauguay,7
+qc,chæteauguay,1
+qc,chénéville,1
+qc,clarendon,1
+qc,clermont,1
+qc,coaticook,6
+qc,contrecoeur,1
+qc,cookshire-eaton,1
+qc,coteau-du-lac,1
+qc,courcelles,1
+qc,cowansville,10
+qc,côte-nord-du-golfe-du-saint-laurent kegaska,1
+qc,côte-saint-luc,5
+qc,delson,1
+qc,deux-montagnes,2
+qc,disraeli,3
+qc,dixville,1
+qc,dolbeau-mistassini,12
+qc,donnacona,4
+qc,drummondville,15
+qc,dunham,1
+qc,duparquet,1
+qc,dupuy,1
+qc,dégelis,2
+qc,east angus,3
+qc,east broughton,1
+qc,eastmain,1
+qc,essipit,1
+qc,farnham,2
+qc,ferme-neuve,3
+qc,fermont,3
+qc,fleurimont,1
+qc,forestville,4
+qc,fort-coulonge,1
+qc,fortierville,2
+qc,frampton,2
+qc,franquelin,2
+qc,gallichan,1
+qc,gaspé,20
+qc,gatineau,79
+qc,gesgapegiag,1
+qc,girardville,2
+qc,godbout,2
+qc,gracefield,4
+qc,granby,25
+qc,grand-remous,1
+qc,grande-rivière,1
+qc,grande-vallée,3
+qc,greenfield park,3
+qc,grenville,1
+qc,grosse-île,1
+qc,ham-nord,1
+qc,ham-sud,1
+qc,harrington harbour côte-nord-du-golfe-du-saint-laurent,1
+qc,havre-saint-pierre,6
+qc,henryville,1
+qc,hill,1
+qc,huberdeau,1
+qc,huntingdon,4
+qc,hébertville,2
+qc,ivry-sur-le-lac,1
+qc,joliette,17
+qc,jonquière,2
+qc,kahnawake,2
+qc,kanesatake,1
+qc,kawawachikamach,2
+qc,kirkland,5
+qc,kuujjuaq,2
+qc,kuujjuarapik,1
+qc,l'assomption,3
+qc,l'islet,1
+qc,la baie,3
+qc,la doré,1
+qc,la guadeloupe,1
+qc,la malbaie,9
+qc,la patrie,1
+qc,la pocatière,7
+qc,la prairie,1
+qc,la pêche,9
+qc,la sarre,16
+qc,la tabatière gros-mécatina,1
+qc,la tuque,10
+qc,labelle,1
+qc,labrecque,1
+qc,lac-bouchette,1
+qc,lac-brome,2
+qc,lac-des-aigles,3
+qc,lac-drolet,1
+qc,lac-etchemin,2
+qc,lac-mégantic,8
+qc,lachine,3
+qc,lachute,7
+qc,lacolle,1
+qc,laforce,1
+qc,lambton,1
+qc,lancienne-lorette,1
+qc,lanoraie,1
+qc,lanse-saint-jean,4
+qc,lantier,1
+qc,lasalle,1
+qc,lascension-de-notre-seigneur,1
+qc,latulipe-et-gaboury,1
+qc,laurier-station,3
+qc,laval,88
+qc,lavaltrie,2
+qc,lebel-sur-quévillon,2
+qc,les bergeronnes,1
+qc,les escoumins,4
+qc,les hauteurs,1
+qc,les méchins,2
+qc,les Îles-de-la-madeleine,1
+qc,les éboulements,1
+qc,les îles-de-la-madeleine,1
+qc,lisle-aux-coudres,1
+qc,lisle-verte,2
+qc,listuguj,1
+qc,longue-pointe-de-mingan,1
+qc,longueuil,37
+qc,lotbinière,1
+qc,louiseville,9
+qc,low,1
+qc,lyster,2
+qc,lépiphanie,2
+qc,lévis,29
+qc,lîle-danticosti,1
+qc,lîle-perrot,1
+qc,lîsle-aux-allumettes,2
+qc,macamic,1
+qc,magog,7
+qc,malartic,5
+qc,manawan,1
+qc,maniwaki,13
+qc,mansfield-et-pontefract,7
+qc,maria,6
+qc,marsoui,1
+qc,mascouche,6
+qc,mashteuiatsh,1
+qc,matagami,2
+qc,matane,13
+qc,matapédia,3
+qc,mcmasterville,1
+qc,mirabel,4
+qc,mistissini,1
+qc,moffet,1
+qc,mont-joli,13
+qc,mont-laurier,11
+qc,mont-royal,4
+qc,mont-saint-hilaire,1
+qc,mont-tremblant,2
+qc,montebello,1
+qc,montmagny,10
+qc,montpellier,1
+qc,montréal,258
+qc,montréal-nord,1
+qc,murdochville,3
+qc,mutton bay gros-mécatina,1
+qc,métabetchouan,1
+qc,métabetchouan lac-à-la-croix,3
+qc,napierville,1
+qc,natashquan,1
+qc,nemaska,1
+qc,new richmond,1
+qc,nicolet,6
+qc,nominingue,1
+qc,normandin,3
+qc,normétal,1
+qc,north hatley,1
+qc,notre-dame-de-la-paix,1
+qc,notre-dame-de-lorette,1
+qc,notre-dame-de-lourdes,1
+qc,notre-dame-des-bois,1
+qc,notre-dame-des-monts,1
+qc,notre-dame-des-prairies,1
+qc,notre-dame-des-sept-douleurs,1
+qc,notre-dame-du-bon-conseil,1
+qc,notre-dame-du-lac,3
+qc,notre-dame-du-laus,1
+qc,notre-dame-du-nord,1
+qc,nédélec,1
+qc,ormstown,4
+qc,otter lake,2
+qc,otterburn park,2
+qc,oujé-bougoumou,1
+qc,palmarolle,1
+qc,papineauville,1
+qc,paspébiac,4
+qc,passes-dangereuses,1
+qc,percé,4
+qc,piedmont,3
+qc,pierreville,1
+qc,pincourt,1
+qc,plessisville,7
+qc,pohénégamook,4
+qc,pointe-claire,14
+qc,pointe-à-la-croix,4
+qc,pont-rouge,2
+qc,pontiac,2
+qc,port-cartier,6
+qc,port-daniel gascons,3
+qc,portneuf,1
+qc,potton,2
+qc,poularies,1
+qc,preissac,2
+qc,prévost,3
+qc,puvirnituq,3
+qc,péribonka,1
+qc,québec,120
+qc,québec city,5
+qc,rapides-des-joachims,1
+qc,rawdon,6
+qc,re,1
+qc,repentigny,15
+qc,richelieu,1
+qc,richmond,1
+qc,rigaud,1
+qc,rimouski,24
+qc,rivière-au-tonnerre,1
+qc,rivière-bleue,2
+qc,rivière-du-loup,14
+qc,rivière-ouelle,1
+qc,rivière-rouge,5
+qc,rivière-saint-jean,1
+qc,rivière-saint-paul rivière-saint-paul,1
+qc,rivière-à-pierre,1
+qc,roberval,14
+qc,rosemère,2
+qc,rouyn-noranda,27
+qc,roxton,1
+qc,roxton falls,2
+qc,roxton pond,1
+qc,rémigny,1
+qc,sacré-coeur,2
+qc,saguenay,42
+qc,saint-adolphe-d'howard,1
+qc,saint-agapit,2
+qc,saint-alexis-des-monts,1
+qc,saint-alphonse-rodriguez,4
+qc,saint-amable,1
+qc,saint-ambroise-de-kildare,1
+qc,saint-andré-avellin,5
+qc,saint-andré-dargenteuil,1
+qc,saint-anselme,2
+qc,saint-antoine-de-lisle-aux-grues,1
+qc,saint-antoine-de-tilly,1
+qc,saint-antonin,1
+qc,saint-apollinaire,1
+qc,saint-augustin,2
+qc,saint-augustin-de-desmaures,1
+qc,saint-augustin-de-woburn,1
+qc,saint-barnabé,1
+qc,saint-barthélemy,1
+qc,saint-benoît-labre,1
+qc,saint-bernard,1
+qc,saint-boniface,2
+qc,saint-bruno,1
+qc,saint-bruno-de-montarville,3
+qc,saint-camille,1
+qc,saint-charles-borromée,12
+qc,saint-charles-de-bellechasse,2
+qc,saint-chrysostome,1
+qc,saint-claude,1
+qc,saint-clément,2
+qc,saint-cyprien,2
+qc,saint-cyrille-de-wendover,1
+qc,saint-célestin,1
+qc,saint-césaire,2
+qc,saint-côme,1
+qc,saint-côme linière,1
+qc,saint-damien-de-buckland,1
+qc,saint-david-de-falardeau,1
+qc,saint-donat,3
+qc,saint-edmond-les-plaines,1
+qc,saint-esprit,1
+qc,saint-eugène-dargentenay,1
+qc,saint-eustache,15
+qc,saint-fabien,2
+qc,saint-fabien-de-panet,1
+qc,saint-flavien,1
+qc,saint-françois-de-la-rivière-du-sud,2
+qc,saint-fulgence,2
+qc,saint-félicien,4
+qc,saint-félix-de-valois,1
+qc,saint-gabriel,3
+qc,saint-gabriel-de-brandon,1
+qc,saint-georges,10
+qc,saint-gilles,1
+qc,saint-guillaume,2
+qc,saint-gédéon-de-beauce,2
+qc,saint-henri,2
+qc,saint-honoré,1
+qc,saint-honoré-de-témiscouata,1
+qc,saint-hubert,1
+qc,saint-hubert-de-rivière-du-loup,2
+qc,saint-hyacinthe,23
+qc,saint-isidore,1
+qc,saint-jacques,2
+qc,saint-jean-de-dieu,2
+qc,saint-jean-de-matha,2
+qc,saint-jean-port-joli,2
+qc,saint-jean-sur-richelieu,11
+qc,saint-joseph-de-beauce,2
+qc,saint-jude,1
+qc,saint-jérome,2
+qc,saint-jérôme,26
+qc,saint-lambert,2
+qc,saint-lazare-de-bellechasse,1
+qc,saint-lin laurentides,1
+qc,saint-ludger,2
+qc,saint-ludger-de-milot,2
+qc,saint-léonard-daston,1
+qc,saint-magloire,1
+qc,saint-malachie,2
+qc,saint-marc-des-carrières,2
+qc,saint-marcel,1
+qc,saint-marcellin,1
+qc,saint-martin,1
+qc,saint-mathieu-de-beloeil,1
+qc,saint-maxime-du-mont-louis,2
+qc,saint-michel-de-bellechasse,1
+qc,saint-michel-des-saints,1
+qc,saint-michel-du-squatec,1
+qc,saint-moïse,1
+qc,saint-narcisse-de-beaurivage,1
+qc,saint-narcisse-de-rimouski,1
+qc,saint-nazaire,2
+qc,saint-odilon-de-cranbourne,1
+qc,saint-pamphile,2
+qc,saint-pascal,5
+qc,saint-patrice-de-beaurivage,3
+qc,saint-paul-de-montminy,1
+qc,saint-paulin,2
+qc,saint-philippe,1
+qc,saint-pierre-de-lîle-dorléans,1
+qc,saint-polycarpe,1
+qc,saint-prime,1
+qc,saint-prosper,3
+qc,saint-raphaël,1
+qc,saint-raymond,3
+qc,saint-robert-bellarmin,1
+qc,saint-roch-de-lachigan,1
+qc,saint-roch-des-aulnaies,1
+qc,saint-rémi,1
+qc,saint-sauveur,5
+qc,saint-siméon,2
+qc,saint-stanislas,3
+qc,saint-sylvestre,1
+qc,saint-thomas,2
+qc,saint-thomas-didyme,1
+qc,saint-tite,4
+qc,saint-ubalde,1
+qc,saint-urbain,1
+qc,saint-victor,1
+qc,saint-zacharie,1
+qc,saint-édouard-de-lotbinière,1
+qc,saint-élie-de-caxton,1
+qc,saint-épiphane,1
+qc,saint-étienne-des-grès,1
+qc,sainte-adèle,2
+qc,sainte-agathe-de-lotbinière,3
+qc,sainte-agathe-des-monts,9
+qc,sainte-angèle-de-prémont,2
+qc,sainte-anne-de-bellevue,2
+qc,sainte-anne-de-la-pérade,1
+qc,sainte-anne-des-monts,13
+qc,sainte-anne-des-plaines,2
+qc,sainte-brigide-diberville,1
+qc,sainte-catherine-de-la-jacques-cartier,1
+qc,sainte-claire,3
+qc,sainte-croix,2
+qc,sainte-foy,1
+qc,sainte-félicité,1
+qc,sainte-geneviève-de-batiscan,3
+qc,sainte-jeanne-darc,1
+qc,sainte-julie,1
+qc,sainte-julienne,2
+qc,sainte-justine,1
+qc,sainte-luce,1
+qc,sainte-madeleine,1
+qc,sainte-marie,4
+qc,sainte-marthe-sur-le-lac,1
+qc,sainte-monique,1
+qc,sainte-perpétue,1
+qc,sainte-rose-du-nord,1
+qc,sainte-sophie,1
+qc,sainte-thècle,1
+qc,sainte-thérèse,4
+qc,salaberry-de-valleyfield,10
+qc,sayabec,2
+qc,schefferville,1
+qc,senneterre,3
+qc,sept-îles,15
+qc,shawinigan,16
+qc,shawinigan-sud,2
+qc,shawville,5
+qc,shefford,1
+qc,sherbrooke,51
+qc,sorel-tracy,11
+qc,stanstead,2
+qc,stoneham-et-tewkesbury,2
+qc,stornoway,1
+qc,stratford,2
+qc,sutton,1
+qc,tadoussac,1
+qc,terrebonne,28
+qc,thetford mines,18
+qc,thurso,1
+qc,tring-jonction,3
+qc,trois-pistoles,7
+qc,trois-rivières,66
+qc,témiscaming,5
+qc,témiscouata-sur-le-lac,8
+qc,tête-à-la-baleine côte-nord-du-golfe-du-saint-laurent,1
+qc,upton,1
+qc,val-david,1
+qc,val-des-bois,1
+qc,val-des-monts,3
+qc,val-dor,15
+qc,valcourt,1
+qc,vallée-jonction,4
+qc,vanier,1
+qc,varennes,2
+qc,vaudreuil-dorion,6
+qc,verchères,1
+qc,verdun,6
+qc,victoriaville,18
+qc,ville-marie,9
+qc,wakefield,1
+qc,waskaganish,1
+qc,waswanipi,1
+qc,waterloo,3
+qc,weedon,1
+qc,wemindji,1
+qc,wendake,1
+qc,westmount,4
+qc,wickham,1
+qc,windsor,6
+qc,,60
+sk,arborfield,1
+sk,arcola,1
+sk,assiniboia,4
+sk,balcarres,1
+sk,battleford,1
+sk,beauval,1
+sk,beechy,1
+sk,bengough,1
+sk,big river,2
+sk,biggar,3
+sk,birch hills,2
+sk,black lake,1
+sk,blaine lake,1
+sk,borden,1
+sk,broadview,4
+sk,buffalo narrows,1
+sk,cabri,3
+sk,candle lake,1
+sk,canora,2
+sk,canwood,2
+sk,carlyle,4
+sk,carnduff,4
+sk,carrot river,1
+sk,central butte,1
+sk,climax,1
+sk,coronach,2
+sk,craik,1
+sk,creighton,1
+sk,cudworth,2
+sk,cumberland house,3
+sk,cupar,2
+sk,cut knife,1
+sk,dalmeny,1
+sk,davidson,1
+sk,debden,1
+sk,delisle,1
+sk,dinsmore,2
+sk,duck lake,2
+sk,eastend,2
+sk,eatonia,1
+sk,edam,2
+sk,elrose,1
+sk,esterhazy,3
+sk,estevan,6
+sk,eston,1
+sk,fillmore,2
+sk,foam lake,2
+sk,fort quappelle,6
+sk,gainsborough,2
+sk,goodsoil,2
+sk,gravelbourg,3
+sk,green lake,1
+sk,grenfell,2
+sk,gull lake,1
+sk,hafford,2
+sk,herbert,1
+sk,hodgeville,1
+sk,hudson bay,1
+sk,humboldt,4
+sk,imperial,2
+sk,indian head,4
+sk,invermay,1
+sk,ituna,1
+sk,kamsack,3
+sk,kelvington,4
+sk,kerrobert,3
+sk,kincaid,1
+sk,kindersley,2
+sk,kinistino,3
+sk,kipling,7
+sk,kyle,2
+sk,la loche,1
+sk,la ronge,1
+sk,lafleche,1
+sk,lampman,2
+sk,langenburg,5
+sk,langham,1
+sk,lanigan,2
+sk,leader,2
+sk,leask,2
+sk,leoville,3
+sk,lestock,1
+sk,lloydminster,5
+sk,loon lake,2
+sk,lucky lake,1
+sk,lumsden,2
+sk,macklin,2
+sk,maidstone,1
+sk,mankota,2
+sk,maple creek,2
+sk,maryfield,1
+sk,meadow lake,6
+sk,melfort,3
+sk,melville,7
+sk,midale,1
+sk,middle lake,1
+sk,montmartre,1
+sk,moose jaw,10
+sk,moosomin,2
+sk,mossbank,1
+sk,naicam,1
+sk,neilburg,1
+sk,nipawin,3
+sk,norquay,3
+sk,north battleford,16
+sk,outlook,2
+sk,oxbow,2
+sk,pangman,1
+sk,paradise hill,1
+sk,pinehouse,1
+sk,ponteix,3
+sk,porcupine plain,3
+sk,preeceville,3
+sk,prince albert,15
+sk,quill lake,1
+sk,radville,3
+sk,raymore,3
+sk,redvers,2
+sk,regina,52
+sk,regina beach,1
+sk,rockglen,1
+sk,rose valley,1
+sk,rosetown,3
+sk,rosthern,3
+sk,saltcoats,2
+sk,sandy bay,1
+sk,saskatoon,40
+sk,shaunavon,1
+sk,shellbrook,3
+sk,smeaton,1
+sk,spiritwood,4
+sk,st breiux,1
+sk,st brieux,1
+sk,st walburg,1
+sk,stoughton,2
+sk,strasbourg,3
+sk,swift current,3
+sk,theodore,1
+sk,tisdale,4
+sk,turtleford,1
+sk,unity,2
+sk,vanguard,1
+sk,wadena,4
+sk,wakaw,3
+sk,warman,1
+sk,watrous,7
+sk,watson,1
+sk,wawota,2
+sk,weyakwin,1
+sk,weyburn,10
+sk,whitecap,1
+sk,whitewood,1
+sk,wilkie,1
+sk,willow bunch,1
+sk,wolseley,5
+sk,wynyard,4
+sk,yorkton,10
+sk,île-à-la-crosse,1
+sk,,8
+yt,beaver creek,1
+yt,carcross,1
+yt,carmacks,1
+yt,dawson city,4
+yt,destruction bay,1
+yt,faro,1
+yt,haines junction,1
+yt,mayo,1
+yt,old crow,1
+yt,pelly crossing,1
+yt,ross river,1
+yt,teslin,1
+yt,watson lake,3
+yt,whitehorse,20
+yt,whitehose,1
