@@ -95,67 +95,6 @@ Run the scripts as needed:
 
 The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The flood pipeline writes risk-response JSON and map layers under `data/pipeline/`. These outputs are not used by the frontend automatically; connect them through the backend/API before presenting them in the dashboard.
 
-### Hurricane pipeline
-
-`data/hurricane_pipeline.py` follows the flood pipeline's fetch, historical-context,
-score, and export flow for the same scenario regions. No API key is needed.
-
-- **Current tracks:** ECCC `hurricanes-track-realtime`, filtered with
-  `active=true&latest_publication=true`. It follows pagination and checks both
-  flags locally. An active track published more than 24 hours ago, or more than
-  five minutes in the future, fails the run rather than becoming a zero-risk result.
-- **Regional screening:** shortest distance to forecast line segments within
-  300 km of each city, not just distance to forecast vertices. This is not a
-  wind, rainfall, landfall-probability, or storm-surge model.
-- **Official alerts:** hurricane, tropical-storm, and storm-surge alerts in the
-  same 50 km bounding-box search area used by the flood script. Ended and expired
-  alerts are excluded. Duplicate bulletin polygons do not multiply the score.
-- **Historical context:** NOAA IBTrACS v04r01 `last3years` CSV (about 12 MB),
-  cached under `data/raw/ibtracs/` for seven days. The units row is skipped;
-  only main tracks from seasons before the current calendar year are used.
-  Dateline-crossing longitudes are normalized to GeoJSON's -180 to 180 range.
-  Each storm is counted once per region if a recorded position is within 300 km.
-  Exported historical points are the closest recorded position per storm, not
-  complete tracks or interpolated closest approaches. The output reports the
-  actual season range. This recent window is not a long-term climatology.
-
-The **unvalidated prototype score** adds up to 70 points for track proximity
-(`70 * (1 - distance / 300)`) and up to 30 for the highest relevant alert:
-warning 30, watch 20, advisory 10, other 5. Historical counts contribute zero.
-The flood pipeline's level boundaries are retained: low below 25, moderate below
-50, high below 75, otherwise critical. These are not official thresholds.
-No wind-intensity trend is inferred from track geometry.
-
-City assessments are written directly under `data/samples/`:
-
-- `{region_id}_severe_storm.json`: validated against the existing risk-response
-  schema. The API uses `severe_storm`, not `hurricane`; this script only screens
-  hurricane-related signals, not every severe-storm hazard.
-  Each run overwrites the three city files with timestamped live results; their
-  location does not make them simulated data.
-
-Map layers remain under `data/pipeline/`:
-
-- `hurricane_tracks_latest.geojson`: nearby fresh forecast tracks by region.
-- `hurricane_historical_storms.geojson`: historical closest recorded positions.
-- `hurricane_active_alerts.geojson`: relevant alert polygons by region.
-
-An empty successful ECCC response is labelled explicitly; it does not mean no
-risk. For empty track/alert collections, source `observedAt` is the query time,
-not an invented storm observation. Live ECCC queries use `dataMode: live`; the
-historical source retains the cache file's retrieval time. Network, freshness,
-parsing, and schema errors fail the run without replacing outputs with fabricated
-success data. Previous outputs can remain on disk after a failure, so consumers
-must honor `generatedAt` and `expiresAt`.
-
-Force a NOAA cache refresh:
-
-```bash
-.venv/bin/python data/hurricane_pipeline.py --refresh-history
-```
-
-The script does not change flood outputs or automatically connect to the dashboard.
-
 ## Run the frontend
 
 The frontend does not need a build step or package install.
