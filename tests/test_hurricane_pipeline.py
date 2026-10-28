@@ -268,11 +268,10 @@ class HurricanePipelineTests(unittest.TestCase):
             hurricane.main()
         self.assertEqual(flood_output.read_text(), "unchanged")
         responses = list(samples.glob("*_severe_storm.json"))
-        self.assertEqual(len(responses), 3)
+        regions = json.loads((hurricane.DATA_DIR / "scenarios.json").read_text())["regions"]
         self.assertEqual(
             {path.name for path in responses},
-            {"vancouver_severe_storm.json", "calgary_severe_storm.json",
-             "halifax_severe_storm.json"},
+            {f"{region['id']}_severe_storm.json" for region in regions},
         )
         self.assertFalse((out / "risk").exists())
         for path in responses:
