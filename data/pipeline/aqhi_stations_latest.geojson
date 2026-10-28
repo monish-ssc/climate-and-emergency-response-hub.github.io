@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.113889,
+          49.261111
+        ]
+      },
+      "properties": {
+        "regionId": "vancouver",
+        "stationName": "Metro Vancouver - NW",
+        "aqhi": 2.05,
+        "display": "2",
+        "category": "low",
+        "observedAt": "2026-10-28T23:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.0575,
+          51.0458333333333
+        ]
+      },
+      "properties": {
+        "regionId": "calgary",
+        "stationName": "Calgary",
+        "aqhi": 1.89,
+        "display": "2",
+        "category": "low",
+        "observedAt": "2026-10-28T23:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.57392,
+          44.64625
+        ]
+      },
+      "properties": {
+        "regionId": "halifax",
+        "stationName": "Halifax",
+        "aqhi": 1.73,
+        "display": "2",
+        "category": "low",
+        "observedAt": "2026-10-28T23:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.327222222222,
+          50.6733333333333
+        ]
+      },
+      "properties": {
+        "regionId": "clinton",
+        "stationName": "Kamloops",
+        "aqhi": 1.6,
+        "display": "2",
+        "category": "low",
+        "observedAt": "2026-10-28T23:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.483333333333,
+          49.8833333333333
+        ]
+      },
+      "properties": {
+        "regionId": "west-kelowna",
+        "stationName": "Central Okanagan",
+        "aqhi": 1.77,
+        "display": "2",
+        "category": "low",
+        "observedAt": "2026-10-28T23:00:00Z"
+      }
+    }
+  ]
+}
