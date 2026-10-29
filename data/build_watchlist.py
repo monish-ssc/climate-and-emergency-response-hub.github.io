@@ -94,6 +94,8 @@ def wildfire_screen(fires, lat, lon):
             "stage": top.get("stage_label"),
             "sizeHa": top.get("size_ha"),
             "edgeDistanceKm": top["edge_distance_km"],
+            "lat": top["_lat"],
+            "lon": top["_lon"],
         },
     }
 
@@ -115,6 +117,9 @@ def flood_screen(rivers, lat, lon):
         "stationsWithin50Km": len(conds),
         "worstStation": {
             "name": worst.get("station_name"),
+            "number": worst.get("station_number"),
+            "lat": worst["_lat"],
+            "lon": worst["_lon"],
             "status": worst.get("status"),
             "percentileForMonth": worst.get("percentile_for_month"),
             "trend": worst.get("trend"),
@@ -130,15 +135,21 @@ def driver_of(row):
     if h == "wildfire" and v.get("nearestFire"):
         f = v["nearestFire"]
         return ("wildfire", f["id"]), {
+            "id": f"fire-{f['id']}",
             "hazard": "wildfire",
+            "lat": f.get("lat"),
+            "lon": f.get("lon"),
             "label": f"Wildfire {f['id']}",
             "detail": f"{f['stage']}, about {round(f['sizeHa'] or 0):,} ha",
         }
     if h == "flood" and v.get("worstStation"):
         st = v["worstStation"]
         pct = st.get("percentileForMonth")
-        return ("flood", st["name"]), {
+        return ("flood", st.get("number") or st["name"]), {
+            "id": f"river-{st.get('number') or st['name']}",
             "hazard": "flood",
+            "lat": st.get("lat"),
+            "lon": st.get("lon"),
             "label": (st["name"] or "River station").title(),
             "detail": f"{(st.get('status') or 'unknown').replace('_', ' ')}"
                       + (f", {pct}th percentile for the month" if pct is not None else "")
@@ -160,7 +171,7 @@ def group_hotspots(rows):
         if r["lead"]["score"] > g["score"]:
             g["score"], g["level"] = r["lead"]["score"], r["lead"]["level"]
         g["population"] += int(r["population"] or 0)
-        g["communities"].append({"name": r["name"], "province": r["province"],
+        g["communities"].append({"name": r["name"], "province": r["province"], "csduid": r.get("csduid"),
                                  "population": r["population"], "score": r["lead"]["score"],
                                  "lat": r["lat"], "lon": r["lon"]})
     out = sorted(groups.values(), key=lambda g: (-g["score"], -g["population"]))

@@ -23,7 +23,7 @@ class WatchlistTest(unittest.TestCase):
         fire = point(-121.6, 51.0, national_fire_id="F1", agency_fire_id="K1", stage="OC",
                      stage_label="out of control", size_ha=5000, radius_km=4.0, status_date="2026-07-23")
         (live / "active_fires.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": [fire]}))
-        river = point(-97.1, 49.9, station_name="RED RIVER", metric="discharge", status="very_high",
+        river = point(-97.1, 49.9, station_name="RED RIVER", station_number="05OJ015", metric="discharge", status="very_high",
                       percentile_for_month=97, pct_of_flood_peak=85, trend="rising")
         (live / "river_conditions.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": [river]}))
         pop = {"metadata": {"year": 2025}, "communities": [
@@ -49,6 +49,15 @@ class WatchlistTest(unittest.TestCase):
         self.assertEqual(hazards["flood"]["communities"][0]["name"], "Winnipeg")
         self.assertGreater(hazards["wildfire"]["score"], 25)
         self.assertTrue(wl.OUT.exists())
+
+    def test_ids_and_locations_link_map_markers(self):
+        """The dashboard finds a hotspot from a clicked marker by these ids."""
+        doc = wl.build(now=datetime(2026, 7, 23, tzinfo=timezone.utc))
+        hazards = {g["hazard"]: g for g in doc["hotspots"]}
+        self.assertEqual(hazards["wildfire"]["id"], "fire-K1")
+        self.assertEqual(hazards["flood"]["id"], "river-05OJ015")
+        self.assertEqual((hazards["flood"]["lat"], hazards["flood"]["lon"]), (49.9, -97.1))
+        self.assertEqual(hazards["wildfire"]["communities"][0]["csduid"], "1")
 
 
 if __name__ == "__main__":

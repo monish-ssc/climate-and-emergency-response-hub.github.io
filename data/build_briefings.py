@@ -253,6 +253,55 @@ def live_subjects(ref):
     return out
 
 
+WATCH_MAX = 8  # briefings for the top places to watch (moderate or above)
+
+
+def watch_subjects(ref):
+    """The top 'places to watch': one briefing per fire or river station, planned around the most
+    affected community. Refreshed only when the level changes or the draft is old (see needs_refresh)."""
+    doc = load(DATA_DIR / "pipeline" / "live" / "watchlist.json")
+    if not doc:
+        return []
+    out = []
+    for g in [g for g in doc.get("hotspots", []) if g.get("level") != "low" and g.get("id")][:WATCH_MAX]:
+        lead = g["communities"][0]
+        noun = HAZARD_NAME[g["hazard"]]
+        facts = Facts()
+        facts.add(f"Place: {g['label']} area. Hazard: {noun}. Found by screening every community of 1,000+ "
+                  "people in Canada.")
+        score_fact = f"F{len(facts.items) + 1}"
+        facts.add(f"Highest automated {noun} screening score among nearby communities: {g['score']} out of 100, "
+                  f"level {g['level']} (screening only, not an official warning; weather alerts and fire history "
+                  f"are not included). Data generated {doc['generatedAt']}.")
+        if g["hazard"] == "wildfire":
+            facts.add(f"{g['label']}: {g['detail']}.", "CWFIS active fires (NRCan)", "https://cwfis.cfs.nrcan.gc.ca/")
+        else:
+            facts.add(f"River station {g['label']} ({g['id'].removeprefix('river-')}): {g['detail']}.",
+                      "ECCC real-time hydrometric data", "https://wateroffice.ec.gc.ca/")
+        dist = lambda c: (f", {n(km(c['lat'], c['lon'], g['lat'], g['lon']))} km away"  # noqa: E731
+                          if g.get("lat") is not None and c.get("lat") is not None else "")
+        facts.add(f"Communities above low ({g['communityCount']}, about {n(g['population'])} people in total): "
+                  + "; ".join(f"{c['name']}, {c.get('province') or ''} ({n(c['population'])} residents, score "
+                              f"{c['score']}{dist(c)})" for c in g["communities"][:5]) + ".")
+        region = {"id": f"watch-{g['id']}", "label": f"{lead['name']}, {lead.get('province') or ''}".strip(", "),
+                  "lat": lead["lat"], "lon": lead["lon"], "csduid": lead.get("csduid")}
+        ctx = add_context(facts, ref, region, g["hazard"])
+        ctx["score"] = (score_fact, None)
+        out.append({
+            "ctx": ctx,
+            "key": f"watch/{g['id']}",
+            "kind": "watch",
+            "watchId": g["id"],
+            "regionId": region["id"],
+            "hazard": g["hazard"],
+            "score": g["score"],
+            "level": g["level"],
+            "asOf": doc["generatedAt"],
+            "facts": facts,
+        })
+    return out
+
+
 def replay_marks(meta, steps):
     """Steps worth a briefing: score changes and reported events (same rule as the dashboard)."""
     idx = set()
@@ -481,6 +530,11 @@ def template_actions(subject):
                    if re.search(r"downgrad|all clear|rescind|lifted|return", ev["event"], re.I)), None)
     sc = c["score"][0] if c.get("score") else "F2"
     acts = []
+    if subject.get("kind") == "watch" and level in ("critical", "high", "moderate"):
+        # a screening result, not a confirmed event: verify first, prepare at most
+        acts.append(("Confirm the situation with local officials and check official alerts before acting.",
+                     f"This is an automated screening score, not a warning [{sc}]."))
+        level = "high" if level == "critical" else level
     if level == "critical":
         acts.append(("Coordinate the response with the local emergency operations centre.", f"The score is critical [{sc}]."))
         if easing:
@@ -504,9 +558,9 @@ def template_actions(subject):
         if centres:
             ce = centres[0]
             acts.append((f"Keep {ce['name']} ({ce['city']}) staffed and ready for more evacuees.",
-                         f"The score is high [{sc}] and this reception centre is open{cite('centres')}."))
+                         f"The score is {subject['level']} [{sc}] and this reception centre is open{cite('centres')}."))
         else:
-            acts.append(("Prepare reception centres and transport so they can open quickly.", f"The score is high [{sc}]."))
+            acts.append(("Prepare reception centres and transport so they can open quickly.", f"The score is {subject['level']} [{sc}]."))
         if evac:
             acts.append((f"Support residents evacuated after the {day(evac[1]['date'])} report: registration, lodging and transport.",
                          f"An evacuation was reported [{evac[0]}]."))
@@ -567,7 +621,10 @@ def needs_refresh(subject, old, now):
         return True
     if subject["kind"] == "replay":
         return old.get("hash") != subject["hash"]
-    if old.get("score") != subject["score"] or old.get("level") != subject["level"]:
+    if subject["kind"] == "watch":  # screening scores move every run: redraft on a level change only
+        if old.get("level") != subject["level"]:
+            return True
+    elif old.get("score") != subject["score"] or old.get("level") != subject["level"]:
         return True
     age = now - datetime.fromisoformat(old["generatedAt"].replace("Z", "+00:00"))
     return age > timedelta(hours=MAX_AGE_HOURS)
@@ -576,7 +633,7 @@ def needs_refresh(subject, old, now):
 def build(base_url=None, max_calls=8, offline=False, now=None):
     now = now or datetime.now(timezone.utc)
     ref = Reference()
-    subjects = replay_subjects(ref) + live_subjects(ref)
+    subjects = replay_subjects(ref) + live_subjects(ref) + watch_subjects(ref)
     for s in subjects:
         s["hash"] = hashlib.sha256((PROMPT_VERSION + s["facts"].text()).encode()).hexdigest()[:16]
     old = previous(base_url)
@@ -640,7 +697,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
             entry = {"briefing": r["briefing"], "publicAlert": r["publicAlert"], "model": r["model"],
                      "generatedAt": r["briefing"]["generatedAt"]}
         elif prev and prev.get("model") != "template" and prev.get("promptVersion") == PROMPT_VERSION and (
-                s["kind"] == "live" or prev.get("hash") == s["hash"]):
+                s["kind"] in ("live", "watch") or prev.get("hash") == s["hash"]):
             entry = {k: prev[k] for k in ("briefing", "publicAlert", "model", "generatedAt")}
             entry["stale"] = needs_refresh(s, prev, now)
         else:
@@ -649,7 +706,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
             if s["key"] in results:  # the model was asked but its answer failed the checks
                 entry["aiRejected"] = results[s["key"]]["problems"]
         entry.update({"key": s["key"], "kind": s["kind"], "regionId": s["regionId"], "hazard": s["hazard"],
-                      "step": s.get("step"), "fireId": s.get("fireId"), "score": s["score"], "level": s["level"],
+                      "step": s.get("step"), "fireId": s.get("fireId"), "watchId": s.get("watchId"), "score": s["score"], "level": s["level"],
                       "asOf": s["asOf"], "hash": s["hash"], "promptVersion": PROMPT_VERSION,
                       "facts": s["facts"].items})
         out.append(entry)
