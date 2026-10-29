@@ -172,7 +172,9 @@ class Reference:
 
 
 def add_context(facts, ref, region, hazard):
-    """Population, history, hospitals and host communities: the planning side of every briefing."""
+    """Population, history, hospitals and host communities: the planning side of every briefing.
+    Returns {name: (fact id, data)} so template actions can name and cite them."""
+    ctx = {}
     pop = ref.population(region)
     if pop and pop.get("population"):
         facts.add(f"{pop['name']} has about {n(pop['population'])} residents (Statistics Canada {ref.pop_year} estimate).",
@@ -189,14 +191,17 @@ def add_context(facts, ref, region, hazard):
             facts.add(f"Similar past event: {e['startDate'][:4]}, {e['place']}: {n(e['evacuated'])} people evacuated.", *cdd)
     hosp = ref.nearest_hospitals(region["lat"], region["lon"])
     if hosp:
+        ctx["hospitals"] = (f"F{len(facts.items) + 1}", hosp)
         facts.add("Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): "
                   + "; ".join(f"{nm}, {town} ({n(d, 1)} km)" for nm, town, d in hosp) + ".",
                   "Open Database of Healthcare Facilities (Statistics Canada)", "https://www.statcan.gc.ca/en/lode/databases/odhf")
     hosts = ref.hosts(region)
     if hosts:
+        ctx["hosts"] = (f"F{len(facts.items) + 1}", hosts)
         facts.add("Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): "
                   + "; ".join(f"{c['name']} ({n(c['population'])} residents, {n(d)} km)" for c, d in hosts) + ".")
     facts.add("Assumption: plan group lodging for about 20% of evacuees (an adjustable planning assumption, not data).")
+    return ctx
 
 
 # ---------- subjects ----------
@@ -212,6 +217,7 @@ def live_subjects(ref):
         a = doc["assessment"]
         facts = Facts()
         facts.add(f"Place: {region['label']}. Hazard: {HAZARD_NAME[e['hazard']]}.")
+        score_fact = f"F{len(facts.items) + 1}"
         facts.add(f"Automated {HAZARD_NAME[e['hazard']]} risk score: {a['score']} out of 100, level {a['level']} "
                   f"(screening score, not an official warning). Data generated {doc['generatedAt']}.")
         if a.get("summary"):
@@ -227,8 +233,10 @@ def live_subjects(ref):
                       f"{aq['current']['display']} ({aq['current']['category']} health risk); forecast peak "
                       f"{(aq.get('forecastPeak') or {}).get('display', 'unknown')}.",
                       "ECCC Air Quality Health Index", "https://api.weather.gc.ca/collections/aqhi-observations-realtime")
-        add_context(facts, ref, region, e["hazard"])
+        ctx = add_context(facts, ref, region, e["hazard"])
+        ctx["score"] = (score_fact, None)
         out.append({
+            "ctx": ctx,
             "key": f"live/{region['id']}/{e['hazard']}",
             "kind": "live",
             "regionId": region["id"],
@@ -279,6 +287,7 @@ def replay_subjects(ref):
                       f"{'' if st.get('isReported') else ' (estimated between agency reports)'}; its approximate edge is "
                       f"{n(fire.get('edgeDistanceKm'), 1)} km from {region['label']}.",
                       "CWFIS reported fires (NRCan)", "https://cwfis.cfs.nrcan.gc.ca/")
+            score_fact = f"F{len(facts.items) + 1}"
             facts.add(f"Replayed wildfire risk score: {a['score']} out of 100, level {a['level']} "
                       "(computed only from information available at that time).")
             for f in sorted(a.get("factors", []), key=lambda f: -(f.get("contribution") or 0))[:3]:
@@ -291,19 +300,28 @@ def replay_subjects(ref):
                     facts.add(f"Smoke: AQHI+ {row['display']} ({row['category']} health risk) at {stn['name']}, "
                               f"{n(stn['distanceKm'])} km away.", "BC Ministry of Environment air quality data",
                               "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air")
+            ctx_centres = None
             if res:
                 open_now = [c for c in res.get("receptionCentres", [])
                             if c.get("openedAt") and c.get("opensAtStep") is not None and i >= c["opensAtStep"]
                             and not (c.get("closedAt") and t > datetime.fromisoformat(c["closedAt"].replace("Z", "+00:00")))]
+                ctx_centres = (f"F{len(facts.items) + 1}", open_now)
                 facts.add("Reception centres open at this time: " + ("; ".join(
                     f"{c['name']}, {c['city']} ({n(c.get('distanceFromRegionKm'))} km)" for c in open_now) or "none") + ".",
                     "Reception centre announcements (EmergencyInfoBC, local news)", (open_now[0]["source"] if open_now else ""))
             happened = [ev for ev in meta.get("referenceEvents", [])
                         if datetime.fromisoformat(f"{ev['date']}T{ev.get('timeLocal') or '12:00'}:00-07:00") <= t]
+            ctx_events = []
             for ev in happened[-2:]:
+                ctx_events.append((f"F{len(facts.items) + 1}", ev))
                 facts.add(f"Reported on {ev['date']}: {ev['event']}.", "News and official reports at the time", ev.get("source"))
-            add_context(facts, ref, region, "wildfire")
+            ctx = add_context(facts, ref, region, "wildfire")
+            if res:
+                ctx["centres"] = ctx_centres
+            ctx["events"] = ctx_events
+            ctx["score"] = (score_fact, None)
             out.append({
+                "ctx": ctx,
                 "key": f"replay/{rp['fireId']}/{i}",
                 "kind": "replay",
                 "fireId": rp["fireId"],
@@ -435,19 +453,69 @@ def contract(answer, subject, model, now):
 
 # ---------- template fallback (no model) ----------
 
-ACTIONS = {
-    "low": [("Keep monitoring official alerts and the hub's data.", "The score is low."),
-            ("Confirm contact lists and reception-site options are current.", "Readiness costs little while risk is low.")],
-    "moderate": [("Review the local emergency plan for this hazard.", "The score is moderate."),
-                 ("Check reception-site and transport options with nearby communities.", "Possible host communities are listed in the facts."),
-                 ("Identify residents who would need help to leave.", "Early lists save time if the risk rises.")],
-    "high": [("Prepare reception centres and transport so they can open quickly.", "The score is high."),
-             ("Contact facilities with vulnerable residents (care homes, hospitals).", "They need the most lead time."),
-             ("Coordinate with possible host communities.", "Evacuees may need lodging outside the area.")],
-    "critical": [("Coordinate now with the local emergency operations centre.", "The score is critical."),
-                 ("Be ready to open reception centres and arrange transport.", "The situation can change quickly."),
-                 ("Confirm hospital and care-home relocation plans.", "Vulnerable residents need the most lead time.")],
-}
+def day(iso_date):
+    """2026-07-24 -> Jul 24 (works on Windows too)."""
+    d = datetime.strptime(iso_date, "%Y-%m-%d")
+    return f"{d.strftime('%b')} {d.day}"
+
+
+def template_actions(subject):
+    """Level-appropriate actions that name and cite what the facts contain (centres, hospitals, hosts, events)."""
+    level, c = subject["level"], subject.get("ctx") or {}
+    cite = lambda key: f" [{c[key][0]}]" if c.get(key) else ""  # noqa: E731
+    hosp = c["hospitals"][1][0] if c.get("hospitals") else None
+    host = c["hosts"][1][0][0]["name"] if c.get("hosts") else None
+    centres = (c.get("centres") or (None, []))[1] or []
+    events = c.get("events") or []
+    evac = next(((fid, ev) for fid, ev in reversed(events) if re.search(r"evacuat", ev["event"], re.I)
+                 and not re.search(r"downgrad|all clear|rescind|lifted", ev["event"], re.I)), None)
+    easing = next(((fid, ev) for fid, ev in reversed(events)
+                   if re.search(r"downgrad|all clear|rescind|lifted|return", ev["event"], re.I)), None)
+    sc = c["score"][0] if c.get("score") else "F2"
+    acts = []
+    if level == "critical":
+        acts.append(("Coordinate the response with the local emergency operations centre.", f"The score is critical [{sc}]."))
+        if easing:
+            acts.append((f"Plan the return of residents with local officials (reported {day(easing[1]['date'])}).",
+                         f"Orders are easing [{easing[0]}]."))
+        if centres:
+            ce = centres[0]
+            acts.append((f"Keep {ce['name']} ({ce['city']}) staffed for evacuees and confirm it can take more people.",
+                         f"It is the reception centre open now{cite('centres')}."))
+        elif host:
+            acts.append((f"Open a reception centre in a host community such as {host}.", f"No reception centre is open yet{cite('hosts')}."))
+        if evac and not easing:
+            acts.append((f"Support residents evacuated after the {day(evac[1]['date'])} report: registration, lodging and transport.",
+                         f"An evacuation was reported [{evac[0]}]."))
+        elif not evac and not easing:
+            acts.append(("Arrange transport for residents who cannot leave on their own.", "They need the most lead time."))
+        if hosp:
+            acts.append((f"Confirm patient-transfer and care-home relocation plans with {hosp[0]} ({hosp[1]}).",
+                         f"It is the nearest hospital in the inventory{cite('hospitals')}."))
+    elif level == "high":
+        if centres:
+            ce = centres[0]
+            acts.append((f"Keep {ce['name']} ({ce['city']}) staffed and ready for more evacuees.",
+                         f"The score is high [{sc}] and this reception centre is open{cite('centres')}."))
+        else:
+            acts.append(("Prepare reception centres and transport so they can open quickly.", f"The score is high [{sc}]."))
+        if evac:
+            acts.append((f"Support residents evacuated after the {day(evac[1]['date'])} report: registration, lodging and transport.",
+                         f"An evacuation was reported [{evac[0]}]."))
+        if host:
+            acts.append((f"Confirm {host} as a possible host community for evacuees.", f"Largest nearby option{cite('hosts')}."))
+        if hosp:
+            acts.append((f"Contact {hosp[0]} and local care homes about relocation plans.",
+                         f"Vulnerable residents need the most lead time{cite('hospitals')}."))
+    elif level == "moderate":
+        acts.append(("Review the local emergency plan for this hazard.", f"The score is moderate [{sc}]."))
+        if host:
+            acts.append((f"Check reception-site and transport options with {host}.", f"Possible host community{cite('hosts')}."))
+        acts.append(("Identify residents who would need help to leave.", "Early lists save time if the risk rises."))
+    else:
+        acts.append(("Keep monitoring official alerts and the hub's data.", f"The score is low [{sc}]."))
+        acts.append(("Confirm contact lists and reception-site options are current.", "Readiness costs little while risk is low."))
+    return acts[:5]
 
 
 def template(subject, now):
@@ -458,7 +526,7 @@ def template(subject, now):
     answer = {
         "title": title,
         "situation": situation,
-        "actions": [{"priority": i, "action": a, "rationale": r} for i, (a, r) in enumerate(ACTIONS[level], 1)],
+        "actions": [{"priority": i, "action": a, "rationale": r} for i, (a, r) in enumerate(template_actions(subject), 1)],
         "confidence": "medium",
     }
     out = contract(answer, subject, "template", now)

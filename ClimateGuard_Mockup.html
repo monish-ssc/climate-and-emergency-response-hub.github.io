@@ -1222,6 +1222,89 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .watch-list .who small {
         display: block;
       }
+      /* replay: AI briefing card beside the map, and a layout that fits one screen */
+      .brief-card {
+        border-left: 6px solid var(--bc-level, #7fa06a);
+      }
+      .brief-card .bc-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .brief-card h2 {
+        font-size: 17px;
+        margin: 0;
+      }
+      .brief-card .bc-when {
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .brief-card .bc-title {
+        margin: 6px 0 4px;
+        font-size: 19px;
+        color: var(--bc-level, var(--ink));
+      }
+      .brief-card h4 {
+        margin: 10px 0 2px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ink-2);
+      }
+      .brief-card .bc-sit {
+        margin: 0;
+        font-size: 14px;
+      }
+      .brief-card .bc-actions {
+        margin: 2px 0 0;
+        padding-left: 20px;
+        font-size: 14px;
+      }
+      .brief-card .bc-actions li {
+        margin: 3px 0;
+      }
+      .brief-card .bc-actions small {
+        display: block;
+        color: var(--ink-2);
+        font-size: 12px;
+      }
+      .brief-card .bc-happened {
+        margin: 10px 0 8px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: var(--lichen-2);
+        font-size: 13px;
+      }
+      .brief-card .bc-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .brief-card.flash {
+        animation: bcflash 1.8s ease-out;
+      }
+      @keyframes bcflash {
+        0% {
+          box-shadow: 0 0 0 0 var(--bc-level, #d9822b);
+          background: #fff3e0;
+        }
+        100% {
+          box-shadow: 0 0 0 14px transparent;
+          background: var(--white);
+        }
+      }
+      body.replay-mode #areaPanel,
+      body.replay-mode #scenarioBriefing {
+        display: none;
+      }
+      body.replay-mode #mapSub {
+        font-size: 14px;
+      }
+      body.replay-mode .lmap {
+        height: clamp(280px, calc(100vh - 660px), 540px);
+      }
       .ai-badge {
         display: inline-block;
         margin: 4px 0 6px;
@@ -2944,6 +3027,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 Open the BC Interior wildfire
               </button>
             </div>
+            <section class="panel brief-card" id="replayBrief" hidden aria-live="polite" aria-labelledby="rbHeading">
+              <div class="bc-top">
+                <h2 id="rbHeading">AI briefing: situation and preparedness actions</h2>
+                <span class="bc-when" id="rbWhen"></span>
+              </div>
+              <div class="ai-badge" id="rbBadge"></div>
+              <h3 class="bc-title" id="rbTitle"></h3>
+              <h4>Situation</h4>
+              <p class="bc-sit" id="rbSituation"></p>
+              <h4>Recommended preparedness actions</h4>
+              <ol class="bc-actions" id="rbActions"></ol>
+              <p class="bc-happened" id="rbHappened"></p>
+              <div class="bc-buttons">
+                <button class="btn ghost" data-goto="briefing">Full briefing and public advisory (EN/FR)</button>
+                <button class="btn ghost" id="rbBack" type="button">‹ Back to overview</button>
+              </div>
+            </section>
             <div class="panel" id="resourcePanel" aria-live="polite">
               <h2 id="resTitle">Resource planning</h2>
               <p class="hint">
@@ -5052,7 +5152,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           : "Canadian region overview";
         if (det) {
           $("mapSub").textContent =
-            "A real fire, replayed from CWFIS fire reports. The outline is an approximate circle from the reported size; smoke readings come from BC air monitoring stations. Press play or drag the timeline.";
+            "Real fire, replayed from CWFIS reports. Press play: the briefing on the right updates at each key moment.";
         } else if (live.state === "error") {
           $("mapSub").textContent =
             "Live map layers are unavailable. Regional risk cards still show the latest saved snapshots.";
@@ -5077,6 +5177,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             $("mapSub").textContent += " The health-facility inventory could not be loaded.";
           }
         }
+        document.body.classList.toggle("replay-mode", det);
+        if ($("replayBrief")) $("replayBrief").hidden = !det;
+        if (map) setTimeout(() => map.invalidateSize(), 60);
         // no archived wind data for the replays, so the wind arrow stays hidden
         if (windCtl) windCtl.getContainer().style.display = "none";
         if (backCtl) backCtl.getContainer().style.display = det ? "" : "none";
@@ -5818,6 +5921,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             : "No reception centre open yet.",
         ];
         const happened = replayEventsUpTo(step).pop();
+        renderReplayCard();
         const ai = currentBriefing();
         if (isAI(ai)) {
           $("bsTitle").textContent = `AI briefing, ${replayTime(ai.asOf, { timeZoneName: "short" })}`;
@@ -5840,6 +5944,60 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           '<span class="replay-event" style="display:block">Built from the replay data, not generated by AI.</span>';
 
         drawReplayMap();
+      }
+
+      /* Replay: AI briefing card beside the map. It follows the timeline and flashes when a new
+         briefing (a new key moment) begins. */
+      let lastCardKey = null;
+      function renderReplayCard() {
+        const card = $("replayBrief");
+        if (!card || mode !== "detail") return;
+        const b = currentBriefing();
+        if (!b) {
+          const first = brief.state === "ready"
+            ? brief.doc.briefings.filter((x) => x.kind === "replay" && x.fireId === replay.id).sort((x, y) => x.step - y.step)[0]
+            : null;
+          $("rbHeading").textContent = "AI briefing: situation and preparedness actions";
+          $("rbWhen").textContent = "";
+          $("rbBadge").textContent = brief.state === "error" ? "Briefings are not available yet" : "Waiting for the first key moment";
+          $("rbBadge").className = "ai-badge template";
+          $("rbTitle").textContent = first ? `The first briefing starts ${replayTime(replay.steps[first.step]?.t || first.asOf, { timeZoneName: "short" })}` : "No briefing yet";
+          ["rbSituation", "rbActions", "rbHappened"].forEach((id) => ($(id).innerHTML = ""));
+          card.style.setProperty("--bc-level", "#7fa06a");
+          lastCardKey = null;
+          return;
+        }
+        const d = b.briefing,
+          col = (LEVEL_STYLE[b.level] || LEVEL_STYLE.low)[1],
+          ai = isAI(b);
+        card.style.setProperty("--bc-level", col);
+        $("rbHeading").textContent = ai
+          ? "AI briefing: situation and preparedness actions"
+          : "Briefing: situation and preparedness actions";
+        $("rbWhen").textContent = `as of ${replayTime(b.asOf, { timeZoneName: "short" })}`;
+        $("rbBadge").textContent = ai
+          ? `AI draft · GitHub Models (${b.model.split("/").pop()}) · grounded in our data · needs human review`
+          : "Template from the same facts (AI draft pending) · needs human review";
+        $("rbBadge").className = "ai-badge" + (ai ? "" : " template");
+        $("rbTitle").textContent = d.title;
+        const clean = (t) => escapeHTML(t.replace(/\s*\[F[\d, F-]+\]/g, ""));
+        $("rbSituation").innerHTML = clean(d.situation);
+        $("rbActions").innerHTML = d.actions
+          .map((a) => `<li><b>${clean(a.action)}</b><small>${clean(a.rationale)}</small></li>`)
+          .join("");
+        const happened = replayEventsUpTo(replay.steps[replay.step]).pop();
+        $("rbHappened").innerHTML = happened
+          ? `<b>What actually happened</b> (reported ${escapeHTML(replayDate(replay.steps[happened.index].t))}): ${escapeHTML(happened.text)} · <a href="${escapeHTML(happened.source)}" target="_blank" rel="noopener">source</a>`
+          : "";
+        $("rbHappened").hidden = !happened;
+        if (lastCardKey !== b.key) {
+          if (lastCardKey !== null && !reduced) {
+            card.classList.remove("flash");
+            void card.offsetWidth; // restart the animation
+            card.classList.add("flash");
+          }
+          lastCardKey = b.key;
+        }
       }
 
       function drawReplayMap() {
@@ -6055,6 +6213,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("playIco").innerHTML =
           '<path d="M4 2h3v12H4zM9 2h3v12H9z" fill="currentColor"/>';
         $("play").setAttribute("aria-label", "Pause");
+        // about one minute of fire progression, plus pauses so viewers can read each change
+        const tick = Math.max(300, Math.round(60000 / replay.steps.length));
         playT = setInterval(
           () => {
             if (playHold > 0) {
@@ -6065,11 +6225,13 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
               stopPlay();
               return;
             }
+            const before = currentBriefing()?.key;
             setReplayStep(replay.step + 1);
-            // pause briefly on score changes and real events so they can be read
-            if (replay.marks.some((m) => m.index === replay.step)) playHold = 6;
+            // pause on score changes and real events, longer when a new briefing begins
+            if (currentBriefing()?.key !== before) playHold = Math.ceil(6000 / tick);
+            else if (replay.marks.some((m) => m.index === replay.step)) playHold = Math.ceil(2500 / tick);
           },
-          reduced ? 700 : 280,
+          tick,
         );
       };
       function stopPlay() {
@@ -6117,6 +6279,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         renderArea();
         drawCanada();
       };
+      $("rbBack").onclick = () => exitDetail();
       $("areaGo").onclick = () =>
         mode === "detail" ? exitDetail() : enterDetail();
       document.querySelectorAll("#detailCtrl .chip").forEach(
