@@ -768,6 +768,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         display: grid;
         place-items: center;
         transition: opacity 0.6s ease 0.15s;
+        overflow: hidden;
       }
       .loader.done {
         opacity: 0;
@@ -775,24 +776,77 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
       .loader-inner {
         position: relative;
+        z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 26px;
+        gap: 64px;
         padding: 24px;
         text-align: center;
       }
       .globe-wrap {
         position: relative;
-        width: min(300px, 70vw);
+        isolation: isolate;
+        width: min(300px, 60vw);
         aspect-ratio: 1;
         transform-origin: center;
         transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1);
       }
       .globe-wrap canvas {
+        position: relative;
+        z-index: 1;
         width: 100%;
         height: 100%;
         display: block;
+      }
+      .loader-winds {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+      .loader-wind {
+        fill: none;
+        stroke: #8aa77a;
+        stroke-linecap: round;
+        stroke-width: 2.5;
+        opacity: 0.65;
+      }
+      .loader-wind:nth-child(2n) {
+        opacity: 0.4;
+      }
+      .loader-wind:nth-child(3n) {
+        stroke-width: 1.5;
+      }
+      .loader-orbit {
+        position: absolute;
+        left: -25%;
+        top: -25%;
+        width: 150%;
+        height: 150%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .loader-orbit-back { z-index: 0; }
+      .loader-orbit-front { z-index: 2; }
+      .loader-leaf {
+        fill: #6f9a5a;
+        stroke: #416c40;
+        stroke-width: 1;
+        stroke-linejoin: round;
+      }
+      .loader-twig {
+        fill: none;
+        stroke: #9a7857;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .loader.leaving .loader-winds {
+        opacity: 0;
       }
       .loader-title {
         font-family: var(--display);
@@ -2427,14 +2481,50 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <!-- ============ LOADER ============ -->
     <div class="loader" id="loader" role="status" aria-live="polite">
+      <svg class="loader-winds" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+        <path class="loader-wind" d="M0 135c55-22 85 18 140 0s75-12 100-4" />
+        <path class="loader-wind" d="M0 190h75c32 0 40-26 20-26-16 0-20 15-11 20" />
+        <path class="loader-wind" d="M0 295c50-20 85 18 150-4" />
+        <path class="loader-wind" d="M0 505c60 20 90-18 155 0s75 8 100-2" />
+        <path class="loader-wind" d="M0 570h105c26 0 33-22 17-22-12 0-16 11-10 16" />
+        <path class="loader-wind" d="M0 625c55-16 95 18 160 0" />
+      </svg>
       <div class="loader-inner">
         <div class="globe-wrap" id="globeWrap">
+          <svg class="loader-orbit loader-orbit-back" viewBox="-225 -225 450 450" aria-hidden="true">
+            <g id="loaderDebrisBack"></g>
+          </svg>
           <canvas
             id="globe"
             width="600"
             height="600"
             aria-hidden="true"
           ></canvas>
+          <svg class="loader-orbit loader-orbit-front" viewBox="-225 -225 450 450" aria-hidden="true">
+            <g id="loaderDebrisOrbit">
+              <g transform="translate(-150 -105)"><g class="loader-fragment">
+                <path class="loader-leaf" d="M-15 10C-20-8-5-20 16-14 13 5 3 15-15 10Z" />
+                <path class="loader-twig" d="m-19 16 28-25" />
+              </g></g>
+              <g transform="translate(32 -183)"><g class="loader-fragment">
+                <path class="loader-twig" d="m-20 15 40-30M-6 5l-12-12M4-3l3-15M10-7l15 3" />
+              </g></g>
+              <g transform="translate(175 -62)"><g class="loader-fragment">
+                <path class="loader-leaf" d="M-12 10C-20-4-8-18 14-12 12 3 1 15-12 10Z" />
+                <path class="loader-twig" d="m-16 13 24-20" />
+              </g></g>
+              <g transform="translate(145 116)"><g class="loader-fragment">
+                <path class="loader-twig" d="m-21 12 42-24M-7 4l-11-12M6-3l1-13M11-6l13 7" />
+              </g></g>
+              <g transform="translate(-25 185)"><g class="loader-fragment">
+                <path class="loader-leaf" fill="#b89d56" d="M-14 8C-19-8-2-19 15-13 12 7 0 15-14 8Z" />
+                <path class="loader-twig" d="m-18 14 28-24" />
+              </g></g>
+              <g transform="translate(-180 48)"><g class="loader-fragment">
+                <path class="loader-twig" d="m-18 12 36-24M-5 3l-13-7M4-3l-1-13" />
+              </g></g>
+            </g>
+          </svg>
         </div>
         <div>
           <div class="loader-title">Climate & Emergency Response Hub</div>
@@ -5485,10 +5575,54 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         const ease = (t) =>
           t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
+        // Use the globe's clock for the surrounding debris. Keep it moving
+        // through the exit: globeWrap carries the globe and orbit into the logo.
+        const loaderElement = $("loader"),
+          orbit = $("loaderDebrisOrbit"),
+          backOrbit = $("loaderDebrisBack"),
+          fragments = [...orbit.querySelectorAll(".loader-fragment")],
+          windStreaks = [...loaderElement.querySelectorAll(".loader-wind")];
+        function animateWeather(now) {
+          if (!loaderElement.isConnected) return;
+          const elapsed = reduced ? 0 : (now - start) / 1000,
+            progress = Math.min(1, (now - start) / LOADER_MS),
+            turn = reduced ? 0 : 270 * ease(progress) + 70 * elapsed,
+            radians = Math.PI / 180,
+            tilt = 28 * radians,
+            bank = -22 * radians;
+          // Project a tilted 3D ring through a perspective camera. Splitting
+          // the ring across canvas layers lets the globe occlude its far side.
+          fragments.map((fragment, index) => {
+            const angle = (turn + index * 360 / fragments.length) * radians,
+              radius = 188 + (index % 2) * 8,
+              x = radius * Math.cos(angle),
+              y = radius * Math.sin(angle) * Math.sin(tilt),
+              z = radius * Math.sin(angle) * Math.cos(tilt),
+              perspective = 650 / (650 - z),
+              screenX = (x * Math.cos(bank) - y * Math.sin(bank)) * perspective,
+              screenY = (x * Math.sin(bank) + y * Math.cos(bank)) * perspective,
+              tumble = elapsed * (index % 2 ? -180 : 145) + index * 47,
+              face = Math.cos(tumble * radians),
+              fold = Math.sign(face || 1) * (0.2 + 0.8 * Math.abs(face)),
+              carrier = fragment.parentElement;
+            carrier.setAttribute("transform", `translate(${screenX} ${screenY}) scale(${perspective})`);
+            carrier.setAttribute("opacity", String(0.6 + 0.4 * (z / radius + 1) / 2));
+            fragment.setAttribute("transform", `rotate(${tumble}) scale(${fold} 1)`);
+            return { carrier, z };
+          }).sort((a, b) => a.z - b.z).forEach(({ carrier, z }) => {
+            (z < 0 ? backOrbit : orbit).appendChild(carrier);
+          });
+          windStreaks.forEach((streak, index) => {
+            const x = ((elapsed * (460 + index * 38) + index * 230) % 1500) - 280;
+            streak.setAttribute("transform", `translate(${x} 0)`);
+          });
+          if (!reduced) requestAnimationFrame(animateWeather);
+        }
+
         function frame(now) {
           if (done) return;
           const t = Math.min(1, (now - start) / LOADER_MS),
-            e = ease(t);
+            e = reduced ? 1 : ease(t);
           ctx.clearRect(0, 0, W, W);
           // ocean
           const g = ctx.createRadialGradient(
@@ -5541,7 +5675,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             ctx.strokeStyle = "rgba(111,154,90,.35)";
             ctx.lineWidth = 2;
             for (let i = 0; i < 6; i++) {
-              const k = Math.cos((i / 6) * Math.PI + t * 4);
+              const k = Math.cos((i / 6) * Math.PI + (reduced ? 0 : t * 4));
               ctx.beginPath();
               ctx.ellipse(W / 2, W / 2, Math.abs(k) * R, R, 0, 0, Math.PI * 2);
               ctx.stroke();
@@ -5559,6 +5693,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           if (done) return;
           done = true;
           clearInterval(msgT);
+          loaderElement.classList.add("leaving");
           const wrap = $("globeWrap"),
             a = wrap.getBoundingClientRect(),
             b = $("brandGlobe").getBoundingClientRect();
@@ -5574,6 +5709,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           );
           setTimeout(() => $("loader").remove(), 1400);
         }
+        requestAnimationFrame(animateWeather);
         requestAnimationFrame(frame);
       })();
 
