@@ -26,6 +26,29 @@ def answer(situation="Clinton's wildfire risk score is 51 out of 100, which is h
             "confidence": "medium", "publicAlert": {"en": alert, "fr": alert}}
 
 
+class ModelReplyTest(unittest.TestCase):
+    def test_reply_that_is_not_json_names_the_status(self):
+        class Reply:
+            status, headers = 200, {"Content-Type": "text/html"}
+
+            def read(self):
+                return b"<html>sign in</html>"
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        saved = bb.urllib.request.urlopen
+        bb.urllib.request.urlopen = lambda *a, **k: Reply()
+        try:
+            with self.assertRaisesRegex(ValueError, r"not JSON \(HTTP 200"):
+                bb.call_model("token", "model", "[F1] fact")
+        finally:
+            bb.urllib.request.urlopen = saved
+
+
 class CheckTest(unittest.TestCase):
     def test_grounded_answer_passes(self):
         self.assertEqual(bb.check(answer(), facts()), [])

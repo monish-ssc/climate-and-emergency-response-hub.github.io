@@ -417,7 +417,13 @@ def call_model(token, model, facts_text, feedback=None):
     req = urllib.request.Request(ENDPOINT, data=body, method="POST", headers={
         "Content-Type": "application/json", "Accept": "application/json", "Authorization": f"Bearer {token}"})
     with urllib.request.urlopen(req, timeout=90) as r:
-        out = json.loads(r.read().decode())
+        raw, status, ctype = r.read().decode("utf-8", "replace"), r.status, r.headers.get("Content-Type")
+    try:
+        out = json.loads(raw)
+    except ValueError:
+        # show in the workflow log what came back instead of JSON (empty body, HTML page, ...)
+        print(f"  model reply was not JSON: HTTP {status}, {ctype}, {len(raw)} bytes: {raw[:300]!r}")
+        raise ValueError(f"reply was not JSON (HTTP {status}, {len(raw)} bytes)") from None
     return parse_json(out["choices"][0]["message"]["content"])
 
 
