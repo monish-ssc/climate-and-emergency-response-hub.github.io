@@ -8,20 +8,44 @@
     {
       "id": "vancouver",
       "label": "Vancouver, BC",
+      "lat": 49.2827,
+      "lon": -123.1207,
       "temperatureC": 29,
       "windKmh": 38
     },
     {
       "id": "calgary",
       "label": "Calgary, AB",
+      "lat": 51.0447,
+      "lon": -114.0719,
       "temperatureC": 24,
       "windKmh": 52
     },
     {
       "id": "halifax",
       "label": "Halifax, NS",
+      "lat": 44.6488,
+      "lon": -63.5752,
       "temperatureC": 18,
       "windKmh": 66
+    },
+    {
+      "id": "clinton",
+      "label": "Clinton, BC",
+      "lat": 51.0903,
+      "lon": -121.5911,
+      "temperatureC": 31,
+      "windKmh": 44,
+      "replayScenario": "2026_BC_2026-C40983"
+    },
+    {
+      "id": "west-kelowna",
+      "label": "West Kelowna, BC",
+      "lat": 49.8625,
+      "lon": -119.5833,
+      "temperatureC": 33,
+      "windKmh": 50,
+      "replayScenario": "2023_BC_2023-K52767"
     }
   ]
 }

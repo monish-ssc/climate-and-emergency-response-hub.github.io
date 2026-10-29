@@ -1,0 +1,6 @@
+pandas
+jsonschema
+requests
+numpy
+openpyxl
+geopandas>=1.0

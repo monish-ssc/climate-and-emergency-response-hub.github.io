@@ -1,0 +1,99 @@
+{
+  "scenarioFolder": "2026_BC_2026-C40983",
+  "region": {
+    "id": "clinton",
+    "label": "Clinton, BC",
+    "lat": 51.0903,
+    "lon": -121.5911
+  },
+  "generatedAt": "2026-10-28T23:42:25Z",
+  "receptionCentres": [
+    {
+      "name": "McArthur Island Sport and Event Centre",
+      "address": "1655 Island Pkwy",
+      "city": "Kamloops",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2026-07-24T07:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 11,
+      "pets": null,
+      "notes": "Village of Clinton evacuees (~650 people); buses on standby",
+      "lat": 50.69653,
+      "lon": -120.37171,
+      "distanceFromRegionKm": 96.1,
+      "distanceFromFireKm": 105.7,
+      "nearestHospitals": [
+        {
+          "name": "Royal Inland Hospital",
+          "city": "Kamloops",
+          "type": "general",
+          "lat": 50.6701949,
+          "lon": -120.3345924,
+          "distanceKm": 3.9
+        },
+        {
+          "name": "Ashcroft And District Hospital And Community Health Centre",
+          "city": "Ashcroft",
+          "type": "general",
+          "lat": 50.7347718,
+          "lon": -121.2801628,
+          "distanceKm": 64.1
+        },
+        {
+          "name": "Nicola Valley Hospital And Health Centre",
+          "city": "Merritt",
+          "type": "",
+          "lat": 50.122034,
+          "lon": -120.773011,
+          "distanceKm": 69.9
+        }
+      ],
+      "source": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+    },
+    {
+      "name": "ESS Reception Centre (Prince George)",
+      "address": "4249 18th Ave",
+      "city": "Prince George",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2026-07-31T07:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 25,
+      "pets": null,
+      "notes": "Named for the Jul 31 CRD/TNRD orders (Green Lake / Loon Lake)",
+      "lat": 53.90732,
+      "lon": -122.79879,
+      "distanceFromRegionKm": 323.7,
+      "distanceFromFireKm": 332.4,
+      "nearestHospitals": [
+        {
+          "name": "Prince George Regional Hospital",
+          "city": "Prince George",
+          "type": "general",
+          "lat": 53.9113826,
+          "lon": -122.7644758,
+          "distanceKm": 2.3
+        },
+        {
+          "name": "St. John Hospital",
+          "city": "Vanderhoof",
+          "type": "general",
+          "lat": 54.0285333,
+          "lon": -124.0107233,
+          "distanceKm": 80.4
+        },
+        {
+          "name": "G.R. Baker Hospital",
+          "city": "Quesnel",
+          "type": "",
+          "lat": 52.981739,
+          "lon": -122.498817,
+          "distanceKm": 104.8
+        }
+      ],
+      "source": "https://cfjctoday.com/2026/07/31/hundreds-of-new-crd-tnrd-properties-under-evacuation-order-due-to-clinton-area-wildfire/"
+    }
+  ],
+  "note": "Hand-compiled from public announcements; capacity was not published. Opening times given only as a date use that day's first replay step."
+}

@@ -1,0 +1,168 @@
+{
+ "builtAt": "2026-10-28T20:55:20Z",
+ "dataMode": "cached",
+ "replays": [
+  {
+   "scenarioId": "replay-2023_BC_2023-K52767",
+   "label": "Replay: McDougall Creek wildfire (2023-K52767, 2023)",
+   "fireId": "2023_BC_2023-K52767",
+   "region": {
+    "id": "west-kelowna",
+    "label": "West Kelowna, BC",
+    "lat": 49.8625,
+    "lon": -119.5833
+   },
+   "start": "2023-08-16T08:00:00Z",
+   "end": "2023-10-19T02:00:00Z",
+   "stepHours": 6,
+   "stepCount": 256,
+   "keyMoments": [
+    {
+     "t": "2023-08-16T08:00:00Z",
+     "level": "moderate",
+     "score": 28
+    },
+    {
+     "t": "2023-08-18T02:00:00Z",
+     "level": "high",
+     "score": 51
+    },
+    {
+     "t": "2023-08-18T20:00:00Z",
+     "level": "critical",
+     "score": 76
+    },
+    {
+     "t": "2023-09-21T08:00:00Z",
+     "level": "high",
+     "score": 56
+    },
+    {
+     "t": "2023-10-04T20:00:00Z",
+     "level": "low",
+     "score": 19
+    }
+   ],
+   "referenceEvents": [
+    {
+     "date": "2023-08-15",
+     "timeLocal": "18:00",
+     "event": "Fire first spotted, less than a hectare",
+     "source": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+    },
+    {
+     "date": "2023-08-16",
+     "timeLocal": "23:00",
+     "event": "Evacuation alerts for 4,800 properties in West Kelowna and on Westbank First Nation land",
+     "source": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+    },
+    {
+     "date": "2023-08-17",
+     "timeLocal": null,
+     "event": "First evacuation orders (already in place by a 7 p.m. news conference)",
+     "source": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+    },
+    {
+     "date": "2023-08-17",
+     "timeLocal": "20:00",
+     "event": "Fire crests the ridge toward Traders Cove and West Kelowna Estates",
+     "source": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+    },
+    {
+     "date": "2023-08-18",
+     "timeLocal": null,
+     "event": "Homes lost overnight; fire estimated at 10,500 ha",
+     "source": "https://globalnews.ca/news/9904497/west-kelowna-fire-evacuation-order-structures-lost"
+    },
+    {
+     "date": "2023-08-19",
+     "timeLocal": null,
+     "event": "At least 35,000 people under evacuation orders",
+     "source": "https://en.wikipedia.org/wiki/McDougall_Creek_fire"
+    },
+    {
+     "date": "2023-09-20",
+     "timeLocal": null,
+     "event": "BC Wildfire Service declares the fire held",
+     "source": "https://www.castanetkamloops.net/news/West-Kelowna/535522/Cause-of-destructive-McDougall-Creek-fire-still-under-investigation"
+    }
+   ],
+   "file": "2023_BC_2023-K52767/timeline.json"
+  },
+  {
+   "scenarioId": "replay-2026_BC_2026-C40983",
+   "label": "Replay: Pear Lake wildfire (2026-C40983, 2026)",
+   "fireId": "2026_BC_2026-C40983",
+   "region": {
+    "id": "clinton",
+    "label": "Clinton, BC",
+    "lat": 51.0903,
+    "lon": -121.5911
+   },
+   "start": "2026-07-18T20:00:00Z",
+   "end": "2026-09-12T08:00:00Z",
+   "stepHours": 12,
+   "stepCount": 112,
+   "keyMoments": [
+    {
+     "t": "2026-07-18T20:00:00Z",
+     "level": "moderate",
+     "score": 36
+    },
+    {
+     "t": "2026-07-23T20:00:00Z",
+     "level": "high",
+     "score": 51
+    },
+    {
+     "t": "2026-08-01T20:00:00Z",
+     "level": "critical",
+     "score": 77
+    },
+    {
+     "t": "2026-09-06T08:00:00Z",
+     "level": "high",
+     "score": 57
+    },
+    {
+     "t": "2026-09-12T08:00:00Z",
+     "level": "low",
+     "score": 18
+    }
+   ],
+   "referenceEvents": [
+    {
+     "date": "2026-07-20",
+     "timeLocal": null,
+     "event": "SLRD evacuation order for properties in the Pear Lake area",
+     "source": "https://cfjctoday.com/?p=1117011"
+    },
+    {
+     "date": "2026-07-24",
+     "timeLocal": null,
+     "event": "Entire Village of Clinton evacuated",
+     "source": "https://cfjctoday.com/2026/07/25/clinton-fire-department-bcws-working-to-keep-remaining-community-structures-from-burning/"
+    },
+    {
+     "date": "2026-07-24",
+     "timeLocal": null,
+     "event": "Reception centre for evacuees set up in Kamloops (McArthur Island Sport and Events Centre)",
+     "source": "https://www.ctvnews.ca/vancouver/article/entire-bc-village-ordered-to-evacuate-due-to-encroaching-wildfire/"
+    },
+    {
+     "date": "2026-08-15",
+     "timeLocal": null,
+     "event": "Clinton evacuation order downgraded to an alert",
+     "source": "https://cfjctoday.com/2026/08/25/village-of-clinton-partially-reduces-evacuation-alert-area-in-response-to-pear-lake-wildfire/"
+    },
+    {
+     "date": "2026-08-23",
+     "timeLocal": "15:00",
+     "event": "TNRD gives the all clear to nearly 1,243 properties",
+     "source": "https://cfjctoday.com/?p=1117011"
+    }
+   ],
+   "file": "2026_BC_2026-C40983/timeline.json"
+  }
+ ]
+}

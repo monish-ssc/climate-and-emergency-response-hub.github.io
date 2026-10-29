@@ -71,6 +71,33 @@ Keep provider-specific code inside `providers`. The rest of the backend should w
 
 `data/scenarios.json` is the offline fallback fixture. It lets the demo continue if a live provider is unavailable. Any screen using this file must clearly say that the data is simulated.
 
+The scripts in `data/` are separate data-exploration tools; they are not connected to the dashboard or backend yet. The weather scripts fetch live, provisional data from ECCC, while the healthcare pipeline downloads a public facility inventory from Open Government Canada. Downloads require internet access. Run all commands below from the repository root.
+
+Create a virtual environment once (skip creation if `.venv/` already exists), then install the declared dependencies:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Use the virtual environment's interpreter directly; activation is not needed.
+In VS Code, select `.venv/bin/python` with **Python: Select Interpreter** so
+editor analysis uses the same dependencies as the terminal.
+On Windows, use `.venv\Scripts\python.exe` instead of `.venv/bin/python`.
+
+Run the scripts as needed:
+
+```bash
+.venv/bin/python data/explore_water_weather.py
+.venv/bin/python data/flood_pipeline.py
+.venv/bin/python data/hurricane_pipeline.py
+.venv/bin/python data/healthcare_data_pipeline.py
+```
+
+The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The flood pipeline writes risk-response JSON and map layers under `data/pipeline/`. These outputs are not used by the frontend automatically; connect them through the backend/API before presenting them in the dashboard.
+
+The healthcare pipeline saves cleaned CSVs, regional summaries, and `data/healthcare/facilities.geojson` with facility locations, source information, and timestamps. Optional hazard analysis requires `geopandas>=1.0` and valid polygons in `data/hazard_zones.geojson`; otherwise exposure is unknown (`null`). It suggests up to three alternatives within 50 km straight-line distance, without verifying safety or capacity.
+
 ## Run the frontend
 
 The frontend does not need a build step or package install.
@@ -78,7 +105,7 @@ The frontend does not need a build step or package install.
 From the repository root, run:
 
 ```bash
-python3 -m http.server 8000
+.venv/bin/python -m http.server 8000
 ```
 
 Then open:
@@ -93,11 +120,11 @@ You can also open `ClimateGuard_AI_Interactive_Dashboard.html` directly, but a l
 
 The HTML and API use slightly different hazard names. Translate them in one small adapter function:
 
-| Dashboard value | API value |
-| --- | --- |
-| `wildfire` | `wildfire` |
-| `rain` | `flood` |
-| `hurricane` | `severe_storm` |
+| Dashboard value | API value      |
+| --------------- | -------------- |
+| `wildfire`      | `wildfire`     |
+| `rain`          | `flood`        |
+| `hurricane`     | `severe_storm` |
 
 A simple request flow should look like this:
 

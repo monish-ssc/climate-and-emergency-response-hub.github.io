@@ -205,6 +205,13 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Downloaded hurricane history and generated hurricane pipeline outputs
+data/raw/ibtracs/
+data/pipeline/hurricane_*.geojson
+
+# Downloaded population source and generated analysis
+data/population/
+
 # Ruff stuff:
 .ruff_cache/
 

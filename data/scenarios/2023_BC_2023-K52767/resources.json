@@ -1,0 +1,271 @@
+{
+  "scenarioFolder": "2023_BC_2023-K52767",
+  "region": {
+    "id": "west-kelowna",
+    "label": "West Kelowna, BC",
+    "lat": 49.8625,
+    "lon": -119.5833
+  },
+  "generatedAt": "2026-10-28T23:42:25Z",
+  "receptionCentres": [
+    {
+      "name": "Mount Boucherie Secondary School",
+      "address": "Mount Boucherie Secondary School",
+      "city": "West Kelowna",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": null,
+      "closedAt": "2023-08-31T07:00:00Z",
+      "opensAtStep": 0,
+      "pets": null,
+      "notes": "Opening date not in source; moved to Louie Drive Sep 1",
+      "lat": 49.85818,
+      "lon": -119.58426,
+      "distanceFromRegionKm": 0.5,
+      "distanceFromFireKm": null,
+      "nearestHospitals": [
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 6.7
+        },
+        {
+          "name": "Summerland Health Centre",
+          "city": "Summerland",
+          "type": "extended care",
+          "lat": 49.601398,
+          "lon": -119.668653,
+          "distanceKm": 29.2
+        },
+        {
+          "name": "Penticton Regional Hospital",
+          "city": "Penticton",
+          "type": "general",
+          "lat": 49.4812182,
+          "lon": -119.577927,
+          "distanceKm": 41.9
+        }
+      ],
+      "source": "https://www.westkelownacity.ca/news/posts/city-of-west-kelowna-community-update-august-31-2023/"
+    },
+    {
+      "name": "Royal LePage Place",
+      "address": "2760 Cameron Rd",
+      "city": "West Kelowna",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2023-08-17T07:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 4,
+      "pets": "animals: Alert Canada on site (Aug 18)",
+      "notes": "Evacuees south of Traders Cove sent here",
+      "lat": 49.85878,
+      "lon": -119.58286,
+      "distanceFromRegionKm": 0.4,
+      "distanceFromFireKm": 6.6,
+      "nearestHospitals": [
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 6.6
+        },
+        {
+          "name": "Summerland Health Centre",
+          "city": "Summerland",
+          "type": "extended care",
+          "lat": 49.601398,
+          "lon": -119.668653,
+          "distanceKm": 29.3
+        },
+        {
+          "name": "Penticton Regional Hospital",
+          "city": "Penticton",
+          "type": "general",
+          "lat": 49.4812182,
+          "lon": -119.577927,
+          "distanceKm": 42.0
+        }
+      ],
+      "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+    },
+    {
+      "name": "Kal Tire Place",
+      "address": "3445 43rd Ave",
+      "city": "Vernon",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2023-08-17T07:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 4,
+      "pets": null,
+      "notes": "Evacuees north of Traders Cove sent here",
+      "lat": 50.27475,
+      "lon": -119.2669,
+      "distanceFromRegionKm": 51.1,
+      "distanceFromFireKm": 48.4,
+      "nearestHospitals": [
+        {
+          "name": "Vernon Jubilee Hospital",
+          "city": "Vernon",
+          "type": "extended care",
+          "lat": 50.2556464,
+          "lon": -119.270432,
+          "distanceKm": 2.1
+        },
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 47.5
+        },
+        {
+          "name": "Shuswap Lake General Hospital",
+          "city": "Salmon Arm",
+          "type": "general",
+          "lat": 50.7045612,
+          "lon": -119.2743811,
+          "distanceKm": 47.8
+        }
+      ],
+      "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+    },
+    {
+      "name": "The Salvation Army",
+      "address": "1480 Sutherland Ave",
+      "city": "Kelowna",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2023-08-18T06:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 8,
+      "pets": "no pets",
+      "notes": "Opened 11 pm Aug 17 (Clifton/McKinley spot fires)",
+      "lat": 49.8804,
+      "lon": -119.46605,
+      "distanceFromRegionKm": 8.6,
+      "distanceFromFireKm": 12.3,
+      "nearestHospitals": [
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 2.1
+        },
+        {
+          "name": "Summerland Health Centre",
+          "city": "Summerland",
+          "type": "extended care",
+          "lat": 49.601398,
+          "lon": -119.668653,
+          "distanceKm": 34.3
+        },
+        {
+          "name": "Vernon Jubilee Hospital",
+          "city": "Vernon",
+          "type": "extended care",
+          "lat": 50.2556464,
+          "lon": -119.270432,
+          "distanceKm": 44.0
+        }
+      ],
+      "source": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+    },
+    {
+      "name": "Prospera Place",
+      "address": "1223 Water St",
+      "city": "Kelowna",
+      "role": "overnight_group_lodging",
+      "roleLabel": "Overnight group lodging",
+      "openedAt": "2023-08-18T09:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 9,
+      "pets": "small pets caged or leashed",
+      "notes": "Overnight shelter for evacuees with nowhere to go; opening time approximate (reported by 2:30 am)",
+      "lat": 49.89344,
+      "lon": -119.49488,
+      "distanceFromRegionKm": 7.2,
+      "distanceFromFireKm": 10.0,
+      "nearestHospitals": [
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 2.2
+        },
+        {
+          "name": "Summerland Health Centre",
+          "city": "Summerland",
+          "type": "extended care",
+          "lat": 49.601398,
+          "lon": -119.668653,
+          "distanceKm": 34.8
+        },
+        {
+          "name": "Vernon Jubilee Hospital",
+          "city": "Vernon",
+          "type": "extended care",
+          "lat": 50.2556464,
+          "lon": -119.270432,
+          "distanceKm": 43.3
+        }
+      ],
+      "source": "https://www.castanetkamloops.net/news/West-Kelowna/442161/West-Kelowna-s-Rose-Valley-being-evacuated-due-to-wildfire"
+    },
+    {
+      "name": "ESS Reception Centre (Louie Drive)",
+      "address": "3041 Louie Dr",
+      "city": "West Kelowna",
+      "role": "ess_reception_centre",
+      "roleLabel": "ESS reception centre",
+      "openedAt": "2023-09-01T16:00:00Z",
+      "closedAt": null,
+      "opensAtStep": 66,
+      "pets": null,
+      "notes": "Unit 523 on Westbank First Nation lands; next to Resiliency Centre",
+      "lat": 49.83926,
+      "lon": -119.61273,
+      "distanceFromRegionKm": 3.3,
+      "distanceFromFireKm": 7.8,
+      "nearestHospitals": [
+        {
+          "name": "Kelowna General Hospital",
+          "city": "Kelowna",
+          "type": "general",
+          "lat": 49.8735931,
+          "lon": -119.493866,
+          "distanceKm": 9.3
+        },
+        {
+          "name": "Summerland Health Centre",
+          "city": "Summerland",
+          "type": "extended care",
+          "lat": 49.601398,
+          "lon": -119.668653,
+          "distanceKm": 26.8
+        },
+        {
+          "name": "Penticton Regional Hospital",
+          "city": "Penticton",
+          "type": "general",
+          "lat": 49.4812182,
+          "lon": -119.577927,
+          "distanceKm": 39.9
+        }
+      ],
+      "source": "https://www.westkelownacity.ca/news/posts/city-of-west-kelowna-community-update-august-31-2023/"
+    }
+  ],
+  "note": "Hand-compiled from public announcements; capacity was not published. Opening times given only as a date use that day's first replay step."
+}
