@@ -217,6 +217,8 @@ data/pipeline/live/
 
 # Downloaded population source and generated analysis
 data/population/
+# Large census source shapefiles; publish the compact generated map instead.
+data/raw/boundaries/
 
 # Ruff stuff:
 .ruff_cache/
