@@ -2,7 +2,7 @@
 
 ClimateGuard AI is a two-day hackathon prototype for a **Climate & Emergency Response Intelligence Hub**. It helps emergency teams explore climate-related hazards, understand a simple risk score, and produce a preparedness briefing.
 
-The supplied `ClimateGuard_AI_Interactive_Dashboard.html` is the canonical frontend and stays self-contained. The surrounding project skeleton adds backend integration boundaries, contracts, fixtures, documentation, and tests without replacing or restructuring that file. Its current weather values, risk scores, and recommendations are simulated and are not suitable for real emergency decisions.
+`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Regional risk and event layers load from the generated files under `data/`; embedded scenario values remain as a clearly labeled fallback. The prototype is not suitable for real emergency decisions.
 
 Developers continuing the project should start with the [developer guide](docs/developer-guide.md).
 
@@ -15,20 +15,20 @@ Developers continuing the project should start with the [developer guide](docs/d
 
 ## Run locally
 
-No install or build step is required. Open `ClimateGuard_AI_Interactive_Dashboard.html` in a browser, or serve the folder locally:
+No build step is required. Serve the folder locally so browser `fetch()` can load the data files:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then visit `http://localhost:8000/ClimateGuard_AI_Interactive_Dashboard.html`.
+Then visit `http://localhost:8000/`.
 
 ## Project structure
 
 ```text
 .
 ├── index.html                              # GitHub Pages entry point
-├── ClimateGuard_AI_Interactive_Dashboard.html # Canonical supplied frontend
+├── ClimateGuard_Mockup.html                # Canonical frontend
 ├── api/                                    # Frontend/backend HTTP contract
 │   ├── contracts/                          # Versioned JSON Schemas
 │   └── examples/                           # Example request/response bodies
@@ -72,7 +72,7 @@ For a hackathon, the normalization and risk layers can be small serverless funct
 
 ## Frontend rule
 
-Treat `ClimateGuard_AI_Interactive_Dashboard.html` as the presentation layer and source of truth for the UI. `index.html` only launches it for GitHub Pages. Backend work must conform to the contracts in `api/`; avoid moving, splitting, or replacing the dashboard during the two-day build.
+Treat `ClimateGuard_Mockup.html` as the presentation layer and source of truth for the UI. `index.html` launches it for GitHub Pages. Data adapters should continue to conform to the contracts in `api/`.
 
 ## Definition of done
 

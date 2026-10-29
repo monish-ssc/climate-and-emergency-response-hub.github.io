@@ -9,8 +9,8 @@
   ---------------------------------------------------------------
   HOW TO CUSTOMIZE
   1. Colours: edit the tokens in :root below. Everything reads from them.
-  2. Data: all sample numbers live in the DATA section of the <script>
-     (DAYS, COMMUNITIES, WHATIF, PLAN). Swap in your API responses there.
+  2. Data: regional risk and event layers load from data/. The embedded DATA
+     section (DAYS, COMMUNITIES, WHATIF, PLAN) remains the safe demo fallback.
   3. Loader: tune LOADER_MS (how long the globe spins) in the script.
   4. Fonts: Google Fonts link below. Fallbacks are system fonts.
   Everything is inlined: the map works offline with the "Simple" style.
@@ -2070,7 +2070,39 @@ svg.leaflet-image-layer.leaflet-interactive path {
       #areaGo {
         width: 100%;
       }
-
+      .data-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        width: fit-content;
+        margin-top: 8px;
+        padding: 5px 9px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--lichen-2);
+        color: var(--ink-2);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .data-status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--moss);
+      }
+      .data-status[data-state="loading"]::before {
+        background: var(--mustard);
+        animation: pulse 1s ease-in-out infinite alternate;
+      }
+      .data-status[data-state="stale"]::before,
+      .data-status[data-state="unavailable"]::before,
+      .data-status[data-state="error"]::before {
+        background: var(--amber);
+      }
+      .data-status[data-state="live"] {
+        color: var(--spruce);
+      }
       /* ---------- Leaflet map styling ---------- */
       .lmap {
         height: 540px;
@@ -2316,13 +2348,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
           </svg>
           <div>
             <h1>Climate & Emergency Response Hub</h1>
-            <p>BC Interior, sample wildfire scenario</p>
+            <p>Regional risk snapshots and sample preparedness scenarios</p>
           </div>
         </div>
         <div class="clock">
           <span class="txt"
             >Scenario time: <b id="clockTxt">Day 3, 14:00</b></span
-          ><span class="sample">Historical reply</span>
+          ><span class="sample">Historical replay</span>
         </div>
       </div>
     </header>
@@ -2367,7 +2399,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <div class="mh-title">
                   <h2 id="mapTitle">Canada overview</h2>
                   <p class="hint" id="mapSub">
-                    Pick a hazard, then select a province or territory.
+                    Pick a hazard, then select a region.
                   </p>
                 </div>
                 <div class="ov-ctrl" id="ovCtrl">
@@ -2403,7 +2435,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                   </div>
                   <select
                     id="regionSelect"
-                    aria-label="Province or territory"
+                    aria-label="Region"
                   ></select>
                 </div>
                 <div
@@ -2564,6 +2596,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <div>
                   <h2 id="areaName">British Columbia</h2>
                   <p class="hint" id="areaSub" style="margin: 2px 0 0"></p>
+                  <div
+                    class="data-status"
+                    id="areaDataStatus"
+                    data-state="loading"
+                    role="status"
+                  >Loading latest data…</div>
                 </div>
                 <span class="area-ico" id="areaIco"></span>
               </div>
@@ -2994,8 +3032,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         ODHF, Open-Meteo</span
       >
       <span
-        >Prototype: all figures on this screen are sample or simulated
-        data</span
+        >Prototype: pipeline snapshots are labeled with freshness; timelines,
+        plans and recommendations remain demonstrations</span
       >
     </footer>
     <div class="toast" id="toast" role="status"></div>
@@ -3124,163 +3162,69 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             "Projection: four communities above the threshold and 46,200 people at risk. Request regional shelter support now; local capacity cannot cover it.",
         },
       };
-      // Province / territory overview (from the team's ClimateGuard map). base = risk 0-100 per hazard
+      // Pipeline regions. `base` values are retained only as a safe demonstration fallback.
       const REGIONS = [
         {
-          id: "bc",
-          name: "British Columbia",
-          short: "BC",
-          sub: "Pacific coast and interior",
-          lon: -125.6,
-          lat: 55.2,
-          base: { wildfire: 84, rain: 55, hurricane: 16 },
-          temp: 31,
-          wind: 45,
+          id: "vancouver",
+          name: "Vancouver, BC",
+          short: "VAN",
+          sub: "Pacific coast",
+          lon: -123.1207,
+          lat: 49.2827,
+          base: { wildfire: 43, rain: 55, hurricane: 16 },
+          temp: 29,
+          wind: 38,
           rain: 55,
         },
         {
-          id: "ab",
-          name: "Alberta",
-          short: "AB",
+          id: "calgary",
+          name: "Calgary, AB",
+          short: "YYC",
           sub: "Prairies and foothills",
-          lon: -114.5,
-          lat: 54.7,
-          base: { wildfire: 77, rain: 33, hurricane: 9 },
-          temp: 29,
-          wind: 58,
+          lon: -114.0719,
+          lat: 51.0447,
+          base: { wildfire: 37, rain: 48, hurricane: 9 },
+          temp: 24,
+          wind: 52,
           rain: 34,
         },
         {
-          id: "sk",
-          name: "Saskatchewan",
-          short: "SK",
-          sub: "Central Prairies",
-          lon: -106,
-          lat: 53.4,
-          base: { wildfire: 64, rain: 28, hurricane: 9 },
-          temp: 27,
-          wind: 46,
-          rain: 20,
-        },
-        {
-          id: "mb",
-          name: "Manitoba",
-          short: "MB",
-          sub: "Prairies and Red River",
-          lon: -98.4,
-          lat: 54.1,
-          base: { wildfire: 52, rain: 74, hurricane: 10 },
-          temp: 25,
-          wind: 40,
-          rain: 80,
-        },
-        {
-          id: "on",
-          name: "Ontario",
-          short: "ON",
-          sub: "Central Canada",
-          lon: -84,
-          lat: 50.7,
-          base: { wildfire: 43, rain: 70, hurricane: 18 },
-          temp: 24,
-          wind: 43,
-          rain: 78,
-        },
-        {
-          id: "qc",
-          name: "Quebec",
-          short: "QC",
-          sub: "St. Lawrence region",
-          lon: -71.5,
-          lat: 49.8,
-          base: { wildfire: 62, rain: 63, hurricane: 30 },
-          temp: 23,
-          wind: 41,
-          rain: 71,
-        },
-        {
-          id: "nb",
-          name: "New Brunswick",
-          short: "NB",
-          sub: "Atlantic Canada",
-          lon: -66.4,
-          lat: 46.5,
-          base: { wildfire: 37, rain: 79, hurricane: 72 },
-          temp: 22,
-          wind: 83,
-          rain: 94,
-        },
-        {
-          id: "ns",
-          name: "Nova Scotia",
-          short: "NS",
+          id: "halifax",
+          name: "Halifax, NS",
+          short: "YHZ",
           sub: "Atlantic coast",
-          lon: -63.6,
-          lat: 45.0,
-          base: { wildfire: 42, rain: 80, hurricane: 91 },
-          temp: 24,
-          wind: 112,
-          rain: 103,
-        },
-        {
-          id: "pe",
-          name: "Prince Edward Island",
-          short: "PE",
-          sub: "Gulf of St. Lawrence",
-          lon: -63,
-          lat: 46.2,
-          base: { wildfire: 25, rain: 61, hurricane: 78 },
-          temp: 21,
-          wind: 93,
-          rain: 69,
-        },
-        {
-          id: "nl",
-          name: "Newfoundland and Labrador",
-          short: "NL",
-          sub: "Atlantic Canada",
-          lon: -56.7,
-          lat: 49.6,
-          base: { wildfire: 36, rain: 73, hurricane: 86 },
+          lon: -63.5752,
+          lat: 44.6488,
+          base: { wildfire: 42, rain: 80, hurricane: 50 },
           temp: 18,
-          wind: 106,
+          wind: 66,
           rain: 98,
         },
         {
-          id: "yt",
-          name: "Yukon",
-          short: "YT",
-          sub: "Northern Canada",
-          lon: -135,
-          lat: 64.5,
-          base: { wildfire: 68, rain: 19, hurricane: 5 },
-          temp: 18,
-          wind: 31,
-          rain: 16,
+          id: "clinton",
+          name: "Clinton, BC",
+          short: "CLI",
+          sub: "BC Interior",
+          lon: -121.5911,
+          lat: 51.0903,
+          base: { wildfire: 64, rain: 28, hurricane: 9 },
+          temp: 31,
+          wind: 44,
+          rain: 20,
+          replayScenario: "2026_BC_2026-C40983",
         },
         {
-          id: "nt",
-          name: "Northwest Territories",
-          short: "NT",
-          sub: "Northern Canada",
-          lon: -119,
-          lat: 64.7,
-          base: { wildfire: 89, rain: 22, hurricane: 5 },
-          temp: 21,
-          wind: 38,
-          rain: 21,
-        },
-        {
-          id: "nu",
-          name: "Nunavut",
-          short: "NU",
-          sub: "Arctic Canada",
-          lon: -94,
-          lat: 67.5,
-          base: { wildfire: 8, rain: 14, hurricane: 4 },
-          temp: 5,
-          wind: 31,
-          rain: 15,
+          id: "west-kelowna",
+          name: "West Kelowna, BC",
+          short: "WK",
+          sub: "Okanagan Valley",
+          lon: -119.5833,
+          lat: 49.8625,
+          base: { wildfire: 84, rain: 55, hurricane: 16 },
+          temp: 33,
+          wind: 50,
+          rain: 55,
+          replayScenario: "2023_BC_2023-K52767",
         },
       ];
       const HAZARDS = {
@@ -3521,6 +3465,169 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           need,
           gap: Math.max(0, need - cap),
           cap,
+        };
+      }
+
+      /* =================================================================
+   STATIC DATA ADAPTER
+   Loads pipeline snapshots from GitHub Pages and keeps the embedded
+   demonstration values as a safe fallback.
+   ================================================================= */
+      const HAZARD_DATA_KEY = {
+        wildfire: "wildfire",
+        rain: "flood",
+        hurricane: "severe_storm",
+      };
+      const EVENT_FILES = {
+        wildfire: [
+          "data/pipeline/active_fires.geojson",
+          "data/pipeline/fire_weather_alerts.geojson",
+        ],
+        rain: [
+          "data/pipeline/stations.geojson",
+          "data/pipeline/active_alerts.geojson",
+        ],
+        hurricane: [
+          "data/pipeline/hurricane_tracks_latest.geojson",
+          "data/pipeline/hurricane_active_alerts.geojson",
+        ],
+      };
+      const dataAdapter = {
+        riskIndex: null,
+        riskIndexPromise: null,
+        riskCache: new Map(),
+        selection: { key: "", state: "idle", data: null, error: null },
+        events: { hazard: "", state: "idle", features: [], missing: 0 },
+        selectionRequest: 0,
+        eventRequest: 0,
+      };
+
+      async function fetchJSON(path) {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+        return response.json();
+      }
+
+      async function loadRiskIndex() {
+        if (dataAdapter.riskIndex) return dataAdapter.riskIndex;
+        dataAdapter.riskIndexPromise ??= fetchJSON(
+          "data/pipeline/risk/index.json",
+        ).then((index) => {
+          dataAdapter.riskIndex = index;
+          return index;
+        });
+        return dataAdapter.riskIndexPromise;
+      }
+
+      function riskEntry(regionId, uiHazard) {
+        const hazardKey = HAZARD_DATA_KEY[uiHazard];
+        return dataAdapter.riskIndex?.entries?.find(
+          (entry) =>
+            entry.regionId === regionId && entry.hazard === hazardKey,
+        );
+      }
+
+      async function loadSelectionData() {
+        const request = ++dataAdapter.selectionRequest;
+        const key = `${prov}/${hazard}`;
+        dataAdapter.selection = {
+          key,
+          state: "loading",
+          data: null,
+          error: null,
+        };
+        renderArea();
+        try {
+          await loadRiskIndex();
+          if (request !== dataAdapter.selectionRequest) return;
+          const entry = riskEntry(prov, hazard);
+          if (!entry) {
+            dataAdapter.selection = {
+              key,
+              state: "unavailable",
+              data: null,
+              error: null,
+            };
+          } else {
+            const path = `data/${entry.path}`;
+            let data = dataAdapter.riskCache.get(path);
+            if (!data) {
+              data = await fetchJSON(path);
+              dataAdapter.riskCache.set(path, data);
+            }
+            if (request !== dataAdapter.selectionRequest) return;
+            const stale = data.expiresAt && Date.now() > Date.parse(data.expiresAt);
+            dataAdapter.selection = {
+              key,
+              state: stale ? "stale" : "live",
+              data,
+              error: null,
+            };
+          }
+        } catch (error) {
+          if (request !== dataAdapter.selectionRequest) return;
+          dataAdapter.riskIndexPromise = null;
+          dataAdapter.selection = { key, state: "error", data: null, error };
+        }
+        renderArea();
+        if (mode === "canada") drawCanada();
+      }
+
+      async function loadEventData() {
+        const request = ++dataAdapter.eventRequest;
+        const requestedHazard = hazard;
+        dataAdapter.events = {
+          hazard: requestedHazard,
+          state: "loading",
+          features: [],
+          missing: 0,
+        };
+        syncMapChrome();
+        const results = await Promise.allSettled(
+          EVENT_FILES[requestedHazard].map(fetchJSON),
+        );
+        if (request !== dataAdapter.eventRequest) return;
+        const successful = results
+          .filter((result) => result.status === "fulfilled")
+          .map((result) => result.value);
+        const features = successful.flatMap((collection) =>
+          Array.isArray(collection.features) ? collection.features : [],
+        );
+        const missing = results.length - successful.length;
+        dataAdapter.events = {
+          hazard: requestedHazard,
+          state:
+            successful.length === 0
+              ? "unavailable"
+              : features.length === 0
+                ? "empty"
+                : "ready",
+          features,
+          missing,
+        };
+        syncMapChrome();
+        if (mode === "canada") drawCanada();
+      }
+
+      function formatSnapshotTime(value) {
+        if (!value || Number.isNaN(Date.parse(value))) return "time unavailable";
+        return new Intl.DateTimeFormat("en-CA", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZoneName: "short",
+        }).format(new Date(value));
+      }
+
+      function formatFactor(factor) {
+        if (!factor) return { label: "Indicator", value: "Unavailable" };
+        const value = Number.isFinite(factor.value)
+          ? factor.value.toLocaleString("en-CA", { maximumFractionDigits: 1 })
+          : String(factor.value ?? "Unavailable");
+        return {
+          label: factor.label,
+          value: `${value}${factor.unit ? ` ${factor.unit}` : ""}`,
         };
       }
 
@@ -3896,18 +4003,29 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       /* ---------- Canada overview ---------- */
       let mode = "canada",
         hazard = "wildfire",
-        prov = "bc",
+        prov = "vancouver",
         severity = 0;
       const clamp = (x) => Math.max(0, Math.min(100, x));
-      const provScore = (r) => clamp(r.base[hazard] + severity);
-      const provCat = (n) =>
-        n >= 85
-          ? ["Critical", "#B8432F"]
+      const LEVEL_STYLE = {
+        low: ["Low", "#7FA06A"],
+        moderate: ["Moderate", "#C9A227"],
+        high: ["High", "#D9822B"],
+        critical: ["Critical", "#B8432F"],
+      };
+      const provScore = (r) => {
+        const entry = riskEntry(r.id, hazard);
+        return clamp((entry?.score ?? r.base[hazard]) + severity);
+      };
+      const provCat = (n, level) => {
+        if (severity === 0 && LEVEL_STYLE[level]) return LEVEL_STYLE[level];
+        return n >= 85
+          ? LEVEL_STYLE.critical
           : n >= 65
-            ? ["High", "#D9822B"]
+            ? LEVEL_STYLE.high
             : n >= 40
-              ? ["Moderate", "#C9A227"]
-              : ["Low", "#7FA06A"];
+              ? LEVEL_STYLE.moderate
+              : LEVEL_STYLE.low;
+      };
       const HZ_ICON = {
         wildfire:
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 01-11 0c0-3 1.8-4.4 2.3-6.4 1 1 1.4 2.3 1.6 3.3 1.4-2.2 1.9-4.6 1.6-7.6z" fill="currentColor"/></svg>',
@@ -3918,11 +4036,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       function drawCanada() {
         if (!map) return;
         overlay.clearLayers();
-        const shortLbl = innerWidth < 700,
-          ATL = ["nb", "ns", "pe", "nl"];
         REGIONS.forEach((r) => {
-          const n = provScore(r),
-            col = provCat(n)[1],
+          const entry = riskEntry(r.id, hazard),
+            n = provScore(r),
+            col = provCat(n, entry?.level)[1],
             sel = r.id === prov;
           L.circle([r.lat, r.lon], {
             radius: (90 + n * 3.2) * 1000,
@@ -3940,39 +4057,53 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           })
             .bindTooltip(r.short, {
               permanent: true,
-              direction: ["pe", "qc"].includes(r.id)
-                ? "top"
-                : r.id === "nb"
-                  ? "left"
-                  : "bottom",
-              offset: ["pe", "qc"].includes(r.id)
-                ? [0, -8]
-                : r.id === "nb"
-                  ? [-8, 0]
-                  : [0, 8],
+              direction: "bottom",
+              offset: [0, 8],
               className: "prov",
             })
             .addTo(overlay);
           m.on("click", () => selectProv(r.id));
         });
-        if (hazard === "wildfire") {
-          L.marker(FIRE_CENTER, {
-            icon: L.divIcon({
-              className: "",
-              html: '<div class="ico-fire"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 01-11 0c0-3 1.8-4.4 2.3-6.4 1 1 1.4 2.3 1.6 3.3 1.4-2.2 1.9-4.6 1.6-7.6z" fill="#D9822B"/></svg></div>',
-              iconSize: [30, 30],
-              iconAnchor: [15, 15],
-            }),
-            zIndexOffset: 1000,
-            keyboard: true,
-            title: "Fire K-2041",
-          })
-            .bindTooltip(
-              "Fire K-2041, BC Interior<br><small>Select to open the scenario</small>",
-              { direction: "right", offset: [16, 0], className: "tip" },
-            )
-            .on("click", () => enterDetail())
-            .addTo(overlay);
+        if (
+          dataAdapter.events.hazard === hazard &&
+          dataAdapter.events.features.length
+        ) {
+          L.geoJSON(
+            {
+              type: "FeatureCollection",
+              features: dataAdapter.events.features,
+            },
+            {
+              pointToLayer: (feature, latlng) =>
+                L.circleMarker(latlng, {
+                  radius: hazard === "wildfire" ? 5 : 4,
+                  color: "#fff",
+                  weight: 1.5,
+                  fillColor:
+                    hazard === "wildfire"
+                      ? "#B8432F"
+                      : hazard === "hurricane"
+                        ? "#537DA6"
+                        : "#4E86A0",
+                  fillOpacity: 0.9,
+                }),
+              style: {
+                color: hazard === "hurricane" ? "#537DA6" : "#4E86A0",
+                weight: 2,
+                fillOpacity: 0.12,
+              },
+              onEachFeature: (feature, layer) => {
+                const properties = feature.properties || {};
+                const label =
+                  properties.agency_fire_id ||
+                  properties.event ||
+                  properties.alert_type ||
+                  properties.name ||
+                  HAZARDS[hazard].label;
+                layer.bindTooltip(String(label), { className: "tip" });
+              },
+            },
+          ).addTo(overlay);
         }
       }
       function selectProv(id) {
@@ -3980,14 +4111,52 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("regionSelect").value = id;
         renderArea();
         if (mode === "canada") drawCanada();
+        void loadSelectionData();
       }
       function renderArea() {
         const r = REGIONS.find((x) => x.id === prov),
           h = HAZARDS[hazard],
-          n = provScore(r),
-          c = provCat(n);
+          key = `${prov}/${hazard}`,
+          selection =
+            dataAdapter.selection.key === key
+              ? dataAdapter.selection
+              : { state: "loading", data: null },
+          snapshot = selection.data,
+          entry = riskEntry(prov, hazard),
+          n = clamp(
+            (snapshot?.assessment?.score ?? entry?.score ?? r.base[hazard]) +
+              severity,
+          ),
+          c = provCat(
+            n,
+            severity === 0
+              ? snapshot?.assessment?.level ?? entry?.level
+              : null,
+          ),
+          status = $("areaDataStatus");
         $("areaName").textContent = r.name;
-        $("areaSub").textContent = `${r.sub}, ${h.label.toLowerCase()} outlook`;
+        $("areaSub").textContent = `${r.sub} · ${h.label.toLowerCase()} outlook`;
+        $("areaPanel").setAttribute(
+          "aria-busy",
+          selection.state === "loading" ? "true" : "false",
+        );
+        status.dataset.state = selection.state;
+        status.title = "";
+        if (selection.state === "live") {
+          status.textContent = `${snapshot.dataMode === "live" ? "Live" : "Cached"} snapshot · as of ${formatSnapshotTime(snapshot.generatedAt)}`;
+        } else if (selection.state === "stale") {
+          status.textContent = `Stale snapshot · expired ${formatSnapshotTime(snapshot.expiresAt)}`;
+        } else if (selection.state === "unavailable") {
+          status.textContent = "Demonstration mode · snapshot unavailable";
+        } else if (selection.state === "error") {
+          status.textContent = "Demonstration mode · data could not load";
+          status.title = selection.error?.message || "Data request failed";
+        } else {
+          status.textContent = "Loading latest data…";
+        }
+        if (snapshot?.sources?.length) {
+          status.title = `Sources: ${snapshot.sources.map((source) => source.name).join(", ")}`;
+        }
         $("areaIco").innerHTML = HZ_ICON[hazard]
           .replace('fill="currentColor"', `fill="${c[1]}"`)
           .replace('stroke="currentColor"', `stroke="${c[1]}"`);
@@ -3996,25 +4165,39 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("areaScore").textContent = `Risk index ${n} of 100`;
         $("areaFill").style.width = n + "%";
         $("areaFill").style.background = c[1];
-        $("areaReason").textContent =
-          n >= 85
-            ? "Very elevated. Check official agency alerts now."
-            : n >= 65
-              ? "Elevated conditions call for a closer preparedness review."
-              : n >= 40
-                ? "Some conditions are worth monitoring."
-                : "Low relative risk under this scenario.";
-        const v1 =
-            hazard === "wildfire"
-              ? r.temp
-              : hazard === "rain"
-                ? r.rain + severity
-                : r.wind + severity,
-          v2 = hazard === "hurricane" ? r.rain + severity : r.wind;
-        $("m1l").textContent = h.m1;
-        $("m2l").textContent = h.m2;
-        $("m1").textContent = Math.max(0, v1) + h.units[0];
-        $("m2").textContent = Math.max(0, v2) + h.units[1];
+        $("areaReason").textContent = snapshot?.assessment?.summary
+          ? snapshot.assessment.summary
+          : selection.state === "loading"
+            ? "Loading the latest regional assessment. Demonstration values are shown temporarily."
+            : n >= 85
+              ? "Very elevated demonstration scenario. Check official agency alerts now."
+              : n >= 65
+                ? "Elevated demonstration conditions call for a closer preparedness review."
+                : n >= 40
+                  ? "Some demonstration conditions are worth monitoring."
+                  : "Low relative risk under this demonstration scenario.";
+        if (snapshot?.assessment?.factors?.length) {
+          const factor1 = formatFactor(snapshot.assessment.factors[0]),
+            factor2 = formatFactor(
+              snapshot.assessment.factors[1] || snapshot.assessment.factors[0],
+            );
+          $("m1l").textContent = factor1.label;
+          $("m2l").textContent = factor2.label;
+          $("m1").textContent = factor1.value;
+          $("m2").textContent = factor2.value;
+        } else {
+          const v1 =
+              hazard === "wildfire"
+                ? r.temp
+                : hazard === "rain"
+                  ? r.rain + severity
+                  : r.wind + severity,
+            v2 = hazard === "hurricane" ? r.rain + severity : r.wind;
+          $("m1l").textContent = h.m1;
+          $("m2l").textContent = h.m2;
+          $("m1").textContent = Math.max(0, v1) + h.units[0];
+          $("m2").textContent = Math.max(0, v2) + h.units[1];
+        }
         $("areaRec").textContent =
           h.brief[n >= 65 ? 1 : 0] +
           " " +
@@ -4022,15 +4205,17 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             ? "Escalate with local emergency management."
             : "Check conditions against official guidance.");
         const showGo =
-          mode === "detail" || (hazard === "wildfire" && prov === "bc");
+          mode === "detail" || (hazard === "wildfire" && r.replayScenario);
         $("areaGo").hidden = !showGo;
         $("areaGo").textContent =
           mode === "detail"
-            ? "Back to Canada overview"
-            : "Open the BC Interior wildfire";
+            ? "Back to region overview"
+            : "Open the sample wildfire timeline";
       }
       function syncMapChrome() {
-        const det = mode === "detail";
+        const det = mode === "detail",
+          region = REGIONS.find((item) => item.id === prov),
+          events = dataAdapter.events;
         $("ovCtrl").hidden = det;
         $("detailCtrl").hidden = !det;
         $("legOv").hidden = det;
@@ -4039,17 +4224,28 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("tlBar").hidden = !det;
         $("legInc").hidden = hazard !== "wildfire";
         $("mapTitle").textContent = det
-          ? "BC Interior, Fire K-2041"
-          : "Canada overview";
-        $("mapSub").textContent = det
-          ? "Sample wildfire scenario. Use the timeline to replay it."
-          : "Pick a hazard, then select a province or territory.";
+          ? `${region.name}, sample wildfire timeline`
+          : "Canadian region overview";
+        if (det) {
+          $("mapSub").textContent =
+            "Demonstration scenario. Use the timeline to replay it.";
+        } else if (events.hazard !== hazard || events.state === "loading") {
+          $("mapSub").textContent =
+            "Loading the latest event layers for the selected hazard…";
+        } else if (events.state === "ready") {
+          $("mapSub").textContent = `${events.features.length} mapped event feature${events.features.length === 1 ? "" : "s"} in the latest snapshot${events.missing ? "; some layers are unavailable" : ""}.`;
+        } else if (events.state === "empty") {
+          $("mapSub").textContent =
+            "No active events appear in the latest available snapshot.";
+        } else {
+          $("mapSub").textContent =
+            "Live event layers are unavailable. Regional risk cards remain available with demonstration fallback.";
+        }
         if (windCtl) windCtl.getContainer().style.display = det ? "" : "none";
         if (backCtl) backCtl.getContainer().style.display = det ? "" : "none";
       }
       function enterDetail(k) {
         mode = "detail";
-        if (prov !== "bc") selectProv("bc");
         syncMapChrome();
         renderArea();
         if (k) selected = k;
@@ -4249,14 +4445,14 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             document
               .querySelectorAll(".hz button")
               .forEach((x) => x.setAttribute("aria-pressed", x === b));
-            prov =
-              hazard === "hurricane" ? "ns" : hazard === "rain" ? "mb" : "bc";
             $("regionSelect").value = prov;
             $("sevLabel").textContent = HAZARDS[hazard].slider;
             $("sevValue").textContent = "+0%";
             syncMapChrome();
             renderArea();
             drawCanada();
+            void loadSelectionData();
+            void loadEventData();
           }),
       );
       $("severity").oninput = (e) => {
@@ -4660,10 +4856,13 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
 
       /* init */
       initMap();
+      syncMapChrome();
       renderArea();
       renderSituation();
       setLang("en");
       renderChecks();
+      void loadSelectionData();
+      void loadEventData();
     </script>
   </body>
 </html>

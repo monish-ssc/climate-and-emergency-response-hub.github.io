@@ -30,7 +30,7 @@ Dashboard tab to `hazard` (from `api/README.md`):
 
 Region ids come from `data/scenarios.json`: `vancouver`, `calgary`, `halifax`, `clinton`, `west-kelowna`. Each region has `lat`/`lon` for the map.
 
-> **Open question for the team:** the dashboard's built-in region list is provinces (`bc`, `ab`, ...), while the pipelines use these city regions. Either add these regions to the dashboard or decide which region each province shows.
+The dashboard selector uses these same five city-region ids, so a selected region can be matched directly against the risk index.
 
 What to show from a risk file:
 
