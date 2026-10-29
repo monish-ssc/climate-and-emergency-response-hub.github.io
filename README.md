@@ -2,17 +2,64 @@
 
 ClimateGuard AI is a two-day hackathon prototype for a **Climate & Emergency Response Intelligence Hub**. It helps emergency teams explore climate-related hazards, understand a simple risk score, and produce a preparedness briefing.
 
-`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Regional risk and Canada-wide live map layers load from the generated files under `data/`. A scheduled GitHub Actions workflow refreshes them every 30 minutes and deploys them to GitHub Pages. Embedded scenario values remain as a clearly labeled fallback. The prototype is not suitable for real emergency decisions.
+`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Live data, risk scores and AI briefings are built from public Canadian data by a GitHub Actions workflow every 30 minutes and published with the site. Two wildfire replays (McDougall Creek 2023, Pear Lake 2026) show the same scoring and briefings on real past events. The What-if and Plan check tabs use a labelled sample scenario. The prototype is not suitable for real emergency decisions.
 
-Developers continuing the project should start with the [developer guide](docs/developer-guide.md).
+Developers continuing the project should start with the [developer guide](docs/developer-guide.md). Data files are described in [docs/data-files.md](docs/data-files.md).
 
-## MVP demo flow
+## Demo flow
 
-1. Select a Canadian region.
-2. Switch between wildfire, flood, and severe-storm scenarios.
-3. Review the illustrative risk score and supporting indicators.
-4. Turn on the clustered health-facility reference layer to inspect the 7,525 map-ready ODHF records.
-5. Generate a deterministic preparedness briefing.
+1. **Overview:** live wildfires and river stations across Canada, and the risk score for the selected region and hazard, with the factors behind it.
+2. **Places to watch:** every community of 1,000+ people screened with the same rules, grouped by the fire or river driving the risk. Select a row or a map marker to see the communities affected and the briefing.
+3. **Resource planning:** population, typical evacuation size from past disasters, group lodging, host communities and nearest hospitals for the selected region.
+4. **Replay:** select Clinton (Pear Lake fire) or West Kelowna (McDougall Creek fire) and open the replay. The score, map, smoke readings, reception centres and AI briefing change as the fire grows, next to what actually happened.
+5. **Briefing & advisory:** the full briefing with its numbered facts and sources, and a public advisory draft in English and French.
+
+## How it works
+
+```text
+Public data (NRCan, ECCC, Statistics Canada, ...)            every 30 minutes, GitHub Actions
+   │
+   ├─ pipelines (data/*_pipeline.py) ──> risk score per region and hazard (0-100, with factors)
+   ├─ build_live_layers.py ────────────> Canada-wide map layers
+   ├─ build_watchlist.py ──────────────> places to watch (every community of 1,000+ people)
+   └─ build_briefings.py ──> numbered facts ──> AI draft (GitHub Models) ──> checks ──> briefing
+                                                         └─ fails or unavailable ──> template from the same facts
+   │
+   └─> published with the site on GitHub Pages; ClimateGuard_Mockup.html reads the JSON files
+```
+
+**Risk scores are rules, not AI.** Each hazard has a transparent 0-100 score built from named factors, and the dashboard shows every factor's points. Wildfire: distance to the nearest fire's edge (40), uncontained fire within 5 km (20), uncontained fires within 150 km (10), burned area (10), fire-weather alerts (10) and past large fires (10). Flood, from river stations within 50 km: highest reading compared with the station's own history for the month (50), highest flow as a share of its typical yearly peak (30), above-normal stations still rising (10) and rain, flood or storm-surge alerts (10). Levels: under 25 low, 25-49 moderate, 50-74 high, 75 and over critical.
+
+**Places to watch** applies the same rules to every community of 1,000+ people in Canada and groups them by the fire or river station driving the risk. River readings are checked before they count: level-only gauges, flat placeholder readings, single spikes, short records and seasonal trickles far below flood flows are not treated as floods.
+
+**Replays** rebuild each moment of a real fire from the agency reports available at that time (CWFIS), with smoke readings (BC air quality), the reception centres that actually opened and the events that actually happened, from news and official reports. The score uses the same rules as the live view.
+
+**AI briefings.** For each region, each top place to watch and each key replay moment, the pipeline writes a list of numbered facts (score, factors, fire or river status, population, past disasters, hospitals, host communities, open reception centres) and asks the model for a situation summary, 3-5 preparedness actions and a public advisory in English and French. Before a draft is accepted, the code checks that:
+- every number in it appears in the facts (no invented numbers);
+- the situation cites facts like [F2], and the dashboard links each citation to its fact;
+- the actions fit the level (no evacuations or reception-centre openings at low or moderate risk);
+- it has the expected structure.
+
+A draft that fails is retried once with the problems listed. If it still fails, or the AI service is unavailable, a template briefing is built from the same facts, so the dashboard always shows accurate text and says which kind it is. Every briefing is marked "needs human review"; nothing is sent to the public automatically. The replay briefings are saved in the repo once the team has reviewed them (`data/pin_replay_briefings.py`), so the replays never depend on a live AI call.
+
+## AI and third-party services (disclosure)
+
+| What | Used for | Cost and access |
+|---|---|---|
+| **GitHub Models: OpenAI GPT-4.1-mini** (fallback GPT-4o-mini) | Drafting briefings and public advisories from our numbered facts | Free tier, called from GitHub Actions with the workflow's own token; no API key. Only public data is sent. Approved by the organizers. |
+| NRCan Canadian Wildland Fire Information System (CWFIS) | Active and past wildfires | Free, public |
+| ECCC MSC GeoMet (api.weather.gc.ca) and Water Survey of Canada | River levels and flows, weather alerts, AQHI air quality, hurricane tracks | Free, public |
+| BC Ministry of Environment air quality data | Smoke readings (PM2.5) for the replays | Free, public |
+| Statistics Canada | Population estimates and census boundaries | Free, public |
+| Open Database of Healthcare Facilities (Statistics Canada) | Hospitals and health facilities | Free, public |
+| Public Safety Canada, Canadian Disaster Database | Past disasters and evacuation sizes | Free, public |
+| NOAA IBTrACS | Historical hurricane tracks | Free, public |
+| News and official reports (EmergencyInfoBC, local news) | What actually happened during the replayed fires | Linked as sources |
+| CARTO, OpenTopoMap, Esri World Imagery | Map background tiles | Free tiers |
+| Leaflet, d3-geo, topojson-client | Map and boundaries in the browser (open source, bundled in the page) | Open source |
+| GitHub Pages and GitHub Actions | Hosting and the 30-minute refresh | Free for public repositories |
+
+No paid services, no personal data and no internal government data are used.
 
 ## Run locally
 
