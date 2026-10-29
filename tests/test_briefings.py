@@ -76,14 +76,45 @@ class BuildTest(unittest.TestCase):
             doc = bb.build(max_calls=2)
         finally:
             bb.call_model, bb.OUT = saved
-        ai = [b for b in doc["briefings"] if b["model"] != "template"]
+        ai = [b for b in doc["briefings"] if b["model"] != "template" and not b.get("pinned")]
         self.assertEqual(len(ai), 1)  # budget of 2 calls = one subject (retry used the second)
         self.assertIn("numbers not in the facts", calls[1])
         b = ai[0]["briefing"]
         self.assertTrue(b["requiresHumanReview"])
         self.assertEqual(b["contractVersion"], "1.0")
         # every other subject still has a template briefing
-        self.assertEqual(doc["counts"]["template"], doc["counts"]["subjects"] - 1)
+        self.assertEqual(doc["counts"]["template"], doc["counts"]["subjects"] - 1 - doc["counts"]["pinned"])
+
+    def test_saved_replay_briefings_are_used_as_they_are(self):
+        subject = bb.replay_subjects(bb.Reference())[0]
+        saved_entry = {"key": subject["key"], "model": "openai/gpt-4.1-mini", "generatedAt": "2026-10-29T22:00:00Z",
+                       "briefing": {"title": "Saved draft", "situation": "x [F2]", "actions": []},
+                       "publicAlert": {"en": {}, "fr": {}}, "facts": ["fact one"], "reviewed": True}
+        calls = []
+        saved = (bb.call_model, bb.OUT, bb.load_pinned)
+        bb.call_model = lambda *a, **k: calls.append(a) or answer()
+        bb.OUT = Path(tempfile.mkdtemp()) / "briefings.json"
+        bb.load_pinned = lambda: {subject["key"]: saved_entry}
+        try:
+            import os
+            os.environ["GITHUB_TOKEN"] = "test"
+            doc = bb.build(max_calls=1)
+        finally:
+            bb.call_model, bb.OUT, bb.load_pinned = saved
+        b = next(x for x in doc["briefings"] if x["key"] == subject["key"])
+        self.assertEqual(b["briefing"]["title"], "Saved draft")
+        self.assertTrue(b["pinned"] and b["reviewed"])
+        self.assertEqual(b["facts"], ["fact one"])  # the facts its citations point to
+        self.assertEqual(doc["counts"]["pinned"], 1)
+        self.assertEqual(len(calls), 1)  # the one call went to another subject, not the saved one
+
+    def test_template_advisory_names_the_open_reception_centre(self):
+        subject = next(s for s in bb.replay_subjects(bb.Reference())
+                       if s["key"] == "replay/2026_BC_2026-C40983/28")
+        alert = bb.template_alert(subject)
+        self.assertIn("evacuation was reported on Jul 24", alert["en"]["body"])
+        self.assertIn("McArthur Island", alert["en"]["body"])
+        self.assertIn("24 juillet", alert["fr"]["body"])
 
 
 if __name__ == "__main__":

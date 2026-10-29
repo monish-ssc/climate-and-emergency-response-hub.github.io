@@ -580,6 +580,67 @@ def template_actions(subject):
     return acts[:5]
 
 
+HAZARD_FR = {"wildfire": "feux de forêt", "flood": "inondation", "severe_storm": "ouragan et tempête violente"}
+LEVEL_FR = {"low": "faible", "moderate": "modéré", "high": "élevé", "critical": "critique"}
+MONTH_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre",
+            "novembre", "décembre"]
+
+
+def day_fr(iso_date):
+    d = datetime.strptime(iso_date, "%Y-%m-%d")
+    return f"{'1er' if d.day == 1 else d.day} {MONTH_FR[d.month - 1]}"
+
+
+def template_alert(subject):
+    """Plain-language public advisory (EN/FR) from the same facts: level, reported evacuation or easing,
+    and an open reception centre. No numbers beyond dates, no claim of an official order."""
+    level, hz, c = subject["level"], subject["hazard"], subject.get("ctx") or {}
+    events = c.get("events") or []
+    centres = (c.get("centres") or (None, []))[1] or []
+    evac = next((ev for _, ev in reversed(events) if re.search(r"evacuat", ev["event"], re.I)
+                 and not re.search(r"downgrad|all clear|rescind|lifted", ev["event"], re.I)), None)
+    easing = next((ev for _, ev in reversed(events)
+                   if re.search(r"downgrad|all clear|rescind|lifted|return", ev["event"], re.I)), None)
+    en = [f"The automated {HAZARD_NAME[hz]} risk level for this area is {level}."]
+    fr = [f"Le niveau de risque automatisé ({HAZARD_FR[hz]}) pour ce secteur est {LEVEL_FR[level]}."]
+    if easing:
+        en.append(f"On {day(easing['date'])}, officials reported that orders are easing.")
+        fr.append(f"Le {day_fr(easing['date'])}, les autorités ont signalé un assouplissement des ordres.")
+    elif evac:
+        en.append(f"An evacuation was reported on {day(evac['date'])}.")
+        fr.append(f"Une évacuation a été signalée le {day_fr(evac['date'])}.")
+    if centres:
+        en.append(f"A reception centre for evacuees is open at {centres[0]['name']}, {centres[0]['city']}.")
+        fr.append(f"Un centre d'accueil pour les personnes évacuées est ouvert : {centres[0]['name']}, "
+                  f"{centres[0]['city']}.")
+    en.append("Follow official alerts and orders from your local authority.")
+    fr.append("Suivez les alertes et les ordres officiels de votre autorité locale.")
+    if easing:
+        todo_en = ["Return only when officials say it is safe.", "Check official updates before you travel."]
+        todo_fr = ["Ne revenez que lorsque les autorités le permettent.",
+                   "Consultez les mises à jour officielles avant de vous déplacer."]
+    elif level in ("high", "critical"):
+        todo_en = ["If you are told to leave, leave right away.",
+                   "Register at a reception centre if you need lodging or help.",
+                   "Keep medications, documents and an emergency kit ready."]
+        todo_fr = ["Si on vous demande de partir, partez immédiatement.",
+                   "Inscrivez-vous à un centre d'accueil si vous avez besoin d'hébergement ou d'aide.",
+                   "Gardez vos médicaments, vos documents et une trousse d'urgence à portée de main."]
+        if not centres:
+            todo_en.pop(1)
+            todo_fr.pop(1)
+    elif level == "moderate":
+        todo_en = ["Check official alerts.", "Prepare an emergency kit and a plan to leave."]
+        todo_fr = ["Consultez les alertes officielles.", "Préparez une trousse d'urgence et un plan pour partir."]
+    else:
+        todo_en = ["Check official alerts.", "Keep an emergency kit ready."]
+        todo_fr = ["Consultez les alertes officielles.", "Gardez une trousse d'urgence prête."]
+    return {
+        "en": {"headline": f"{HAZARD_NAME[hz].capitalize()} risk: {level}", "body": " ".join(en), "whatToDo": todo_en},
+        "fr": {"headline": f"Risque de {HAZARD_FR[hz]} : {LEVEL_FR[level]}", "body": " ".join(fr), "whatToDo": todo_fr},
+    }
+
+
 def template(subject, now):
     facts, level = subject["facts"], subject["level"]
     region_line = facts.items[0]
@@ -593,14 +654,7 @@ def template(subject, now):
     }
     out = contract(answer, subject, "template", now)
     out["confidence"] = "medium"
-    return out, {
-        "en": {"headline": f"{HAZARD_NAME[subject['hazard']].capitalize()} risk: {level}",
-               "body": "Automated screening shows this risk level. Follow official alerts from your local authority.",
-               "whatToDo": ["Check official alerts.", "Keep an emergency kit ready."]},
-        "fr": {"headline": f"Risque ({HAZARD_NAME[subject['hazard']]}) : {level}",
-               "body": "Le dépistage automatisé indique ce niveau de risque. Suivez les alertes officielles de votre autorité locale.",
-               "whatToDo": ["Consultez les alertes officielles.", "Gardez une trousse d'urgence prête."]},
-    }
+    return out, template_alert(subject)
 
 
 # ---------- main ----------
@@ -614,6 +668,19 @@ def previous(base_url):
         except Exception as e:  # noqa: BLE001 - first run, or the site is unreachable
             print(f"No published briefings reused ({e})")
     return {b["key"]: b for b in (prev or {}).get("briefings", [])}
+
+
+def load_pinned():
+    """Replay briefings saved in the repo (data/scenarios/<fireId>/briefings.json, written by
+    pin_replay_briefings.py and reviewed by the team). They are used as they are: never redrafted,
+    never replaced by a template."""
+    pinned = {}
+    for rp in load(DATA_DIR / "scenarios" / "index.json", {"replays": []})["replays"]:
+        doc = load(DATA_DIR / "scenarios" / rp["fireId"] / "briefings.json")
+        for b in (doc or {}).get("briefings", []):
+            if b.get("key") and b.get("briefing") and b.get("model") not in (None, "template"):
+                pinned[b["key"]] = b
+    return pinned
 
 
 def needs_refresh(subject, old, now):
@@ -637,6 +704,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
     for s in subjects:
         s["hash"] = hashlib.sha256((PROMPT_VERSION + s["facts"].text()).encode()).hexdigest()[:16]
     old = previous(base_url)
+    pinned = load_pinned()
     token = os.environ.get("GITHUB_TOKEN")
     if not token and not offline:
         print("GITHUB_TOKEN not set: writing template briefings only")
@@ -644,7 +712,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
 
     # most urgent first: replays (written once), then live by level. Subjects whose last AI answer
     # failed the checks go to the back, so they cannot use up every run's calls while the rest wait.
-    todo = [s for s in subjects if needs_refresh(s, old.get(s["key"]), now)]
+    todo = [s for s in subjects if s["key"] not in pinned and needs_refresh(s, old.get(s["key"]), now)]
     todo.sort(key=lambda s: (s["kind"] != "replay", bool((old.get(s["key"]) or {}).get("aiRejected")),
                              LEVEL_ORDER.get(s["level"], 9), s["key"]))
     calls, written, failed, models = 0, 0, 0, list(MODELS)
@@ -692,7 +760,11 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
     out = []
     for s in subjects:
         prev = old.get(s["key"])
-        if s["key"] in results and "briefing" in results[s["key"]]:
+        if s["key"] in pinned:
+            p = pinned[s["key"]]
+            entry = {k: p[k] for k in ("briefing", "publicAlert", "model", "generatedAt")}
+            entry.update(pinned=True, reviewed=bool(p.get("reviewed")))
+        elif s["key"] in results and "briefing" in results[s["key"]]:
             r = results[s["key"]]
             entry = {"briefing": r["briefing"], "publicAlert": r["publicAlert"], "model": r["model"],
                      "generatedAt": r["briefing"]["generatedAt"]}
@@ -709,11 +781,14 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
                       "step": s.get("step"), "fireId": s.get("fireId"), "watchId": s.get("watchId"), "score": s["score"], "level": s["level"],
                       "asOf": s["asOf"], "hash": s["hash"], "promptVersion": PROMPT_VERSION,
                       "facts": s["facts"].items})
+        if s["key"] in pinned and pinned[s["key"]].get("facts"):
+            entry["facts"] = pinned[s["key"]]["facts"]
         out.append(entry)
 
     doc = {"generatedAt": iso(now), "endpoint": "GitHub Models", "models": MODELS, "promptVersion": PROMPT_VERSION,
            "counts": {"subjects": len(subjects), "ai": sum(e["model"] != "template" for e in out),
-                      "template": sum(e["model"] == "template" for e in out), "calls": calls,
+                      "template": sum(e["model"] == "template" for e in out),
+                      "pinned": sum(bool(e.get("pinned")) for e in out), "calls": calls,
                       "written": written, "failed": failed},
            "briefings": out}
     OUT.parent.mkdir(parents=True, exist_ok=True)
