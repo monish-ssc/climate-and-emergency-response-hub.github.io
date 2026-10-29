@@ -1013,6 +1013,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .chip[aria-pressed="false"] .sw {
         opacity: 0.35;
       }
+      .overview-layers {
+        padding-left: 8px;
+        border-left: 1px solid var(--line);
+      }
+      .facility-popup {
+        min-width: 210px;
+        color: var(--ink);
+        line-height: 1.35;
+      }
+      .facility-popup b,
+      .facility-popup small {
+        display: block;
+      }
+      .facility-popup small {
+        margin-top: 2px;
+        color: var(--ink-2);
+      }
+      .facility-popup p {
+        margin: 9px 0 0;
+        padding-top: 8px;
+        border-top: 1px solid var(--line);
+        color: var(--ink-2);
+        font-size: 12px;
+      }
       .map {
         display: block;
         width: 100%;
@@ -2437,6 +2461,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
                     id="regionSelect"
                     aria-label="Region"
                   ></select>
+                  <div
+                    class="layers overview-layers"
+                    role="group"
+                    aria-label="Reference map layers"
+                  >
+                    <button
+                      class="chip"
+                      id="facilityToggle"
+                      type="button"
+                      aria-pressed="false"
+                      aria-busy="false"
+                      title="Show the map-ready ODHF facility inventory. Operating status, capacity and hazard exposure are not verified."
+                    >
+                      <span class="sw" style="background: var(--spruce)"></span>
+                      <span id="facilityToggleLabel">Health facilities (2020)</span>
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="layers"
@@ -2494,6 +2535,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                       fill="#D9822B"
                     /></svg
                   >Active incident: select it to open the scenario</span
+                >
+                <span id="legHealth" hidden
+                  ><span class="dotk" style="background: var(--spruce)"></span
+                  >Health facility or clustered facilities · 2020 inventory</span
                 >
               </div>
               <div class="legend" id="legDet" hidden>
@@ -3437,6 +3482,18 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    ================================================================= */
       const $ = (id) => document.getElementById(id);
       const fmt = (n) => n.toLocaleString("en-CA");
+      const escapeHTML = (value) =>
+        String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const band = (s) =>
         s >= 80
@@ -3498,6 +3555,14 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         riskCache: new Map(),
         selection: { key: "", state: "idle", data: null, error: null },
         events: { hazard: "", state: "idle", features: [], missing: 0 },
+        facilities: {
+          enabled: false,
+          state: "idle",
+          features: [],
+          metadata: null,
+          error: null,
+        },
+        facilitiesPromise: null,
         selectionRequest: 0,
         eventRequest: 0,
       };
@@ -3607,6 +3672,64 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         };
         syncMapChrome();
         if (mode === "canada") drawCanada();
+      }
+
+      function facilitySourceYear() {
+        const modifiedAt = dataAdapter.facilities.metadata?.source?.modifiedAt,
+          year = modifiedAt ? new Date(modifiedAt).getUTCFullYear() : NaN;
+        return Number.isFinite(year) ? String(year) : "date unavailable";
+      }
+
+      function updateFacilityControl() {
+        const facilities = dataAdapter.facilities,
+          button = $("facilityToggle"),
+          label = $("facilityToggleLabel");
+        button.setAttribute("aria-pressed", facilities.enabled);
+        button.setAttribute("aria-busy", facilities.state === "loading");
+        if (facilities.state === "loading") {
+          label.textContent = "Loading health facilities…";
+        } else if (facilities.state === "ready") {
+          label.textContent = `Health facilities · ${fmt(facilities.features.length)} · ${facilitySourceYear()}`;
+        } else if (facilities.state === "error") {
+          label.textContent = "Health facilities unavailable";
+        } else {
+          label.textContent = "Health facilities (2020)";
+        }
+      }
+
+      async function loadFacilityData() {
+        if (dataAdapter.facilities.state === "ready") return;
+        if (dataAdapter.facilitiesPromise) return dataAdapter.facilitiesPromise;
+        dataAdapter.facilities.state = "loading";
+        dataAdapter.facilities.error = null;
+        updateFacilityControl();
+        syncMapChrome();
+        dataAdapter.facilitiesPromise = fetchJSON(
+          "data/healthcare/facilities.geojson",
+        )
+          .then((document) => {
+            if (
+              document.type !== "FeatureCollection" ||
+              !Array.isArray(document.features)
+            ) {
+              throw new Error("Facility data is not a GeoJSON FeatureCollection");
+            }
+            dataAdapter.facilities.state = "ready";
+            dataAdapter.facilities.features = document.features;
+            dataAdapter.facilities.metadata = document.metadata || null;
+            updateFacilityControl();
+            syncMapChrome();
+            renderFacilities();
+          })
+          .catch((error) => {
+            dataAdapter.facilities.state = "error";
+            dataAdapter.facilities.error = error;
+            dataAdapter.facilitiesPromise = null;
+            updateFacilityControl();
+            syncMapChrome();
+            renderFacilities();
+          });
+        return dataAdapter.facilitiesPromise;
       }
 
       function formatSnapshotTime(value) {
@@ -3781,6 +3904,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       ];
       let map = null,
         overlay = null,
+        facilityOverlay = null,
         base = null,
         markers = {},
         windCtl = null,
@@ -3795,10 +3919,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           zoomControl: true,
           scrollWheelZoom: false,
           attributionControl: true,
+          preferCanvas: true,
           minZoom: 2,
         }).fitBounds(CANADA_BOUNDS);
         map.on("focus", () => map.scrollWheelZoom.enable());
         map.on("blur", () => map.scrollWheelZoom.disable());
+        map.on("moveend", () => renderFacilities());
         setBasemap("simple");
         L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
         // basemap switcher
@@ -3844,6 +3970,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         });
         backCtl = new BK().addTo(map);
         overlay = L.layerGroup().addTo(map);
+        map.createPane("facilitiesPane").style.zIndex = 390;
+        facilityOverlay = L.layerGroup().addTo(map);
         syncMapChrome();
       }
       let baseBtns = null;
@@ -4033,6 +4161,89 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         hurricane:
           '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path d="M3.5 10.5C5.5 4.5 14 3 18.5 7M20.5 13.5c-2 6-10.5 7.5-15 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
       };
+      function facilityPopup(feature) {
+        const properties = feature.properties || {},
+          name = escapeHTML(properties.name || "Health facility"),
+          type = escapeHTML(properties.type || "Facility type unavailable"),
+          location = [properties.municipality, properties.province?.toUpperCase()]
+            .filter(Boolean)
+            .map(escapeHTML)
+            .join(", "),
+          address = properties.address
+            ? `<small>${escapeHTML(properties.address)}</small>`
+            : "";
+        return `<div class="facility-popup"><b>${name}</b><small>${type}</small>${location ? `<small>${location}</small>` : ""}${address}<p>Reference inventory; source last modified in ${facilitySourceYear()}. Operating status, capacity and hazard exposure are not verified.</p></div>`;
+      }
+      function renderFacilities() {
+        if (!map || !facilityOverlay) return;
+        facilityOverlay.clearLayers();
+        const facilities = dataAdapter.facilities;
+        if (
+          mode !== "canada" ||
+          !facilities.enabled ||
+          facilities.state !== "ready"
+        )
+          return;
+        const bounds = map.getBounds().pad(0.12),
+          zoom = map.getZoom(),
+          cellSize = zoom >= 9 ? 48 : 64,
+          groups = new Map();
+        facilities.features.forEach((feature) => {
+          const coordinates = feature.geometry?.coordinates;
+          if (
+            feature.geometry?.type !== "Point" ||
+            !Array.isArray(coordinates) ||
+            coordinates.length < 2
+          )
+            return;
+          const latlng = L.latLng(coordinates[1], coordinates[0]);
+          if (!bounds.contains(latlng)) return;
+          const point = map.project(latlng, zoom),
+            key = `${Math.floor(point.x / cellSize)}:${Math.floor(point.y / cellSize)}`,
+            group = groups.get(key) || { features: [], lat: 0, lng: 0 };
+          group.features.push(feature);
+          group.lat += latlng.lat;
+          group.lng += latlng.lng;
+          groups.set(key, group);
+        });
+        groups.forEach((group) => {
+          const count = group.features.length,
+            centre = [group.lat / count, group.lng / count];
+          if (count === 1) {
+            const feature = group.features[0],
+              label = feature.properties?.name || "Health facility";
+            L.circleMarker(centre, {
+              pane: "facilitiesPane",
+              radius: 5,
+              color: "#fff",
+              weight: 1.5,
+              fillColor: "#1E4636",
+              fillOpacity: 0.9,
+            })
+              .bindTooltip(String(label), { className: "tip" })
+              .bindPopup(facilityPopup(feature), { maxWidth: 300 })
+              .addTo(facilityOverlay);
+            return;
+          }
+          const marker = L.circleMarker(centre, {
+            pane: "facilitiesPane",
+            radius: Math.min(20, 7 + Math.log2(count) * 2),
+            color: "#fff",
+            weight: 2,
+            fillColor: "#1E4636",
+            fillOpacity: 0.82,
+          })
+            .bindTooltip(`${fmt(count)} health facilities`, {
+              className: "tip",
+            })
+            .addTo(facilityOverlay);
+          marker.on("click", () =>
+            map.flyTo(centre, Math.min(12, zoom + 2), {
+              duration: reduced ? 0 : 0.7,
+            }),
+          );
+        });
+      }
       function drawCanada() {
         if (!map) return;
         overlay.clearLayers();
@@ -4215,7 +4426,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       function syncMapChrome() {
         const det = mode === "detail",
           region = REGIONS.find((item) => item.id === prov),
-          events = dataAdapter.events;
+          events = dataAdapter.events,
+          facilities = dataAdapter.facilities;
         $("ovCtrl").hidden = det;
         $("detailCtrl").hidden = !det;
         $("legOv").hidden = det;
@@ -4223,6 +4435,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("sevBar").hidden = det;
         $("tlBar").hidden = !det;
         $("legInc").hidden = hazard !== "wildfire";
+        $("legHealth").hidden =
+          det || !facilities.enabled || facilities.state !== "ready";
         $("mapTitle").textContent = det
           ? `${region.name}, sample wildfire timeline`
           : "Canadian region overview";
@@ -4241,11 +4455,21 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           $("mapSub").textContent =
             "Live event layers are unavailable. Regional risk cards remain available with demonstration fallback.";
         }
+        if (!det && facilities.enabled) {
+          if (facilities.state === "loading") {
+            $("mapSub").textContent += " Loading the health-facility inventory…";
+          } else if (facilities.state === "ready") {
+            $("mapSub").textContent += ` ${fmt(facilities.features.length)} map-ready health facilities are available from the ${facilitySourceYear()} inventory; operating status, capacity and hazard exposure are unverified.`;
+          } else if (facilities.state === "error") {
+            $("mapSub").textContent += " The health-facility inventory could not be loaded.";
+          }
+        }
         if (windCtl) windCtl.getContainer().style.display = det ? "" : "none";
         if (backCtl) backCtl.getContainer().style.display = det ? "" : "none";
       }
       function enterDetail(k) {
         mode = "detail";
+        renderFacilities();
         syncMapChrome();
         renderArea();
         if (k) selected = k;
@@ -4262,6 +4486,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         syncMapChrome();
         renderArea();
         renderSituation();
+        renderFacilities();
         if (map)
           map.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : 1.4 });
       }
@@ -4470,7 +4695,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       };
       $("areaGo").onclick = () =>
         mode === "detail" ? exitDetail() : enterDetail();
-      document.querySelectorAll(".chip").forEach(
+      document.querySelectorAll("#detailCtrl .chip").forEach(
         (c) =>
           (c.onclick = () => {
             const k = c.dataset.layer;
@@ -4479,6 +4704,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             drawMain(day);
           }),
       );
+      $("facilityToggle").onclick = () => {
+        const facilities = dataAdapter.facilities;
+        facilities.enabled = !facilities.enabled;
+        updateFacilityControl();
+        syncMapChrome();
+        renderFacilities();
+        if (facilities.enabled && facilities.state !== "ready") {
+          void loadFacilityData();
+        }
+      };
 
       /* =================================================================
    BRIEFING: advisory EN / FR
@@ -4856,6 +5091,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
 
       /* init */
       initMap();
+      updateFacilityControl();
       syncMapChrome();
       renderArea();
       renderSituation();

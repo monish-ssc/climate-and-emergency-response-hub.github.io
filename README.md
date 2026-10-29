@@ -11,7 +11,8 @@ Developers continuing the project should start with the [developer guide](docs/d
 1. Select a Canadian region.
 2. Switch between wildfire, flood, and severe-storm scenarios.
 3. Review the illustrative risk score and supporting indicators.
-4. Generate a deterministic preparedness briefing.
+4. Turn on the clustered health-facility reference layer to inspect the 7,525 map-ready ODHF records.
+5. Generate a deterministic preparedness briefing.
 
 ## Run locally
 

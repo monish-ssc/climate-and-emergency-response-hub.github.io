@@ -5,6 +5,8 @@
 - [ ] Each region/hazard selection shows live, stale, unavailable, or demonstration status.
 - [ ] Missing risk files retain the embedded demonstration values.
 - [ ] Empty event layers show a clear no-active-events message.
+- [ ] The Health facilities control loads 7,525 records, clusters them at national zoom, and expands clusters when selected.
+- [ ] Individual facility popups show name, type, location and the unverified status/capacity/hazard warning.
 - [ ] Each hazard tab updates the title, score, summary, and recommendation.
 - [ ] Each region updates the location and measurements.
 - [ ] The briefing dialog opens, contains three actions, and closes.
