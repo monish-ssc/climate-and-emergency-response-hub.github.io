@@ -271,7 +271,8 @@ def replay_subjects(ref):
             st = steps[i]
             a, fire = st["risk"]["assessment"], st.get("fire") or {}
             t = datetime.fromisoformat(st["t"].replace("Z", "+00:00"))
-            local = t.astimezone(timezone(timedelta(hours=-7))).strftime("%b %-d, %Y, %-I %p PDT")
+            lt = t.astimezone(timezone(timedelta(hours=-7)))
+            local = f"{lt:%b} {lt.day}, {lt.year}, {lt.hour % 12 or 12} {lt:%p} PDT"  # no %-d: not on Windows
             facts = Facts()
             facts.add(f"Historical replay of a real event. Time: {local}. Place: {region['label']}.")
             facts.add(f"{fire_name} ({fire.get('agencyFireId')}): {fire.get('stageLabel')}, about {n(fire.get('sizeHa'))} ha"
