@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: read
-  # lets GITHUB_TOKEN call GitHub Models for the AI briefings (free, rate-limited; no API key)
-  models: read
 
 concurrency:
   group: refresh-live-hazard-data
@@ -21,9 +19,14 @@ jobs:
   build:
     name: Build hazard snapshots and site
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # the briefing model runs on CPU (see "Write AI briefings"), so allow more than the ~5 min of the pipelines
+    timeout-minutes: 45
     env:
       PYTHONUNBUFFERED: "1"
+      # open-source model for the AI briefings, run by Ollama on this runner (no API key, nothing leaves it)
+      BRIEFING_BASE_MODEL: qwen2.5:7b
+      BRIEFING_MODELS: qwen2.5:7b-8k
+      BRIEFING_MODEL_LABEL: Qwen2.5 7B
     outputs:
       failed_pipelines: ${{ steps.failures.outputs.list }}
 
@@ -105,15 +108,30 @@ jobs:
       - name: Rebuild risk index
         run: python data/build_risk_index.py
 
-      # AI briefings with GitHub Models. Reuses the published briefings and rewrites only what changed;
-      # if the model is unavailable, template briefings from the same facts are published instead.
+      - name: Restore the briefing model
+        uses: actions/cache@v5
+        with:
+          path: ~/.ollama/models
+          key: ollama-${{ runner.os }}-${{ env.BRIEFING_BASE_MODEL }}-v1
+
+      # Ollama (open source) serves the model on this runner at localhost:11434.
+      - name: Start the briefing model
+        id: model
+        continue-on-error: true
+        timeout-minutes: 10
+        run: bash .github/scripts/start_briefing_model.sh
+
+      # AI briefings: reuses the published briefings and rewrites only what changed, within a time budget.
+      # If the model did not start or an answer fails the checks, template briefings from the same facts
+      # are published instead. Saved replay briefings (data/scenarios/<fireId>/briefings.json) are used as they are.
       - name: Write AI briefings
         continue-on-error: true
+        timeout-minutes: 20
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
-          BRIEFING_MAX_CALLS: "12"
-        run: python data/build_briefings.py
+          BRIEFING_MAX_CALLS: "4"
+          BRIEFING_TIME_BUDGET: "720"
+        run: python data/build_briefings.py ${{ steps.model.outcome != 'success' && '--offline' || '' }}
 
       - name: Validate refreshed outputs
         run: python data/validate_live_outputs.py

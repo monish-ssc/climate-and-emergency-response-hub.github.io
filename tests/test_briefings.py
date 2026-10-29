@@ -48,6 +48,79 @@ class ModelReplyTest(unittest.TestCase):
         finally:
             bb.urllib.request.urlopen = saved
 
+    def test_local_model_is_called_without_a_key(self):
+        sent = []
+
+        class Reply:
+            status, headers = 200, {"Content-Type": "application/json"}
+
+            def read(self):
+                return json.dumps({"choices": [{"message": {"content": json.dumps(answer())}}]}).encode()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        saved = bb.urllib.request.urlopen
+        bb.urllib.request.urlopen = lambda req, **k: sent.append(req) or Reply()
+        try:
+            self.assertEqual(bb.call_model("", "qwen2.5:7b-8k", "[F1] fact")["title"], answer()["title"])
+        finally:
+            bb.urllib.request.urlopen = saved
+        self.assertIsNone(sent[0].get_header("Authorization"))
+        self.assertTrue(sent[0].full_url.startswith(bb.ENDPOINT))
+
+
+class LocalModelBuildTest(unittest.TestCase):
+    """The model runs on the workflow's runner: no token, a time budget, and replay-only runs."""
+
+    def run_build(self, fake, **kwargs):
+        saved = (bb.call_model, bb.OUT, bb.load_pinned)
+        bb.call_model = fake
+        bb.OUT = Path(tempfile.mkdtemp()) / "briefings.json"
+        bb.load_pinned = lambda: {}
+        try:
+            return bb.build(**kwargs)
+        finally:
+            bb.call_model, bb.OUT, bb.load_pinned = saved
+
+    def test_no_model_server_means_templates_after_one_try(self):
+        calls = []
+
+        def down(*a, **k):
+            calls.append(a)
+            raise bb.urllib.error.URLError("connection refused")
+
+        doc = self.run_build(down, max_calls=10)
+        self.assertEqual(len(calls), 1)  # stops at the first refused connection
+        self.assertEqual(doc["counts"]["ai"], 0)
+        self.assertTrue(any(b.get("aiRejected") == ["model server not reachable"] for b in doc["briefings"]))
+
+    def test_only_replay_asks_about_replay_moments_only(self):
+        asked = []
+        doc = self.run_build(lambda t, m, facts_text, feedback=None: asked.append(facts_text) or answer(
+            situation="The replayed score shows the risk level for this place [F3].",
+            action="Review the local emergency plan and contact lists."), max_calls=3, only=["replay"])
+        self.assertEqual(len(asked), 3)
+        self.assertTrue(all("Historical replay" in f for f in asked))
+        ai = [b for b in doc["briefings"] if b["model"] != "template"]
+        self.assertTrue(ai and all(b["kind"] == "replay" for b in ai))
+        self.assertEqual(ai[0]["modelLabel"], bb.MODEL_LABEL)
+        self.assertEqual(ai[0]["provider"], bb.PROVIDER)
+
+    def test_time_budget_stops_new_calls(self):
+        clock = iter(range(0, 10000, 100))  # every reading of the clock is 100 s later
+        saved = bb.time.monotonic
+        bb.time.monotonic = lambda: next(clock)
+        try:
+            asked = []
+            self.run_build(lambda *a, **k: asked.append(a) or answer(), max_calls=50, time_budget=250)
+        finally:
+            bb.time.monotonic = saved
+        self.assertLess(len(asked), 5)
+
 
 class CheckTest(unittest.TestCase):
     def test_grounded_answer_passes(self):

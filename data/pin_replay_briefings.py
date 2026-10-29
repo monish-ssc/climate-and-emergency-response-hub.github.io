@@ -30,8 +30,8 @@ sys.path.insert(0, str(DATA_DIR))
 import build_briefings as bb  # noqa: E402
 
 DEFAULT_SITE = "https://monish-ssc.github.io/climate-and-emergency-response-hub.github.io"
-KEEP = ("key", "kind", "fireId", "regionId", "hazard", "step", "score", "level", "asOf", "model", "generatedAt",
-        "promptVersion", "hash", "briefing", "publicAlert", "facts")
+KEEP = ("key", "kind", "fireId", "regionId", "hazard", "step", "score", "level", "asOf", "model", "modelLabel",
+        "provider", "generatedAt", "promptVersion", "hash", "briefing", "publicAlert", "facts")
 
 
 def fetch(base_url):
