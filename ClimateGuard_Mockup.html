@@ -1164,10 +1164,53 @@ svg.leaflet-image-layer.leaflet-interactive path {
         width: 100%;
         accent-color: var(--spruce);
       }
-      .tl-days {
+      .tl-days,
+      .tl-ends {
         display: flex;
         justify-content: space-between;
         font-size: 12px;
+        color: var(--ink-2);
+      }
+      /* replay key moments under the slider */
+      .tl-marks {
+        position: relative;
+        height: 16px;
+        margin: 2px 8px 2px;
+      }
+      .tl-mark {
+        position: absolute;
+        top: 2px;
+        width: 12px;
+        height: 12px;
+        padding: 0;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 0 1px #78908680;
+        cursor: pointer;
+      }
+      .tl-mark.event {
+        border-radius: 2px;
+        background: var(--spruce);
+        transform: translateX(-50%) rotate(45deg);
+      }
+      .tl-mark:focus-visible,
+      .tl-mark:hover {
+        box-shadow: 0 0 0 2px var(--ink);
+      }
+      .ico-r {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: #3e6f8e;
+        border: 2px solid #fff;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 1px 3px #0004;
+      }
+      .replay-event {
+        margin: 8px 0 0;
+        font-size: 13px;
         color: var(--ink-2);
       }
 
@@ -2671,15 +2714,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
                   </button>
                   <button class="chip" data-layer="alerts" aria-pressed="true">
                     <span class="sw" style="background: var(--smoke)"></span
-                    >Weather alerts
+                    >Smoke (AQHI+)
                   </button>
                   <button class="chip" data-layer="water" aria-pressed="true">
-                    <span class="sw" style="background: var(--water)"></span
-                    >Water levels
+                    <span class="sw" style="background: #3e6f8e"></span
+                    >Reception centres
                   </button>
                   <button class="chip" data-layer="health" aria-pressed="true">
                     <span class="sw" style="background: var(--spruce)"></span
-                    >Health facilities
+                    >Hospitals
                   </button>
                 </div>
               </div>
@@ -2752,42 +2795,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 >
               </div>
               <div class="legend" id="legDet" hidden>
-                <span
-                  ><i style="background: var(--amber); opacity: 0.7"></i>Fire
-                  perimeter, now</span
-                >
-                <span
-                  ><i style="border: 1.5px dashed var(--ember)"></i>Perimeter,
-                  day before</span
-                >
-                <span
-                  ><i
-                    style="
-                      background: #9aa19820;
-                      border: 1.5px dashed var(--smoke);
-                    "
-                  ></i
-                  >Smoke advisory area</span
-                >
-                <span
-                  ><i
-                    style="
-                      border: 1.5px dashed var(--ember);
-                      border-radius: 50%;
-                    "
-                  ></i
-                  >Evacuation alert zone</span
-                >
+                <span><i style="background: var(--amber); opacity: 0.7"></i>Fire extent, now (approximate)</span>
+                <span><i style="border: 1.5px dashed var(--ember)"></i>Extent 24 h earlier</span>
+                <span><span class="dotk" style="background: #d9822b"></span>Community, coloured by replayed risk</span>
+                <span><span class="dotk" style="background: #fff; border: 2.5px solid #8c938a"></span>Smoke reading at a station (AQHI+)</span>
+                <span><i style="background: #3e6f8e; border-radius: 4px"></i>Reception centre (once opened)</span>
                 <span><i style="background: var(--spruce)"></i>Hospital</span>
-                <span
-                  ><i
-                    style="
-                      background: var(--water);
-                      clip-path: polygon(50% 0, 100% 100%, 0 100%);
-                    "
-                  ></i
-                  >River gauge</span
-                >
               </div>
               <div class="sev" id="sevBar">
                 <div>
@@ -2812,35 +2825,33 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 </p>
               </div>
               <div class="timeline" id="tlBar" hidden>
-                <button class="play" id="play" aria-label="Play the scenario">
+                <button class="play" id="play" aria-label="Play the replay">
                   <svg width="16" height="16" viewBox="0 0 16 16" id="playIco">
                     <path d="M4 2l10 6-10 6z" fill="currentColor" />
                   </svg>
                 </button>
                 <div class="tl-body">
                   <div class="tl-label">
-                    Scenario time: <b id="tlTxt">Day 3, 14:00</b>
+                    Replay time: <b id="tlTxt">Loading…</b>
                     <span id="tlNote" style="color: var(--ink-2)"></span>
                   </div>
                   <input
                     type="range"
                     id="day"
-                    min="1"
-                    max="5"
+                    min="0"
+                    max="0"
                     step="1"
-                    value="3"
-                    aria-label="Scenario day"
+                    value="0"
+                    aria-label="Replay time"
                   />
-                  <div class="tl-days">
-                    <span>Day 1</span><span>Day 2</span><span>Day 3</span
-                    ><span>Day 4</span><span>Day 5</span>
-                  </div>
+                  <div class="tl-marks" id="tlMarks" aria-label="Key moments"></div>
+                  <div class="tl-ends"><span id="tlStart"></span><span id="tlEnd"></span></div>
                 </div>
               </div>
             </div>
             <div class="panel facs-panel" id="scenarioFacilities">
-              <h2>Shelters and hospitals</h2>
-              <p class="hint">Nearest to the communities at highest risk</p>
+              <h2>Reception centres and hospitals</h2>
+              <p class="hint">Where evacuees were actually sent, with the nearest hospitals (ODHF inventory). Capacity was not published.</p>
               <div class="facs" id="facs"></div>
             </div>
           </div>
@@ -4479,104 +4490,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         );
         return m;
       }
-      function drawMain(d) {
-        if (!map) return;
-        overlay.clearLayers();
-        markers = {};
-        const D = DAYS[d],
-          fc = fireCenter(d),
-          prev = Math.max(1, d - 1);
-        if (layers.alerts && d >= 2)
-          L.polygon(smokeWedge(fc, WIND_BEARING, 24 + d * 3), {
-            color: "#7E867C",
-            weight: 1.5,
-            dashArray: "6 6",
-            fillColor: "#8C938A",
-            fillOpacity: 0.18,
-          })
-            .bindTooltip("Smoke advisory area (sample)", {
-              sticky: true,
-              className: "tip",
-            })
-            .addTo(overlay);
-        if (layers.alerts && d >= 3)
-          L.circle([COMMUNITIES.B.lat, COMMUNITIES.B.lng], {
-            radius: 3500,
-            color: "#B8432F",
-            weight: 1.8,
-            dashArray: "5 6",
-            fill: false,
-          })
-            .bindTooltip("Evacuation alert zone, Community B", {
-              sticky: true,
-              className: "tip",
-            })
-            .addTo(overlay);
-        if (layers.fire) {
-          if (d > 1)
-            L.polygon(
-              firePoly(fireCenter(prev), FIRE_HA[prev], 1, WIND_BEARING),
-              { color: "#B8432F", weight: 1.6, dashArray: "5 5", fill: false },
-            ).addTo(overlay);
-          L.polygon(firePoly(fc, FIRE_HA[d], 1, WIND_BEARING), {
-            color: "#B8432F",
-            weight: 2.2,
-            fillColor: "#D9822B",
-            fillOpacity: 0.5,
-          })
-            .bindTooltip(
-              `Fire K-2041<small>${D.proj ? "Projected " : "Out of control, "}${fmt(FIRE_HA[d])} ha</small>`,
-              {
-                permanent: true,
-                direction: "left",
-                offset: [-8, 0],
-                className: "firelbl",
-              },
-            )
-            .addTo(overlay);
-        }
-        if (layers.water) {
-          L.marker(GAUGE, {
-            icon: L.divIcon({
-              className: "",
-              html: '<div class="ico-g"></div>',
-              iconSize: [18, 15],
-              iconAnchor: [9, 12],
-            }),
-          })
-            .bindTooltip("Gauge 08LB: 92nd percentile", {
-              direction: "top",
-              offset: [0, -10],
-              className: "tip",
-            })
-            .addTo(overlay);
-        }
-        if (layers.health) {
-          HOSPITALS.forEach((h) =>
-            L.marker(h.at, {
-              icon: L.divIcon({
-                className: "",
-                html: '<div class="ico-h"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="#fff" stroke-width="2.6"/></svg></div>',
-                iconSize: [22, 22],
-                iconAnchor: [11, 11],
-              }),
-            })
-              .bindTooltip(h.name, {
-                direction: "left",
-                offset: [-12, 0],
-                className: "tip",
-              })
-              .addTo(overlay),
-          );
-        }
-        Object.keys(COMMUNITIES).forEach((k) => {
-          const m = cmtyMarker(k, D.s[k]).addTo(overlay);
-          markers[k] = m;
-          m.on("click", () => {
-            selected = selected === k ? null : k;
-            renderSituation();
-          });
-        });
+      // Detail map: the real wildfire replay (see REAL WILDFIRE REPLAYS)
+      function drawMain() {
+        drawReplayMap();
       }
       /* ---------- Canada overview ---------- */
       let mode = "canada",
@@ -5020,6 +4936,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         void loadSelectionData();
       }
       function renderArea() {
+        if (mode === "detail" && replay.state === "ready") {
+          renderReplayArea();
+          return;
+        }
         const r = REGIONS.find((x) => x.id === prov),
           h = HAZARDS[hazard],
           key = `${prov}/${hazard}`,
@@ -5128,7 +5048,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("areaGo").textContent =
           mode === "detail"
             ? "Back to region overview"
-            : "Open the sample wildfire timeline";
+            : "Open the real wildfire replay";
       }
       function syncMapChrome() {
         const det = mode === "detail",
@@ -5148,20 +5068,20 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("scenarioFacilities").hidden = !det;
         $("scenarioBriefing").hidden = !det;
         if (det) {
-          $("communityPanelTitle").textContent = "Communities at risk · sample scenario";
-          $("communityPanelHint").textContent = "Illustrative BC Interior communities, ranked by simulated risk.";
-          $("communityFormula").textContent = "Sample score = 45% hazard, 20% people, 20% vulnerability, 15% history";
+          $("communityPanelTitle").textContent = "What drives the score";
+          $("communityPanelHint").textContent = "Replayed with the same rules as the live wildfire score, using only the fire reports available at each moment. Points out of 100.";
+          $("communityFormula").textContent = "Fire proximity 40 · fire within 5 km 20 · uncontrolled fires 10 · burned area 10 · fire-weather alerts 10 · fire history 10";
         }
         $("tlBar").hidden = !det;
         $("legInc").hidden = hazard !== "wildfire";
         $("legHealth").hidden =
           det || !facilities.enabled || facilities.state !== "ready";
         $("mapTitle").textContent = det
-          ? `${region.name}, sample wildfire timeline`
+          ? `${region.name} · ${replay.state === "ready" ? replayFireName() : "wildfire"} replay`
           : "Canadian region overview";
         if (det) {
           $("mapSub").textContent =
-            "Demonstration scenario. Use the timeline to replay it.";
+            "A real fire, replayed from CWFIS fire reports. The outline is an approximate circle from the reported size; smoke readings come from BC air monitoring stations. Press play or drag the timeline.";
         } else if (live.state === "error") {
           $("mapSub").textContent =
             "Live map layers are unavailable. Regional risk cards remain available with demonstration fallback.";
@@ -5186,22 +5106,22 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             $("mapSub").textContent += " The health-facility inventory could not be loaded.";
           }
         }
-        if (windCtl) windCtl.getContainer().style.display = det ? "" : "none";
+        // no archived wind data for the replays, so the wind arrow stays hidden
+        if (windCtl) windCtl.getContainer().style.display = "none";
         if (backCtl) backCtl.getContainer().style.display = det ? "" : "none";
       }
-      function enterDetail(k) {
+      function enterDetail() {
+        const region = REGIONS.find((item) => item.id === prov);
+        if (!region?.replayScenario) return;
         mode = "detail";
+        selected = null;
         renderPopulationLayer();
         renderFacilities();
         renderLiveLayers();
         syncMapChrome();
         renderArea();
-        if (k) selected = k;
         renderSituation();
-        if (map) {
-          if (k) flyTo(k);
-          else map.flyToBounds(REGION_BOUNDS, { duration: reduced ? 0 : 1.6 });
-        }
+        void loadReplay(region.replayScenario);
       }
       function exitDetail() {
         mode = "canada";
@@ -5216,13 +5136,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         if (map)
           map.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : 1.4 });
       }
-      function flyTo(k) {
-        if (map && k)
-          map.flyTo([COMMUNITIES[k].lat, COMMUNITIES[k].lng], 11, {
-            duration: reduced ? 0 : 0.8,
-          });
-      }
-
       // What-if comparison maps
       const minis = {};
       function initMini(id) {
@@ -5290,6 +5203,524 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       }
 
       /* =================================================================
+   REAL WILDFIRE REPLAYS
+   Steps through data/scenarios/<fireId>/: timeline.json (fire reports and
+   the replayed risk score), air_quality.json (AQHI+ from BC PM2.5) and
+   resources.json (reception centres). Nothing in this view is simulated.
+   ================================================================= */
+      const REPLAY_TZ = "America/Vancouver";
+      const replay = {
+        id: null,
+        state: "idle",
+        error: null,
+        meta: null,
+        steps: [],
+        aq: null,
+        res: null,
+        marks: [],
+        step: 0,
+        cache: new Map(),
+      };
+      const AQHI_COLOUR = {
+        low: "#7FA06A",
+        moderate: "#C9A227",
+        high: "#D9822B",
+        "very high": "#B8432F",
+      };
+      const LEVEL_BAND = {
+        low: "b-low",
+        moderate: "b-mod",
+        high: "b-high",
+        critical: "b-ext",
+      };
+      const replayTime = (iso, options = {}) =>
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone: REPLAY_TZ,
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          ...options,
+        }).format(new Date(iso));
+      const replayDate = (iso) =>
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone: REPLAY_TZ,
+          month: "short",
+          day: "numeric",
+        }).format(new Date(iso));
+      const replayFireName = () =>
+        (replay.meta?.label || "Wildfire")
+          .replace(/^Replay:\s*/, "")
+          .replace(/\s*\(.*\)\s*$/, "");
+      const replayTown = () =>
+        (REGIONS.find((x) => x.id === prov)?.name || "").split(",")[0];
+      // hours between steps (6 h for McDougall Creek, 12 h for Pear Lake)
+      const replayStepHours = () =>
+        replay.steps.length > 1
+          ? (Date.parse(replay.steps[1].t) - Date.parse(replay.steps[0].t)) / 3600000
+          : 6;
+
+      function replayPopulation(name) {
+        const list = dataAdapter.population?.communities || [];
+        return list.find(
+          (c) => c.name === name && c.province === "British Columbia",
+        );
+      }
+
+      async function loadReplay(id) {
+        if (replay.id !== id) {
+          replay.id = id;
+          replay.step = 0;
+        }
+        let bundle = replay.cache.get(id);
+        if (!bundle) {
+          replay.state = "loading";
+          replay.error = null;
+          renderSituation();
+          try {
+            const base = `data/scenarios/${id}/`;
+            const [tl, aq, res] = await Promise.all([
+              fetchJSON(base + "timeline.json"),
+              fetchJSON(base + "air_quality.json").catch(() => null),
+              fetchJSON(base + "resources.json").catch(() => null),
+            ]);
+            bundle = { tl, aq, res };
+            replay.cache.set(id, bundle);
+          } catch (error) {
+            if (replay.id !== id) return;
+            replay.state = "error";
+            replay.error = error;
+            renderSituation();
+            return;
+          }
+        }
+        if (replay.id !== id || mode !== "detail") return;
+        replay.meta = bundle.tl.metadata;
+        replay.steps = bundle.tl.steps || [];
+        replay.aq = bundle.aq;
+        replay.res = bundle.res;
+        replay.marks = buildReplayMarks();
+        replay.state = replay.steps.length ? "ready" : "error";
+        setupReplayTimeline();
+        syncMapChrome();
+        renderArea();
+        renderSituation();
+        fitReplay();
+      }
+
+      // Score changes (keyMoments) and dated real-world events (referenceEvents), placed on steps
+      function buildReplayMarks() {
+        const steps = replay.steps,
+          marks = [];
+        const indexAt = (ms) => {
+          const i = steps.findIndex((s) => Date.parse(s.t) >= ms);
+          return i < 0 ? steps.length - 1 : i;
+        };
+        (replay.meta.keyMoments || []).slice(1).forEach((k) => {
+          const i = steps.findIndex((s) => s.t === k.t);
+          if (i >= 0)
+            marks.push({
+              index: i,
+              kind: "score",
+              level: k.level,
+              text: `Score reached ${LEVEL_STYLE[k.level]?.[0] || k.level} (${k.score})`,
+            });
+        });
+        (replay.meta.referenceEvents || []).forEach((e) => {
+          // dates are BC local time (PDT in fire season)
+          const ms = Date.parse(`${e.date}T${e.timeLocal || "12:00"}:00-07:00`);
+          if (Number.isNaN(ms)) return;
+          marks.push({
+            index: indexAt(ms),
+            kind: "event",
+            text: e.event,
+            date: e.date,
+            source: e.source,
+          });
+        });
+        return marks.sort((a, b) => a.index - b.index);
+      }
+
+      function setupReplayTimeline() {
+        const n = replay.steps.length;
+        $("day").max = Math.max(0, n - 1);
+        $("day").value = replay.step;
+        if (!n) return;
+        const last = Math.max(1, n - 1);
+        // one marker per step; events on the same step share it
+        const groups = new Map();
+        replay.marks.forEach((m) => {
+          if (!groups.has(m.index)) groups.set(m.index, []);
+          groups.get(m.index).push(m);
+        });
+        $("tlMarks").innerHTML = [...groups]
+          .map(([index, ms]) => {
+            const score = ms.find((m) => m.kind === "score"),
+              isEvent = ms.some((m) => m.kind === "event"),
+              label = `${replayDate(replay.steps[index].t)}: ${ms.map((m) => m.text).join("; ")}`;
+            return `<button type="button" class="tl-mark ${isEvent ? "event" : "score"}" data-i="${index}" style="left:${(index / last) * 100}%;${!isEvent && score ? `background:${LEVEL_STYLE[score.level]?.[1] || "#D9822B"}` : ""}" title="${escapeHTML(label)}" aria-label="${escapeHTML(label)}"></button>`;
+          })
+          .join("");
+        $("tlMarks")
+          .querySelectorAll(".tl-mark")
+          .forEach((b) => (b.onclick = () => setReplayStep(+b.dataset.i)));
+        $("tlStart").textContent = replayDate(replay.steps[0].t);
+        $("tlEnd").textContent = replayDate(replay.steps[n - 1].t);
+      }
+
+      function setReplayStep(i) {
+        if (replay.state !== "ready") return;
+        replay.step = Math.max(0, Math.min(replay.steps.length - 1, i));
+        $("day").value = replay.step;
+        renderArea();
+        renderSituation();
+      }
+
+      function replayAirAt(step) {
+        if (!replay.aq?.steps) return null;
+        return (
+          replay.aq.steps.find((x) => x.t === step.t) ||
+          replay.aq.steps[replay.step] ||
+          null
+        );
+      }
+
+      function centreStatus(c, step) {
+        const t = Date.parse(step.t);
+        if (c.closedAt && t > Date.parse(c.closedAt))
+          return { open: false, text: `Closed ${replayDate(c.closedAt)}` };
+        // no reported opening date: list it, but don't assume when it was open
+        if (!c.openedAt)
+          return {
+            open: false,
+            text: c.closedAt
+              ? `Used until ${replayDate(c.closedAt)}; opening date not reported`
+              : "Opening date not reported",
+          };
+        if (c.opensAtStep == null || replay.step >= c.opensAtStep)
+          return { open: true, text: `Open since ${replayDate(c.openedAt)}` };
+        return { open: false, text: `Opens ${replayDate(c.openedAt)}` };
+      }
+
+      function replayEventsUpTo(step) {
+        return replay.marks.filter(
+          (m) => m.kind === "event" && m.index <= replay.step,
+        );
+      }
+
+      function renderReplay() {
+        const town = replayTown();
+        if (replay.state !== "ready") {
+          const msg =
+            replay.state === "error"
+              ? "The replay data could not be loaded. Check the connection and try again."
+              : "Loading the replay…";
+          $("summary").innerHTML = `<div class="stat"><div class="lbl">${msg}</div></div>`;
+          $("rank").innerHTML = "";
+          $("facs").innerHTML = "";
+          $("bsTitle").textContent = "Replay summary";
+          $("bsText").textContent = msg;
+          $("tlTxt").textContent = "…";
+          if (map) overlay.clearLayers();
+          return;
+        }
+        const step = replay.steps[replay.step],
+          a = step.risk.assessment,
+          fire = step.fire || {},
+          lvl = LEVEL_STYLE[a.level] || LEVEL_STYLE.low,
+          back = Math.max(1, Math.round(24 / replayStepHours())),
+          prev = replay.steps[replay.step - back],
+          delta = prev ? a.score - prev.risk.assessment.score : null,
+          air = replayAirAt(step),
+          station = air
+            ? replay.aq.stations.find(
+                (s) => s.ems_id === air.stations.find((x) => x.pm25Max != null)?.emsId,
+              )
+            : null,
+          centres = replay.res?.receptionCentres || [],
+          openCentres = centres.filter((c) => centreStatus(c, step).open),
+          when = replayTime(step.t, { year: "numeric", timeZoneName: "short" }),
+          dist = fire.edgeDistanceKm;
+
+        // header and timeline text
+        $("clockLabel").textContent = "Replay time:";
+        $("clockTxt").textContent = when;
+        document.querySelector(".clock .sample").textContent = "Historical replay";
+        $("tlTxt").textContent = when;
+        const here = replay.marks.filter((m) => m.index === replay.step);
+        $("tlNote").textContent = here.length
+          ? `· ${here.map((m) => m.text).join(" · ")}`
+          : step.isReported
+            ? ""
+            : "· between fire reports (size interpolated)";
+
+        // top stats
+        const stat = (num, lbl, sub) =>
+          `<div class="stat"><div class="num">${num}</div><div class="lbl">${lbl}</div><div class="sub">${sub}</div></div>`;
+        $("summary").innerHTML = [
+          stat(
+            `${a.score} <span class="band ${LEVEL_BAND[a.level] || "b-low"}">${lvl[0]}</span>${delta ? `<span class="delta">${delta > 0 ? "+" : ""}${delta} in 24 h</span>` : ""}`,
+            `Replayed wildfire risk, ${escapeHTML(town)}`,
+            "Same scoring rules as the live view",
+          ),
+          stat(
+            `${fmt(Math.round(fire.sizeHa || 0))} ha`,
+            escapeHTML(replayFireName()),
+            `${escapeHTML(fire.stageLabel || "status unknown")}${step.isReported ? ", as reported" : ", estimated between reports"}`,
+          ),
+          stat(
+            dist == null ? "–" : dist < 0.5 ? "At town" : `${dist.toFixed(1)} km`,
+            `Fire edge to ${escapeHTML(town)}`,
+            "From the reported size (approximate outline)",
+          ),
+          air?.aqhiPlus != null
+            ? stat(
+                `${air.display} <span class="band ${{ low: "b-low", moderate: "b-mod", high: "b-high", "very high": "b-ext" }[air.category] || "b-low"}">${escapeHTML(titleCase(air.category))}</span>`,
+                "Smoke (AQHI+)",
+                `${escapeHTML(station?.name || "Nearest station")}${station ? `, ${station.distanceKm} km away` : ""}`,
+              )
+            : stat("–", "Smoke (AQHI+)", "No station reading at this time"),
+        ].join("");
+
+        // why the score is what it is
+        const factors = [...(a.factors || [])].sort(
+          (x, y) => (y.contribution || 0) - (x.contribution || 0),
+        );
+        $("rank").innerHTML = factors
+          .map((f, i) => {
+            const v = formatFactor(f);
+            return `<li tabindex="-1"><span class="n">${i + 1}</span><span class="who"><b>${escapeHTML(f.label)}</b><small>${escapeHTML(f.explanation || "")}</small></span><span class="sc"><span class="score">${Math.round((f.contribution || 0) * 10) / 10} pts</span><br>${escapeHTML(v.value)}</span></li>`;
+          })
+          .join("");
+
+        // reception centres and hospitals
+        const pop = replayPopulation(town);
+        $("facs").innerHTML =
+          (centres.length
+            ? centres
+                .map((c) => {
+                  const st = centreStatus(c, step),
+                    h = c.nearestHospitals?.[0];
+                  return `<div class="fac" style="${st.open ? "" : "opacity:.55"}"><span><b><a href="${escapeHTML(c.source)}" target="_blank" rel="noopener">${escapeHTML(c.name)}</a></b><small>${escapeHTML(c.city)} · ${escapeHTML(c.roleLabel)} · ${escapeHTML(st.text)}${h ? `<br>Nearest hospital: ${escapeHTML(h.name)} (${h.distanceKm} km)` : ""}${c.pets ? `<br>Pets: ${escapeHTML(c.pets)}` : ""}</small></span><span>${c.distanceFromRegionKm != null ? `${c.distanceFromRegionKm} km from ${escapeHTML(town)}` : ""}</span></div>`;
+                })
+                .join("")
+            : '<div class="fac"><span>No reception centre data for this replay.</span></div>') +
+          `<div class="gap"><span>${pop?.population ? `${escapeHTML(town)}: ${fmt(pop.population)} people (Statistics Canada ${pop.year || 2025}). Planning assumption: ${SHELTER_RATE * 100}% need group lodging ≈ ${fmt(Math.round(pop.population * SHELTER_RATE))} spaces.` : "Population figures are loading."}</span><span style="color:var(--ink-2);font-weight:400">${openCentres.length} of ${centres.length} centres open</span></div>`;
+
+        // factual summary (built from the data; the AI briefing replaces this later)
+        const nearest = [...openCentres].sort(
+          (x, y) => (x.distanceFromRegionKm ?? 1e9) - (y.distanceFromRegionKm ?? 1e9),
+        )[0];
+        const parts = [
+          `${replayFireName()} is ${fire.stageLabel || "burning"} at about ${fmt(Math.round(fire.sizeHa || 0))} ha${step.isReported ? "" : " (estimated between reports)"}, ${dist == null ? "" : dist < 0.5 ? `reaching ${town}` : `${dist.toFixed(1)} km from ${town}`} at its approximate edge.`,
+          `Replayed wildfire risk for ${town}: ${a.score} of 100 (${lvl[0]}).`,
+          air?.aqhiPlus != null
+            ? `Smoke at ${station?.name || "the nearest station"}: AQHI+ ${air.display} (${air.category} health risk).`
+            : "",
+          openCentres.length
+            ? `${openCentres.length} reception centre${openCentres.length === 1 ? "" : "s"} open; nearest is ${nearest.name}, ${nearest.city}${nearest.distanceFromRegionKm != null ? ` (${nearest.distanceFromRegionKm} km)` : ""}.`
+            : "No reception centre open yet.",
+        ];
+        const happened = replayEventsUpTo(step).pop();
+        $("bsTitle").textContent = `Replay summary, ${replayTime(step.t, { timeZoneName: "short" })}`;
+        $("bsText").innerHTML =
+          escapeHTML(parts.filter(Boolean).join(" ")) +
+          (happened
+            ? `<span class="replay-event" style="display:block">What actually happened (reported ${escapeHTML(replayDate(replay.steps[happened.index].t))}): ${escapeHTML(happened.text)} · <a href="${escapeHTML(happened.source)}" target="_blank" rel="noopener">source</a></span>`
+            : "") +
+          '<span class="replay-event" style="display:block">Built from the replay data, not generated by AI.</span>';
+
+        drawReplayMap();
+      }
+
+      function drawReplayMap() {
+        if (!map) return;
+        overlay.clearLayers();
+        markers = {};
+        if (replay.state !== "ready") return;
+        const step = replay.steps[replay.step],
+          a = step.risk.assessment,
+          fire = step.fire || {},
+          region = REGIONS.find((x) => x.id === prov),
+          back = Math.max(1, Math.round(24 / replayStepHours())),
+          prev = replay.steps[replay.step - back];
+        if (layers.fire) {
+          if (prev?.fire?.geometry)
+            L.geoJSON(prev.fire.geometry, {
+              interactive: false,
+              style: { color: "#B8432F", weight: 1.6, dashArray: "5 5", fill: false },
+            }).addTo(overlay);
+          if (fire.geometry)
+            L.geoJSON(fire.geometry, {
+              style: {
+                color: "#B8432F",
+                weight: 2.2,
+                fillColor: "#D9822B",
+                fillOpacity: 0.45,
+              },
+            })
+              .bindTooltip(
+                `${escapeHTML(replayFireName())}<small>${escapeHTML(titleCase(fire.stageLabel || ""))}, about ${fmt(Math.round(fire.sizeHa || 0))} ha (approximate extent)</small>`,
+                { permanent: true, direction: "top", offset: [0, -8], className: "firelbl" },
+              )
+              .addTo(overlay);
+        }
+        if (layers.alerts && replay.aq) {
+          const air = replayAirAt(step);
+          (replay.aq.stations || []).forEach((st) => {
+            const v = air?.stations?.find((x) => x.emsId === st.ems_id),
+              cat = aqhiCategory(v?.aqhiPlus);
+            L.circleMarker([st.lat, st.lon], {
+              radius: 9,
+              color: v?.aqhiPlus != null ? AQHI_COLOUR[cat] : "#8C938A",
+              weight: 3,
+              fillColor: "#fff",
+              fillOpacity: 0.95,
+            })
+              .bindTooltip(
+                `<b>${escapeHTML(st.name)}</b><br>${v?.aqhiPlus != null ? `AQHI+ ${v.aqhiPlus > 10 ? "10+" : v.aqhiPlus} (${cat}) · PM2.5 up to ${Math.round(v.pm25Max)} µg/m³` : "No reading at this time"}`,
+                { direction: "top", className: "tip" },
+              )
+              .addTo(overlay);
+          });
+        }
+        const centres = replay.res?.receptionCentres || [],
+          open = centres.filter((c) => centreStatus(c, step).open);
+        if (layers.health) {
+          const seen = new Set();
+          open
+            .flatMap((c) => c.nearestHospitals || [])
+            .forEach((h) => {
+              if (seen.has(h.name)) return;
+              seen.add(h.name);
+              L.marker([h.lat, h.lon], {
+                icon: L.divIcon({
+                  className: "",
+                  html: '<div class="ico-h"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="#fff" stroke-width="2.6"/></svg></div>',
+                  iconSize: [22, 22],
+                  iconAnchor: [11, 11],
+                }),
+              })
+                .bindTooltip(`${escapeHTML(h.name)}<br><small>${escapeHTML(h.city || "")} · ODHF inventory</small>`, {
+                  direction: "left",
+                  offset: [-12, 0],
+                  className: "tip",
+                })
+                .addTo(overlay);
+            });
+        }
+        if (layers.water) {
+          open.forEach((c) =>
+            L.marker([c.lat, c.lon], {
+              icon: L.divIcon({
+                className: "",
+                html: '<div class="ico-r"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 6L6 1.5 11 6M2.6 5v5.5h6.8V5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg></div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11],
+              }),
+              zIndexOffset: 500,
+            })
+              .bindTooltip(`<b>${escapeHTML(c.name)}</b><br>${escapeHTML(c.roleLabel)} · ${escapeHTML(centreStatus(c, step).text)}`, {
+                direction: "right",
+                offset: [12, 0],
+                className: "tip",
+              })
+              .addTo(overlay),
+          );
+        }
+        const col = (LEVEL_STYLE[a.level] || LEVEL_STYLE.low)[1];
+        L.circleMarker([region.lat, region.lon], {
+          radius: 11,
+          color: "#17251E",
+          weight: 3,
+          fillColor: col,
+          fillOpacity: 1,
+        })
+          .bindTooltip(`${escapeHTML(replayTown())} · ${a.score}`, {
+            permanent: true,
+            direction: "right",
+            offset: [12, 0],
+            className: "lbl",
+          })
+          .addTo(overlay);
+      }
+
+      // AQHI category for an AQHI+ value (same bands as air_quality_pipeline.py)
+      function aqhiCategory(v) {
+        if (v == null) return null;
+        return v <= 3 ? "low" : v <= 6 ? "moderate" : v <= 10 ? "high" : "very high";
+      }
+
+      // Town, every fire extent in the replay, and reception centres within 150 km
+      function fitReplay() {
+        if (!map || replay.state !== "ready") return;
+        const region = REGIONS.find((x) => x.id === prov),
+          b = L.latLngBounds([[region.lat, region.lon]]);
+        replay.steps.forEach((s) => {
+          if (s.fire?.geometry) b.extend(L.geoJSON(s.fire.geometry).getBounds());
+        });
+        (replay.res?.receptionCentres || [])
+          .filter((c) => (c.distanceFromRegionKm ?? 1e9) <= 150)
+          .forEach((c) => b.extend([c.lat, c.lon]));
+        map.flyToBounds(b, { padding: [30, 30], duration: reduced ? 0 : 1.4 });
+      }
+
+      function renderReplayArea() {
+        const step = replay.steps[replay.step],
+          a = step.risk.assessment,
+          c = LEVEL_STYLE[a.level] || LEVEL_STYLE.low,
+          status = $("areaDataStatus"),
+          sources = [
+            ...(step.risk.sources || []),
+            ...(replay.aq?.sources || []),
+          ];
+        $("areaName").textContent = REGIONS.find((x) => x.id === prov).name;
+        $("areaSub").textContent = `${replayFireName()} replay · ${replayTime(step.t, { year: "numeric", timeZoneName: "short" })}`;
+        $("areaPanel").setAttribute("aria-busy", "false");
+        status.dataset.state = "live";
+        status.title = "";
+        status.textContent = "Historical replay · fire reports available at that time";
+        const sourcesEl = $("areaDataSources");
+        sourcesEl.hidden = !sources.length;
+        sourcesEl.innerHTML = `Sources: ${sources
+          .map(
+            (s) =>
+              `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener">${escapeHTML(s.name)}</a>`,
+          )
+          .join(", ")}`;
+        $("areaIco").innerHTML = HZ_ICON.wildfire.replace(
+          'fill="currentColor"',
+          `fill="${c[1]}"`,
+        );
+        $("areaLevel").textContent = c[0];
+        $("areaLevel").style.color = c[1];
+        $("areaScore").textContent = `Risk index ${a.score} of 100`;
+        $("areaFill").style.width = a.score + "%";
+        $("areaFill").style.background = c[1];
+        $("areaReason").textContent = (a.summary || "").replace(/^Replay .*?UTC:\s*/, "");
+        const top = [...(a.factors || [])]
+          .sort((x, y) => (y.contribution || 0) - (x.contribution || 0))
+          .slice(0, 2)
+          .map(formatFactor);
+        if (top[0]) {
+          $("m1l").textContent = top[0].label;
+          $("m1").textContent = top[0].value;
+        }
+        if (top[1]) {
+          $("m2l").textContent = top[1].label;
+          $("m2").textContent = top[1].value;
+        }
+        $("areaRec").textContent =
+          HAZARDS.wildfire.brief[a.score >= 65 ? 1 : 0] +
+          " " +
+          (a.score >= 85
+            ? "Escalate with local emergency management."
+            : "Check conditions against official guidance.");
+        $("areaGo").hidden = false;
+        $("areaGo").textContent = "Back to region overview";
+      }
+
+      /* =================================================================
    SITUATION
    ================================================================= */
       let day = 3;
@@ -5299,95 +5730,45 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           drawCanada();
           return;
         }
-        const D = DAYS[day],
-          st = dayStats(day),
-          prevSt = day > 1 ? dayStats(day - 1) : null;
-        const t = `Day ${day}, 14:00`;
-        $("clockTxt").textContent = t;
-        $("clockLabel").textContent = "Scenario time:";
-        document.querySelector(".clock .sample").textContent = "Historical replay";
-        $("tlTxt").textContent = t;
-        $("tlNote").textContent = D.proj ? "(projection)" : "";
-        const dAbove = prevSt ? st.above - prevSt.above : 0;
-        $("summary").innerHTML = `
-    <div class="stat"><div class="num">${fmt(st.people)}</div><div class="lbl">People at risk</div><div class="sub">in communities scoring ${THRESHOLD} or higher</div></div>
-    <div class="stat"><div class="num">${st.above}${dAbove > 0 ? `<span class="delta">+${dAbove} since Day ${day - 1}</span>` : ""}</div><div class="lbl">Communities above threshold</div><div class="sub">High or Extreme band</div></div>
-    <div class="stat"><div class="num">${fmt(st.need)}</div><div class="lbl">Shelter spaces needed</div><div class="sub">assumes ${SHELTER_RATE * 100}% of people at risk</div></div>
-    <div class="stat"><div class="num">${D.ev}</div><div class="lbl">Active events</div><div class="sub">${D.events}</div></div>`;
-        const order = Object.keys(D.s).sort((a, b) => D.s[b] - D.s[a]);
-        $("rank").innerHTML = order
-          .map((k, i) => {
-            const s = D.s[k],
-              b = band(s);
-            return `<li data-k="${k}" class="${selected === k ? "sel" : ""}" tabindex="0">
-    <span class="n">${i + 1}</span>
-    <span class="who"><b>${COMMUNITIES[k].name}</b><small>${D.notes[k]}</small></span>
-    <span class="sc"><span class="score">${s} <span class="band ${b[1]}">${b[0]}</span></span><br>${fmt(COMMUNITIES[k].people)} people</span></li>`;
-          })
-          .join("");
-        $("rank")
-          .querySelectorAll("li")
-          .forEach((li) => {
-            const go = () => {
-              const k = li.dataset.k;
-              if (mode === "canada") {
-                enterDetail(k);
-                return;
-              }
-              selected = selected === k ? null : k;
-              renderSituation();
-              if (selected) flyTo(selected);
-              else if (map)
-                map.flyToBounds(REGION_BOUNDS, { duration: reduced ? 0 : 0.8 });
-            };
-            li.onclick = go;
-            li.onkeydown = (e) => {
-              if (e.key === "Enter") go();
-            };
-          });
-        $("facs").innerHTML = `
-    <div class="fac"><span><b>Hospital, Community C</b><small>Nearest for Community B</small></span><span>22 km</span></div>
-    ${SHELTERS.map((s) => `<div class="fac"><span><b>${s.name}</b><small>Simulated</small></span><span>${fmt(s.cap)} spaces</span></div>`).join("")}
-    <div class="gap"><span>Shelter gap</span>${st.gap ? `<b>${fmt(st.gap)} spaces short</b>` : '<span style="color:var(--spruce)">Enough space</span>'}</div>`;
-        $("bsTitle").textContent = `AI situation briefing, Day ${day}`;
-        $("bsText").textContent = D.brief;
-        if (mode === "detail") drawMain(day);
-        else drawCanada();
+        renderReplay();
       }
-      $("day").addEventListener("input", (e) => {
-        day = +e.target.value;
-        renderSituation();
-      });
-      let playT = null;
+      $("day").addEventListener("input", (e) => setReplayStep(+e.target.value));
+      let playT = null,
+        playHold = 0;
       $("play").onclick = () => {
         if (playT) {
           stopPlay();
           return;
         }
-        if (day === 5) {
-          day = 1;
-          $("day").value = 1;
-          renderSituation();
-        }
+        if (replay.state !== "ready") return;
+        if (replay.step >= replay.steps.length - 1) setReplayStep(0);
         $("playIco").innerHTML =
           '<path d="M4 2h3v12H4zM9 2h3v12H9z" fill="currentColor"/>';
         $("play").setAttribute("aria-label", "Pause");
-        playT = setInterval(() => {
-          if (day >= 5) {
-            stopPlay();
-            return;
-          }
-          day++;
-          $("day").value = day;
-          renderSituation();
-        }, 1400);
+        playT = setInterval(
+          () => {
+            if (playHold > 0) {
+              playHold--;
+              return;
+            }
+            if (replay.step >= replay.steps.length - 1) {
+              stopPlay();
+              return;
+            }
+            setReplayStep(replay.step + 1);
+            // pause briefly on score changes and real events so they can be read
+            if (replay.marks.some((m) => m.index === replay.step)) playHold = 6;
+          },
+          reduced ? 700 : 280,
+        );
       };
       function stopPlay() {
         clearInterval(playT);
         playT = null;
+        playHold = 0;
         $("playIco").innerHTML =
           '<path d="M4 2l10 6-10 6z" fill="currentColor"/>';
-        $("play").setAttribute("aria-label", "Play the scenario");
+        $("play").setAttribute("aria-label", "Play the replay");
       }
       $("regionSelect").innerHTML = REGIONS.map(
         (r) => `<option value="${r.id}">${r.name}</option>`,
