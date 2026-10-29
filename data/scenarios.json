@@ -1,42 +1,34 @@
 {
   "metadata": {
-    "source": "ClimateGuard AI hackathon fixtures",
+    "source": "ClimateGuard regions used by every pipeline",
     "generatedAt": "2026-10-28T00:00:00Z",
-    "isSimulated": true,
-    "note": "temperatureC/windKmh on the original five regions are simulated placeholders; risk data comes from the pipelines."
+    "isSimulated": false,
+    "note": "id, label (\"City, PR\"; the province code is read from the label) and centre coordinates. replayScenario links a region to its wildfire replay."
   },
   "regions": [
     {
       "id": "vancouver",
       "label": "Vancouver, BC",
       "lat": 49.2827,
-      "lon": -123.1207,
-      "temperatureC": 29,
-      "windKmh": 38
+      "lon": -123.1207
     },
     {
       "id": "calgary",
       "label": "Calgary, AB",
       "lat": 51.0447,
-      "lon": -114.0719,
-      "temperatureC": 24,
-      "windKmh": 52
+      "lon": -114.0719
     },
     {
       "id": "halifax",
       "label": "Halifax, NS",
       "lat": 44.6488,
-      "lon": -63.5752,
-      "temperatureC": 18,
-      "windKmh": 66
+      "lon": -63.5752
     },
     {
       "id": "clinton",
       "label": "Clinton, BC",
       "lat": 51.0903,
       "lon": -121.5911,
-      "temperatureC": 31,
-      "windKmh": 44,
       "replayScenario": "2026_BC_2026-C40983"
     },
     {
@@ -44,8 +36,6 @@
       "label": "West Kelowna, BC",
       "lat": 49.8625,
       "lon": -119.5833,
-      "temperatureC": 33,
-      "windKmh": 50,
       "replayScenario": "2023_BC_2023-K52767"
     },
     {

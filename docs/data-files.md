@@ -18,6 +18,11 @@ The pipelines in `data/` write plain JSON files. The dashboard can load them wit
 | Hurricane map layers | `data/pipeline/hurricane_tracks_latest.geojson`, `hurricane_historical_storms.geojson`, `hurricane_active_alerts.geojson` (git-ignored; regenerate) | `hurricane_pipeline.py` |
 | List of replays | `data/scenarios/index.json` | `build_replay.py` |
 | One replay (time steps) | `data/scenarios/<fireId>/timeline.json` | `build_replay.py` |
+| Smoke during a replay (AQHI+ per step) | `data/scenarios/<fireId>/air_quality.json` | `air_quality_pipeline.py --replay` |
+| Reception centres for a replay | `data/scenarios/<fireId>/resources.json` | `build_reception_centres.py` |
+| Live smoke (AQHI) per region | `data/pipeline/air_quality/<regionId>_aqhi.json` (refreshed by the workflow) | `air_quality_pipeline.py` |
+| Past disasters per region and hazard (all 12 regions) | `data/history/disaster_history.json` | `disaster_history.py` |
+| Health facilities (ODHF) | `data/healthcare/facilities.geojson` | `healthcare_data_pipeline.py` |
 | Regions | `data/scenarios.json` | edited by hand |
 
 ## Live risk (one file per region and tab)
@@ -148,3 +153,11 @@ From the repository root (see `docs/developer-guide.md` for the `.venv` setup):
 ```
 
 The scheduled workflow does these steps every 30 minutes and deploys the result to GitHub Pages. Do not commit the generated files for a normal refresh. Commit the files in `data/scenarios/` when the replays change.
+
+## What the dashboard uses where
+
+- **Overview, Resource planning panel** (selected region and hazard): population from `population_summary.json`; typical evacuation size, its 75th percentile and similar past events from `disaster_history.json`; the three nearest hospitals from `facilities.geojson`; possible host communities (towns of 10,000+ people 30–250 km away) from `population_summary.json`. The share of evacuees needing group lodging is an adjustable planning assumption (20% by default), labelled on screen.
+- **Situation tab, wildfire replay** (Clinton and West Kelowna): `timeline.json`, `air_quality.json` and `resources.json` for that fire; see `docs/air-quality-and-shelters.md`.
+- A region with no risk snapshot yet shows **"No data yet"**. The dashboard has no simulated fallback scores.
+- `disaster_history.py` rebuilds from `data/history/cdd_events_clean.csv` when the raw CDD extract is not in `data/raw/cdd/`, so new regions can be added without the original spreadsheet.
+

@@ -1208,6 +1208,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
         place-items: center;
         box-shadow: 0 1px 3px #0004;
       }
+      .sample-note {
+        margin: 0 0 16px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #f6ecd2;
+        border: 1px solid #e3cf98;
+        font-size: 14px;
+      }
+      .res-body .fac small i {
+        font-style: normal;
+        opacity: 0.8;
+      }
+      .res-body select {
+        font: inherit;
+        padding: 1px 4px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--white);
+      }
       .replay-event {
         margin: 8px 0 0;
         font-size: 13px;
@@ -2787,7 +2806,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                       d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 01-11 0c0-3 1.8-4.4 2.3-6.4 1 1 1.4 2.3 1.6 3.3 1.4-2.2 1.9-4.6 1.6-7.6z"
                       fill="#D9822B"
                     /></svg
-                  >Active incident: select it to open the scenario</span
+                  >Real fire replays: select Clinton or West Kelowna, then open the replay</span
                 >
                 <span id="legHealth" hidden
                   ><span class="dotk" style="background: var(--spruce)"></span
@@ -2888,6 +2907,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <button class="btn" id="areaGo">
                 Open the BC Interior wildfire
               </button>
+            </div>
+            <div class="panel" id="resourcePanel" aria-live="polite">
+              <h2 id="resTitle">Resource planning</h2>
+              <p class="hint">
+                A planning reference, not a forecast. Assumptions are labelled
+                and adjustable.
+              </p>
+              <div class="facs res-body" id="resBody"></div>
             </div>
             <div class="panel">
               <h2 id="communityPanelTitle">Population by community</h2>
@@ -3102,6 +3129,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <!-- ============ WHAT-IF ============ -->
       <section class="view" id="v-whatif" hidden>
+        <p class="sample-note" role="note">
+          <b>Sample scenario.</b> This tab uses an illustrative fire (K-2041)
+          and made-up communities, not real data. The real wildfire replays are
+          on the Situation tab.
+        </p>
         <div class="grid-wi">
           <form class="panel form" id="wiForm" onsubmit="return false;">
             <h2>What-if trigger</h2>
@@ -3221,6 +3253,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <!-- ============ PLAN CHECK (add-on) ============ -->
       <section class="view" id="v-plan" hidden>
+        <p class="sample-note" role="note">
+          <b>Sample scenario.</b> This tab uses an illustrative fire (K-2041)
+          and made-up communities, not real data. The real wildfire replays are
+          on the Situation tab.
+        </p>
         <div class="pc-hero">
           <div>
             <h2>Find the gaps in your emergency plan before the fire does</h2>
@@ -3301,12 +3338,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     <footer>
       <span
-        >Sources: CWFIS, ECCC GeoMet, Water Survey of Canada, Statistics Canada,
-        ODHF, Open-Meteo</span
+        >Sources: CWFIS (NRCan), ECCC GeoMet, Water Survey of Canada, BC Air
+        Quality, Canadian Disaster Database, Statistics Canada, ODHF, IBTrACS</span
       >
       <span
-        >Prototype: pipeline snapshots are labeled with freshness; timelines,
-        plans and recommendations remain demonstrations</span
+        >Prototype, not an official warning system. Live snapshots show their
+        time; the wildfire replays use real past events; the What-if and Plan
+        check tabs use a sample scenario</span
       >
     </footer>
     <div class="toast" id="toast" role="status"></div>
@@ -3435,7 +3473,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             "Projection: four communities above the threshold and 46,200 people at risk. Request regional shelter support now; local capacity cannot cover it.",
         },
       };
-      // Pipeline regions. `base` values are retained only as a safe demonstration fallback.
+      // Pipeline regions. Scores come only from data/pipeline/risk; a region without a snapshot shows "No data yet".
       const REGIONS = [
         {
           id: "vancouver",
@@ -3444,10 +3482,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           sub: "Pacific coast",
           lon: -123.1207,
           lat: 49.2827,
-          base: { wildfire: 43, rain: 55, hurricane: 16 },
-          temp: 29,
-          wind: 38,
-          rain: 55,
         },
         {
           id: "calgary",
@@ -3456,10 +3490,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           sub: "Prairies and foothills",
           lon: -114.0719,
           lat: 51.0447,
-          base: { wildfire: 37, rain: 48, hurricane: 9 },
-          temp: 24,
-          wind: 52,
-          rain: 34,
         },
         {
           id: "halifax",
@@ -3468,10 +3498,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           sub: "Atlantic coast",
           lon: -63.5752,
           lat: 44.6488,
-          base: { wildfire: 42, rain: 80, hurricane: 50 },
-          temp: 18,
-          wind: 66,
-          rain: 98,
         },
         {
           id: "clinton",
@@ -3480,10 +3506,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           sub: "BC Interior",
           lon: -121.5911,
           lat: 51.0903,
-          base: { wildfire: 64, rain: 28, hurricane: 9 },
-          temp: 31,
-          wind: 44,
-          rain: 20,
           replayScenario: "2026_BC_2026-C40983",
         },
         {
@@ -3493,12 +3515,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           sub: "Okanagan Valley",
           lon: -119.5833,
           lat: 49.8625,
-          base: { wildfire: 84, rain: 55, hurricane: 16 },
-          temp: 33,
-          wind: 50,
-          rain: 55,
           replayScenario: "2023_BC_2023-K52767",
         },
+        // Added Oct 29. No simulated fallback values: until the pipelines have data, they show "No data yet".
+        { id: "st-johns", name: "St. John's, NL", short: "YYT", sub: "Avalon Peninsula", lon: -52.7126, lat: 47.5615 },
+        { id: "yellowknife", name: "Yellowknife, NT", short: "YZF", sub: "Great Slave Lake", lon: -114.3718, lat: 62.454 },
+        { id: "winnipeg", name: "Winnipeg, MB", short: "YWG", sub: "Red River valley", lon: -97.1384, lat: 49.8951 },
+        { id: "fort-mcmurray", name: "Fort McMurray, AB", short: "YMM", sub: "Athabasca boreal forest", lon: -111.3803, lat: 56.7264 },
+        { id: "toronto", name: "Toronto, ON", short: "YYZ", sub: "Lake Ontario shore", lon: -79.3832, lat: 43.6532 },
+        { id: "prince-albert", name: "Prince Albert, SK", short: "YPA", sub: "North Saskatchewan River", lon: -105.7531, lat: 53.2033 },
+        { id: "montreal", name: "Montréal, QC", short: "YUL", sub: "St. Lawrence River", lon: -73.5674, lat: 45.5019 },
       ];
       const HAZARDS = {
         wildfire: {
@@ -4086,6 +4112,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       const REGION_CSD = {
         vancouver: "5915022", calgary: "4806016", halifax: "1209034",
         clinton: "5933028", "west-kelowna": "5935029",
+        "st-johns": "1001519", yellowknife: "6106023", winnipeg: "4611040",
+        "fort-mcmurray": "4816037", toronto: "3520005", "prince-albert": "4715066",
+        montreal: "2466023",
       };
       const populationNumber = (value, decimals = 0) =>
         Number.isFinite(value) ? value.toLocaleString("en-CA", { maximumFractionDigits: decimals }) : "Unavailable";
@@ -4508,9 +4537,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       };
       const provScore = (r) => {
         const entry = riskEntry(r.id, hazard);
-        return clamp((entry?.score ?? r.base[hazard]) + severity);
+        const raw = entry?.score ?? r.base?.[hazard];
+        return raw == null ? null : clamp(raw + severity);
       };
+      const NO_DATA_STYLE = ["No data yet", "#9AA198"];
       const provCat = (n, level) => {
+        if (n == null) return NO_DATA_STYLE;
         if (severity === 0 && LEVEL_STYLE[level]) return LEVEL_STYLE[level];
         return n >= 85
           ? LEVEL_STYLE.critical
@@ -4619,10 +4651,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             col = provCat(n, entry?.level)[1],
             sel = r.id === prov;
           L.circle([r.lat, r.lon], {
-            radius: (90 + n * 3.2) * 1000,
+            radius: (90 + (n ?? 0) * 3.2) * 1000,
             stroke: false,
             fillColor: col,
-            fillOpacity: 0.22,
+            fillOpacity: n == null ? 0.1 : 0.22,
             interactive: false,
           }).addTo(overlay);
           const m = L.circleMarker([r.lat, r.lon], {
@@ -4949,10 +4981,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
               : { state: "loading", data: null },
           snapshot = selection.data,
           entry = riskEntry(prov, hazard),
-          n = clamp(
-            (snapshot?.assessment?.score ?? entry?.score ?? r.base[hazard]) +
-              severity,
-          ),
+          rawScore = snapshot?.assessment?.score ?? entry?.score ?? r.base?.[hazard],
+          n = rawScore == null ? null : clamp(rawScore + severity),
           c = provCat(
             n,
             severity === 0
@@ -4973,9 +5003,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         } else if (selection.state === "stale") {
           status.textContent = `Stale snapshot · expired ${formatSnapshotTime(snapshot.expiresAt)}`;
         } else if (selection.state === "unavailable") {
-          status.textContent = "Demonstration mode · snapshot unavailable";
+          status.textContent = "No data yet · snapshot unavailable";
         } else if (selection.state === "error") {
-          status.textContent = "Demonstration mode · data could not load";
+          status.textContent = "No data · the snapshot could not load";
           status.title = selection.error?.message || "Data request failed";
         } else {
           status.textContent = "Loading latest data…";
@@ -5000,20 +5030,23 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           .replace('stroke="currentColor"', `stroke="${c[1]}"`);
         $("areaLevel").textContent = c[0];
         $("areaLevel").style.color = c[1];
-        $("areaScore").textContent = `Risk index ${n} of 100`;
-        $("areaFill").style.width = n + "%";
+        $("areaScore").textContent =
+          n == null ? "Risk data not available yet" : `Risk index ${n} of 100`;
+        $("areaFill").style.width = (n ?? 0) + "%";
         $("areaFill").style.background = c[1];
         $("areaReason").textContent = snapshot?.assessment?.summary
           ? snapshot.assessment.summary
           : selection.state === "loading"
-            ? "Loading the latest regional assessment. Demonstration values are shown temporarily."
+            ? "Loading the latest regional assessment…"
+            : n == null
+              ? "No risk snapshot for this place yet. The automatic refresh adds it, usually within about 30 minutes."
             : n >= 85
-              ? "Very elevated demonstration scenario. Check official agency alerts now."
+              ? "Very high risk. Check official agency alerts now."
               : n >= 65
-                ? "Elevated demonstration conditions call for a closer preparedness review."
+                ? "Elevated risk; a closer preparedness review is worthwhile."
                 : n >= 40
-                  ? "Some demonstration conditions are worth monitoring."
-                  : "Low relative risk under this demonstration scenario.";
+                  ? "Some conditions are worth monitoring."
+                  : "Low relative risk.";
         if (snapshot?.assessment?.factors?.length) {
           const factor1 = formatFactor(snapshot.assessment.factors[0]),
             factor2 = formatFactor(
@@ -5023,6 +5056,11 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           $("m2l").textContent = factor2.label;
           $("m1").textContent = factor1.value;
           $("m2").textContent = factor2.value;
+        } else if (r.temp == null) {
+          $("m1l").textContent = h.m1;
+          $("m2l").textContent = h.m2;
+          $("m1").textContent = "–";
+          $("m2").textContent = "–";
         } else {
           const v1 =
               hazard === "wildfire"
@@ -5049,6 +5087,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           mode === "detail"
             ? "Back to region overview"
             : "Open the real wildfire replay";
+        renderResourcePanel();
       }
       function syncMapChrome() {
         const det = mode === "detail",
@@ -5084,7 +5123,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             "A real fire, replayed from CWFIS fire reports. The outline is an approximate circle from the reported size; smoke readings come from BC air monitoring stations. Press play or drag the timeline.";
         } else if (live.state === "error") {
           $("mapSub").textContent =
-            "Live map layers are unavailable. Regional risk cards remain available with demonstration fallback.";
+            "Live map layers are unavailable. Regional risk cards still show the latest saved snapshots.";
         } else if (!live.manifest) {
           $("mapSub").textContent = "Loading the live map layers…";
         } else {
@@ -5200,6 +5239,186 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         Object.keys(COMMUNITIES).forEach((k) =>
           cmtyMarker(k, scores[k], { label: false, small: true }).addTo(m._ov),
         );
+      }
+
+      /* =================================================================
+   RESOURCE PLANNING (overview, selected region and hazard)
+   Population: Statistics Canada (population_summary.json). Typical
+   evacuations and similar events: Canadian Disaster Database
+   (disaster_history.json). Hospitals: ODHF (facilities.geojson). Host
+   communities: towns of 10,000+ people 30-250 km away. The lodging share
+   is a labelled, adjustable planning assumption.
+   ================================================================= */
+      const HISTORY_HAZARD = { wildfire: "wildfire", rain: "flood", hurricane: "severe_storm" };
+      const HAZARD_NOUN = { wildfire: "wildfire", rain: "flood", hurricane: "hurricane or storm-surge" };
+      const resource = { history: null, historyPromise: null, rate: SHELTER_RATE };
+      // "st. clare's mercy hospital" -> "St. Clare's Mercy Hospital"
+      const properCase = (value) =>
+        String(value || "").replace(/(^|[\s\-(\/])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+      const kmBetween = (lat1, lon1, lat2, lon2) => {
+        const p1 = toRad(lat1),
+          p2 = toRad(lat2),
+          a =
+            Math.sin((p2 - p1) / 2) ** 2 +
+            Math.cos(p1) * Math.cos(p2) * Math.sin(toRad(lon2 - lon1) / 2) ** 2;
+        return 2 * 6371 * Math.asin(Math.sqrt(a));
+      };
+      function loadHistory() {
+        resource.historyPromise ??= fetchJSON("data/history/disaster_history.json")
+          .then((doc) => {
+            resource.history = doc;
+            renderResourcePanel();
+          })
+          .catch(() => {
+            resource.history = { failed: true };
+            renderResourcePanel();
+          });
+        return resource.historyPromise;
+      }
+      function nearestHospitals(lat, lon, n = 3) {
+        const seen = new Set();
+        return (dataAdapter.facilities.features || [])
+          .filter((f) => f.properties?.type === "Hospitals" && f.geometry?.coordinates)
+          .map((f) => ({
+            name: properCase(f.properties.name),
+            town: properCase(f.properties.municipality || ""),
+            km: kmBetween(lat, lon, f.geometry.coordinates[1], f.geometry.coordinates[0]),
+            at: f.geometry.coordinates,
+          }))
+          .sort((a, b) => a.km - b.km)
+          .filter((h) => {
+            // the inventory lists some sites twice; keep one per ~1 km
+            const key = `${h.at[0].toFixed(2)},${h.at[1].toFixed(2)}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          })
+          .slice(0, n);
+      }
+      function hostCommunities(r, ownCsd, n = 3) {
+        return (dataAdapter.population.communities || [])
+          .filter(
+            (c) =>
+              c.csduid !== ownCsd &&
+              c.population >= 10000 &&
+              Number.isFinite(c.centre_lat) &&
+              Number.isFinite(c.centre_lon),
+          )
+          .map((c) => ({ ...c, km: kmBetween(r.lat, r.lon, c.centre_lat, c.centre_lon) }))
+          .filter((c) => c.km >= 30 && c.km <= 250)
+          .sort((a, b) => a.km - b.km)
+          .slice(0, n);
+      }
+      function renderResourcePanel() {
+        const panel = $("resourcePanel");
+        if (!panel) return;
+        panel.hidden = mode === "detail";
+        if (mode === "detail") return;
+        const r = REGIONS.find((x) => x.id === prov),
+          csd = REGION_CSD[prov],
+          pop = (dataAdapter.population.communities || []).find((c) => c.csduid === csd),
+          hz = HISTORY_HAZARD[hazard],
+          hist = resource.history?.regions?.[prov]?.hazards?.[hz],
+          base = hist?.evacuationBaseline,
+          rate = resource.rate,
+          noun = HAZARD_NOUN[hazard];
+        if (!resource.history) void loadHistory();
+        if (dataAdapter.facilities.state === "idle") void loadFacilityData().then(renderResourcePanel);
+        $("resTitle").textContent = `Resource planning · ${r.name}`;
+        const row = (label, value, note) =>
+          `<div class="fac"><span><b>${label}</b>${note ? `<small>${note}</small>` : ""}</span><span>${value}</span></div>`;
+        const rows = [];
+        rows.push(
+          row(
+            "People living here",
+            pop?.population ? fmt(Math.round(pop.population)) : "…",
+            pop
+              ? `Statistics Canada ${pop.year || ""} estimate${pop.name !== r.name.split(",")[0] ? ` for ${escapeHTML(pop.name)}` : ""}`
+              : "Loading population estimates",
+          ),
+        );
+        if (!resource.history) rows.push(row("Typical evacuation", "…", "Loading disaster history"));
+        else if (!hist) rows.push(row("Typical evacuation", "–", "No disaster history for this place"));
+        else if (base?.median == null)
+          rows.push(
+            row(
+              `Typical ${noun} evacuation`,
+              "–",
+              `Too few ${escapeHTML(hist.province)} ${noun} disasters with evacuation counts (${hist.provinceEvents} events on record)`,
+            ),
+          );
+        else
+          rows.push(
+            row(
+              `Typical ${noun} evacuation`,
+              `${fmt(Math.round(base.median))} people`,
+              `Median of ${base.basedOnEvents} past ${escapeHTML(hist.province)} ${noun} disasters (${escapeHTML(base.window)}); 1 in 4 evacuated ${fmt(Math.round(base.p75))}+`,
+            ),
+          );
+        const typicalPeople =
+            base?.median != null
+              ? Math.min(base.median, pop?.population ?? Infinity)
+              : null,
+          typicalNeed = typicalPeople != null ? Math.round(typicalPeople * rate) : null,
+          wholeNeed = pop?.population ? Math.round(pop.population * rate) : null;
+        rows.push(
+          row(
+            "Group lodging to plan for",
+            typicalNeed != null ? `${fmt(typicalNeed)} spaces` : wholeNeed != null ? "–" : "…",
+            `Assumption: <select id="resRate" aria-label="Share of evacuees needing group lodging">${[10, 20, 30, 50]
+              .map((p) => `<option value="${p / 100}"${Math.abs(p / 100 - rate) < 1e-9 ? " selected" : ""}>${p}%</option>`)
+              .join("")}</select> of evacuees need group lodging${typicalNeed != null ? ` (typical event${pop?.population != null && base.median > pop.population ? ", capped at the population" : ""})` : ""}${wholeNeed != null ? `; whole community: ${fmt(wholeNeed)} spaces` : ""}`,
+          ),
+        );
+        const hosts = hostCommunities(r, csd);
+        rows.push(
+          row(
+            "Possible host communities",
+            "",
+            hosts.length
+              ? hosts
+                  .map((h) => `${escapeHTML(h.name)} (${fmt(Math.round(h.population))} people, ${Math.round(h.km)} km)`)
+                  .join("<br>") + "<br><i>Candidates by size and distance only; not confirmed reception sites.</i>"
+              : dataAdapter.population.communities?.length
+                ? "No town of 10,000+ people within 30–250 km"
+                : "Loading",
+          ),
+        );
+        const hospitals = dataAdapter.facilities.state === "ready" ? nearestHospitals(r.lat, r.lon) : null;
+        rows.push(
+          row(
+            "Nearest hospitals",
+            "",
+            hospitals
+              ? hospitals.length
+                ? hospitals
+                    .map((h) => `${escapeHTML(h.name)}${h.town ? `, ${escapeHTML(h.town)}` : ""} (${h.km < 10 ? h.km.toFixed(1) : Math.round(h.km)} km)`)
+                    .join("<br>") + "<br><i>ODHF 2020 inventory; capacity and status not verified.</i>"
+                : "None in the inventory"
+              : dataAdapter.facilities.state === "error"
+                ? "Health-facility data could not load"
+                : "Loading health facilities",
+          ),
+        );
+        const similar = (hist?.similarEvents || []).filter((e) => e.evacuated).slice(0, 2);
+        if (similar.length)
+          rows.push(
+            row(
+              "Similar past events",
+              "",
+              similar
+                .map((e) => `${escapeHTML(e.startDate.slice(0, 4))} · ${escapeHTML(e.place)}: ${fmt(Math.round(e.evacuated))} evacuated`)
+                .join("<br>") +
+                `<br><i>Canadian Disaster Database, to ${escapeHTML(resource.history.metadata?.coverage?.lastEvent?.slice(0, 4) || "2022")}.</i>`,
+            ),
+          );
+        $("resBody").innerHTML = rows.join("");
+        const sel = $("resRate");
+        if (sel)
+          sel.onchange = (e) => {
+            resource.rate = +e.target.value;
+            renderResourcePanel();
+          };
       }
 
       /* =================================================================
