@@ -14,7 +14,7 @@
   3. Loader: tune LOADER_MS (how long the globe spins) in the script.
   4. Fonts: Google Fonts link below. Fallbacks are system fonts.
   Everything is inlined: the map works offline with the "Simple" style.
-  Relief / Topo / Satellite load tiles from the internet when available.
+  Topo / Satellite load tiles from the internet when available.
 -->
     <style>/* Leaflet 1.9.4 (BSD-2), inlined so the map works offline */
 /* required styles */
@@ -2289,12 +2289,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .leaflet-container {
         font-family: var(--body);
       }
-      .hillshade {
-        mix-blend-mode: multiply;
-      }
-      .relief-tint {
-        filter: saturate(0.9) hue-rotate(-6deg);
-      }
       .leaflet-tooltip.lbl {
         background: transparent;
         border: 0;
@@ -4327,31 +4321,6 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       }
       const BASEMAPS = {
         simple: () => simpleBase(),
-        relief: () =>
-          L.layerGroup([
-            L.tileLayer(
-              "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-              {
-                subdomains: "abcd",
-                maxZoom: 18,
-                className: "relief-tint",
-                attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-              },
-            ),
-            L.tileLayer(
-              "https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
-              {
-                maxZoom: 16,
-                opacity: 0.5,
-                className: "hillshade",
-                attribution: "Hillshade: Esri",
-              },
-            ),
-            L.tileLayer(
-              "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-              { subdomains: "abcd", maxZoom: 18, opacity: 0.9 },
-            ),
-          ]),
         topo: () =>
           L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
             subdomains: "abc",
@@ -4413,7 +4382,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             d.setAttribute("role", "group");
             d.setAttribute("aria-label", "Basemap");
             d.innerHTML =
-              '<button data-b="simple" aria-pressed="true">Simple</button><button data-b="relief" aria-pressed="false">Relief</button><button data-b="topo" aria-pressed="false">Topo</button><button data-b="satellite" aria-pressed="false">Satellite</button>';
+              '<button data-b="simple" aria-pressed="true">Simple</button><button data-b="topo" aria-pressed="false">Topo</button><button data-b="satellite" aria-pressed="false">Satellite</button>';
             baseBtns = d;
             L.DomEvent.disableClickPropagation(d);
             d.querySelectorAll("button").forEach(
