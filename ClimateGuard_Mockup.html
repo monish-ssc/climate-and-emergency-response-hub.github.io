@@ -1216,6 +1216,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
         border: 1px solid #e3cf98;
         font-size: 14px;
       }
+      .watch-list li {
+        cursor: pointer;
+      }
+      .watch-list .who small {
+        display: block;
+      }
       .res-body .fac small i {
         font-style: normal;
         opacity: 0.8;
@@ -2915,6 +2921,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 and adjustable.
               </p>
               <div class="facs res-body" id="resBody"></div>
+            </div>
+            <div class="panel" id="watchPanel" aria-live="polite">
+              <h2>Places to watch across Canada</h2>
+              <p class="hint" id="watchHint">
+                Every community of 1,000+ people, screened with the same wildfire
+                and flood rules. Grouped by the fire or river driving the risk.
+              </p>
+              <ol class="rank watch-list" id="watchList"></ol>
+              <p class="formula" id="watchNote"></p>
             </div>
             <div class="panel">
               <h2 id="communityPanelTitle">Population by community</h2>
@@ -5088,6 +5103,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             ? "Back to region overview"
             : "Open the real wildfire replay";
         renderResourcePanel();
+        renderWatchlist();
       }
       function syncMapChrome() {
         const det = mode === "detail",
@@ -5239,6 +5255,61 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         Object.keys(COMMUNITIES).forEach((k) =>
           cmtyMarker(k, scores[k], { label: false, small: true }).addTo(m._ov),
         );
+      }
+
+      /* =================================================================
+   PLACES TO WATCH (data/pipeline/live/watchlist.json, built by
+   build_watchlist.py in the refresh workflow)
+   ================================================================= */
+      const watch = { state: "idle", doc: null };
+      async function loadWatchlist() {
+        if (watch.state === "loading") return;
+        watch.state = "loading";
+        try {
+          watch.doc = await fetchJSON("data/pipeline/live/watchlist.json");
+          watch.state = "ready";
+        } catch {
+          watch.state = "error";
+        }
+        renderWatchlist();
+      }
+      function renderWatchlist() {
+        const panel = $("watchPanel");
+        if (!panel) return;
+        panel.hidden = mode === "detail";
+        if (mode === "detail") return;
+        if (watch.state === "idle") void loadWatchlist();
+        if (watch.state !== "ready") {
+          $("watchList").innerHTML = "";
+          $("watchNote").textContent =
+            watch.state === "error"
+              ? "The watchlist is not available yet. The automatic refresh builds it."
+              : "Loading…";
+          return;
+        }
+        const spots = (watch.doc.hotspots || []).slice(0, 10);
+        $("watchList").innerHTML = spots.length
+          ? spots
+              .map((g, i) => {
+                const lvl = LEVEL_STYLE[g.level] || LEVEL_STYLE.low,
+                  names = g.communities.slice(0, 3).map((c) => c.name).join(", ");
+                return `<li data-i="${i}" tabindex="0"><span class="n">${i + 1}</span><span class="who"><b>${escapeHTML(g.label)}</b><small>${escapeHTML(titleCase(HAZARD_NOUN[g.hazard === "flood" ? "rain" : "wildfire"]))} · ${escapeHTML(g.detail)}</small><small>${g.communityCount} ${g.communityCount === 1 ? "community" : "communities"}, ${fmt(g.population)} people: ${escapeHTML(names)}${g.communityCount > 3 ? "…" : ""}</small></span><span class="sc"><span class="score">${g.score} <span class="band ${LEVEL_BAND[g.level] || "b-low"}">${lvl[0]}</span></span></span></li>`;
+              })
+              .join("")
+          : '<li><span class="who">No community is above Low for wildfire or flood right now.</span></li>';
+        $("watchList")
+          .querySelectorAll("li[data-i]")
+          .forEach((li) => {
+            const go = () => {
+              const c = spots[+li.dataset.i].communities[0];
+              if (map && c) map.flyTo([c.lat, c.lon], 8, { duration: reduced ? 0 : 1 });
+            };
+            li.onclick = go;
+            li.onkeydown = (e) => {
+              if (e.key === "Enter") go();
+            };
+          });
+        $("watchNote").textContent = `${fmt(watch.doc.communitiesScreened)} communities screened · generated ${formatSnapshotTime(watch.doc.generatedAt)}. Screening only, not a warning: weather alerts and fire history are not included.`;
       }
 
       /* =================================================================
