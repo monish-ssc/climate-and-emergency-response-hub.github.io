@@ -103,6 +103,17 @@ jobs:
       - name: Rebuild risk index
         run: python data/build_risk_index.py
 
+      # Needs the GEMINI_API_KEY repository secret; without it the step rebuilds the briefing
+      # index from the restored snapshot and exits 0. Only regions whose risk inputs changed
+      # (or whose briefing is older than a day) call the model.
+      - name: Draft AI briefings (Gemini)
+        id: briefing
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+        run: python data/briefing_pipeline.py
+
       - name: Validate refreshed outputs
         run: python data/validate_live_outputs.py
 
@@ -140,6 +151,7 @@ jobs:
           [ "${{ steps.flood.outcome }}" = "failure" ] && failed="$failed flood"
           [ "${{ steps.hurricane.outcome }}" = "failure" ] && failed="$failed hurricane"
           [ "${{ steps.air_quality.outcome }}" = "failure" ] && failed="$failed air_quality"
+          [ "${{ steps.briefing.outcome }}" = "failure" ] && failed="$failed briefing"
           echo "list=${failed# }" >> "$GITHUB_OUTPUT"
 
   deploy:

@@ -11,6 +11,8 @@ The pipelines in `data/` write plain JSON files. The dashboard can load them wit
 | List of available risk files (use this) | `data/pipeline/risk/index.json` | `build_risk_index.py` |
 | Flood and wildfire risk, one region | `data/pipeline/risk/<regionId>_flood.json`, `<regionId>_wildfire.json` | `flood_pipeline.py`, `wildfire_pipeline.py` |
 | Hurricane risk, one region | `data/samples/<regionId>_severe_storm.json` | `hurricane_pipeline.py` |
+| List of AI briefings (use this) | `data/pipeline/briefing/index.json` (git-ignored; built by the workflow) | `briefing_pipeline.py` |
+| AI briefing, one region and hazard | `data/pipeline/briefing/<regionId>_<hazard>.json` (a `briefing-response`) | `briefing_pipeline.py` |
 | Wildfire map layers | `data/pipeline/active_fires.geojson`, `active_fire_extents.geojson`, `fire_weather_alerts.geojson` | `wildfire_pipeline.py` |
 | Flood map layers | `data/pipeline/stations.geojson`, `river_conditions_latest.geojson`, `active_alerts.geojson` | `flood_pipeline.py` |
 | Population density boundaries | `data/pipeline/population_density.geojson` | `build_population_map.py` |

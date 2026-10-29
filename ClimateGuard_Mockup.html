@@ -1450,6 +1450,74 @@ svg.leaflet-image-layer.leaflet-interactive path {
         font-size: 14px;
         margin-top: 4px;
       }
+      /* Live AI briefing block (filled from data/pipeline/briefing/) */
+      .ai-brief {
+        margin-top: 22px;
+        padding: 18px 20px;
+        background: var(--lichen-2);
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+      }
+      .ai-brief-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 12px;
+      }
+      .doc .ai-brief h3 {
+        margin: 0;
+      }
+      .ai-status {
+        flex: none;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--lichen);
+        color: var(--spruce);
+        border: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .ai-status.is-stale,
+      .ai-status.is-off {
+        background: #f6ebc4;
+        color: #5a4708;
+      }
+      .ai-status.is-error {
+        background: var(--ember);
+        color: #fff;
+        border-color: var(--ember);
+      }
+      .doc .ai-brief p {
+        margin: 12px 0 0;
+      }
+      .ai-actions {
+        margin: 12px 0 0;
+        padding-left: 22px;
+      }
+      .ai-actions li {
+        margin: 8px 0;
+      }
+      .ai-actions small {
+        display: block;
+        color: var(--ink-2);
+      }
+      .ai-brief-foot {
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .ai-brief-foot a {
+        color: var(--spruce);
+      }
+      .doc .sample-divider {
+        margin-top: 30px;
+        padding-top: 18px;
+        border-top: 1px dashed var(--line);
+        color: var(--ink-2);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
       .doc h3 {
         font-size: 18px;
         margin: 26px 0 8px;
@@ -2984,10 +3052,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 </div>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap">
-                <button
-                  class="btn ghost"
-                  data-toast="Briefing regenerated from the latest scores"
-                >
+                <button class="btn ghost" id="briefRefresh">
                   Regenerate
                 </button>
                 <button class="btn ghost" onclick="window.print()">
@@ -2996,6 +3061,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
               </div>
             </div>
 
+            <section class="ai-brief" id="aiBrief" aria-live="polite" aria-labelledby="aiBriefTitle">
+              <div class="ai-brief-head">
+                <div>
+                  <h3 id="aiBriefTitle">AI briefing for the selected region</h3>
+                  <div class="meta" id="aiBriefMeta">Choose a region and hazard on the Situation tab.</div>
+                </div>
+                <span class="ai-status" id="aiBriefStatus">Loading</span>
+              </div>
+              <p class="hint" id="aiBriefNote" hidden></p>
+              <p id="aiBriefSituation"></p>
+              <ol class="ai-actions" id="aiBriefActions"></ol>
+              <p class="ai-brief-foot" id="aiBriefFoot" hidden></p>
+            </section>
+
+            <h3 class="sample-divider">Sample scenario briefing (static demo content)</h3>
             <h3>What is happening</h3>
             <p>
               Wildfire K-2041 is out of control at 4,200 ha, about 60% larger
@@ -3934,7 +4014,119 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         }
         renderArea();
         if (mode === "canada") drawCanada();
+        if (!$("v-briefing").hidden) loadBriefing();
       }
+
+      /* ---------- AI briefing (data/pipeline/briefing/, written by briefing_pipeline.py) ---------- */
+      const briefingAdapter = { index: null, cache: new Map(), request: 0 };
+
+      function setBriefStatus(text, kind) {
+        const el = $("aiBriefStatus");
+        el.textContent = text;
+        el.className = "ai-status" + (kind ? " is-" + kind : "");
+      }
+
+      function fmtWhen(isoText) {
+        const d = new Date(isoText);
+        return isNaN(d)
+          ? isoText
+          : d.toLocaleString("en-CA", { dateStyle: "medium", timeStyle: "short" });
+      }
+
+      // All model text goes in through textContent: never innerHTML.
+      function renderBriefing(doc, entry, state) {
+        const region = REGIONS.find((x) => x.id === prov);
+        const hazardLabel = HAZARDS[hazard]?.label || hazard;
+        $("aiBriefTitle").textContent = doc
+          ? doc.title
+          : `AI briefing: ${region?.name || prov}, ${hazardLabel.toLowerCase()}`;
+        $("aiBriefSituation").textContent = doc ? doc.situation : "";
+        const list = $("aiBriefActions");
+        list.replaceChildren();
+        (doc?.actions || []).forEach((a) => {
+          const li = document.createElement("li");
+          li.append(a.action);
+          const why = document.createElement("small");
+          why.textContent = "Why: " + a.rationale;
+          li.append(why);
+          list.append(li);
+        });
+        const foot = $("aiBriefFoot");
+        foot.replaceChildren();
+        foot.hidden = !doc;
+        if (doc) {
+          foot.append(
+            `Confidence ${doc.confidence}. Requires human review. Drafted by ${entry?.model || "Gemini"} from the risk screening of ${fmtWhen(entry?.riskGeneratedAt || doc.generatedAt)}. Sources: `,
+          );
+          doc.citations.forEach((c, i) => {
+            const a = document.createElement("a");
+            a.href = c.url;
+            a.target = "_blank";
+            a.rel = "noreferrer";
+            a.textContent = c.title;
+            foot.append(i ? ", " : "", a);
+          });
+          foot.append(". " + (doc.disclaimer || ""));
+        }
+        const note = $("aiBriefNote");
+        note.hidden = !state.note;
+        note.textContent = state.note || "";
+        $("aiBriefMeta").textContent = doc
+          ? `Generated ${fmtWhen(doc.generatedAt)} for ${region?.name || prov}, ${hazardLabel.toLowerCase()} risk ${entry?.score ?? ""} (${entry?.level ?? ""}).`
+          : `${region?.name || prov}, ${hazardLabel.toLowerCase()}.`;
+        setBriefStatus(state.label, state.kind);
+      }
+
+      async function loadBriefing({ force = false } = {}) {
+        const request = ++briefingAdapter.request;
+        const hazardKey = HAZARD_DATA_KEY[hazard];
+        setBriefStatus(force ? "Checking for a newer briefing" : "Loading", "");
+        try {
+          const index = await fetchJSON("data/pipeline/briefing/index.json");
+          if (request !== briefingAdapter.request) return false;
+          briefingAdapter.index = index;
+          const entry = index.entries?.find(
+            (e) => e.regionId === prov && e.hazard === hazardKey,
+          );
+          if (!entry) {
+            renderBriefing(null, null, {
+              label: "No AI briefing yet",
+              kind: "off",
+              note: "The refresh workflow has not drafted a briefing for this region and hazard. The static sample below shows the intended format.",
+            });
+            return false;
+          }
+          const path = `data/${entry.path}`;
+          const cached = briefingAdapter.cache.get(path);
+          let doc = cached?.generatedAt === entry.generatedAt ? cached.doc : null;
+          const changed = !doc;
+          if (!doc) {
+            doc = await fetchJSON(path);
+            if (request !== briefingAdapter.request) return false;
+            briefingAdapter.cache.set(path, { generatedAt: entry.generatedAt, doc });
+          }
+          const ageH = (Date.now() - Date.parse(doc.generatedAt)) / 36e5;
+          renderBriefing(doc, entry, {
+            label: ageH > 25 ? "Older than a day" : "AI draft",
+            kind: ageH > 25 ? "stale" : "",
+            note: "",
+          });
+          return changed;
+        } catch (error) {
+          if (request !== briefingAdapter.request) return false;
+          renderBriefing(null, null, {
+            label: "Unavailable",
+            kind: "error",
+            note: `Could not load the AI briefing (${error.message}). The static sample below is shown instead.`,
+          });
+          return false;
+        }
+      }
+
+      $("briefRefresh").onclick = async () => {
+        const changed = await loadBriefing({ force: true });
+        toast(changed ? "Loaded the latest briefing" : "No newer briefing published yet");
+      };
 
       function liveEntry(id) {
         return dataAdapter.live.manifest?.layers?.find((layer) => layer.id === id);
@@ -6366,6 +6558,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           .querySelectorAll(".view")
           .forEach((v) => (v.hidden = v.id !== "v-" + t));
         if (t === "whatif") runWhatIf();
+        if (t === "briefing") loadBriefing();
         if (t === "situation" && map) setTimeout(() => map.invalidateSize(), 0);
         window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
       }

@@ -9,6 +9,8 @@ instead of an older committed file.
 Restores:
   - every layer in data/pipeline/live/manifest.json, and the manifest itself
   - every risk-response in data/pipeline/risk/index.json that is newer than the local copy
+  - every AI briefing in data/pipeline/briefing/index.json, and that index (it carries the
+    input fingerprints briefing_pipeline.py uses to skip unchanged regions)
 
 Best effort: a missing site or file is reported and skipped; the exit code is always 0.
 Standard library only.
@@ -81,12 +83,28 @@ def restore_risk_files(base_url):
     print(f"Restored {restored} newer risk files published at {index.get('builtAt')}")
 
 
+def restore_briefing_files(base_url):
+    index = fetch(base_url, "pipeline/briefing/index.json")
+    restored = 0
+    for entry in index.get("entries", []):
+        path = entry.get("path", "")
+        if (entry.get("generatedAt") or "") <= local_generated_at(path):
+            continue
+        try:
+            write(path, fetch(base_url, path))
+            restored += 1
+        except Exception as e:  # noqa: BLE001 - best effort
+            print(f"  skipped {path}: {e}")
+    write("pipeline/briefing/index.json", index)
+    print(f"Restored {restored} newer briefings published at {index.get('builtAt')}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--base-url", required=True, help="published site URL, for example from actions/configure-pages")
     args = parser.parse_args()
     base_url = args.base_url.rstrip("/")
-    for step in (restore_live_layers, restore_risk_files):
+    for step in (restore_live_layers, restore_risk_files, restore_briefing_files):
         try:
             step(base_url)
         except Exception as e:  # noqa: BLE001 - nothing published yet is a normal first run

@@ -104,8 +104,9 @@ The `build` job does these steps:
 2. It runs the wildfire, flood and hurricane pipelines for the five regions.
 3. It builds the live map layers for all of Canada (`data/build_live_layers.py`).
 4. It rebuilds the risk index.
-5. It validates the output (`data/validate_live_outputs.py`).
-6. It uploads the site as a GitHub Pages artifact.
+5. It drafts an AI briefing per region and hazard with Gemini (`data/briefing_pipeline.py`, see below). Optional: skipped without a key.
+6. It validates the output (`data/validate_live_outputs.py`).
+7. It uploads the site as a GitHub Pages artifact.
 
 The `deploy` job publishes the artifact. It runs only on the default branch.
 
@@ -131,6 +132,26 @@ The dashboard checks `data/pipeline/live/manifest.json` and `data/pipeline/risk/
 The **Live layers across Canada** panel below the map has one control for each layer. Each row shows the status (Live, Stale, Source error, Load error), the feature count, `observedAt`, `generatedAt` and the source. A hazard tab turns on a default set of layers. You can then turn layers on or off.
 
 To see live layers on a local server, run `.venv/bin/python data/build_live_layers.py` first. The `data/pipeline/live/` folder is git-ignored.
+
+#### AI briefings (Gemini)
+
+`data/briefing_pipeline.py` turns each live risk file into a short preparedness briefing that matches `api/contracts/briefing-response.schema.json`. The **Briefing & advisory** tab shows the briefing for the selected region and hazard above the static sample; **Regenerate** reloads the latest published file. The browser never calls Gemini: the model runs inside the workflow, so the key stays on GitHub.
+
+Set it up once:
+
+1. Create a key in Google AI Studio.
+2. Open the repository **Settings → Secrets and variables → Actions** and add a secret named `GEMINI_API_KEY`.
+3. Optional: add a repository **variable** `GEMINI_MODEL` to pick a model (default `gemini-3.8-flash`; a comma-separated list such as `gemini-3.8-flash,gemini-3.7-flash` is tried in order when a model is overloaded or not available to the key). A 404 from Gemini means the model id is wrong; use one from the Gemini models page.
+4. Run the workflow from **Actions → Run workflow**.
+
+How it behaves:
+
+- The prompt contains only the numbers and factor explanations from the risk file, and asks for 3–5 actions, a confidence of `low` or `medium`, and a plain statement that the data is provisional screening. The output is validated against the contract before it is written; `requiresHumanReview` is always `true`.
+- Each briefing stores a fingerprint of its inputs (score, level, factors, summary) in `data/pipeline/briefing/index.json`. A region whose numbers did not change is not sent to the model again, so quiet periods make few calls. Briefings older than 24 hours are refreshed anyway.
+- The step is `continue-on-error`. A failed briefing keeps its last published copy (restored by `restore_published_snapshot.py`) and the `report` job lists `briefing` as failed. Without the secret the step rebuilds the index from the restored files and exits 0.
+- Output is git-ignored (`data/pipeline/briefing/`), like the live layers.
+
+Local use: `GEMINI_API_KEY=... .venv/bin/python data/briefing_pipeline.py --only vancouver_wildfire` drafts one briefing; `--dry-run` prints the prompts without calling the model; `--force` regenerates everything. If your network blocks Google's certificate, test through **Run workflow** instead. Tests: `.venv/bin/python -m unittest tests.test_briefing_pipeline`.
 
 The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The pipelines write risk-response JSON and map layers under `data/pipeline/` and `data/samples/`. The frontend discovers risk files through `data/pipeline/risk/index.json`, uses embedded demonstration values when a snapshot is unavailable, and labels stale data after `expiresAt`.
 
