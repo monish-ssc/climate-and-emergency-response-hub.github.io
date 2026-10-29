@@ -140,7 +140,7 @@ class RiverLayerTests(unittest.TestCase):
                             "LEVEL": None, "DISCHARGE": 10.0 + h}}
             for i in range(3) for h in range(9, 15)
         ]
-        history = {"month": 10, "discharge": {"month_means": [1.0] * 10, "median_annual_peak": 100.0},
+        history = {"month": 10, "discharge": {"month_means": [1.0] * 10, "median_annual_peak": 40.0},
                    "level": {"month_means": [], "median_annual_peak": None}}
 
         def fetch(collection, **_):

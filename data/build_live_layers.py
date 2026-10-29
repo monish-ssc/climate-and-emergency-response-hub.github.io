@@ -248,6 +248,7 @@ def river_layer(now, budget):
             "median_annual_peak": c["median_annual_peak"],
             "pct_of_flood_peak": c["pct_of_flood_peak"],
             "status": c["status"],
+            "note": c.get("note"),
             "baseline": "ready" if ready else "pending",
         }
         features.append(feature({"type": "Point", "coordinates": [float(s["_lon"]), float(s["_lat"])]}, props))

@@ -33,6 +33,7 @@ CONTRACTS_DIR = ROOT_DIR / "api" / "contracts"
 RADIUS_KM = 50
 MIN_YEARS = 5  # fewer years of history than this -> no percentile / flood peak
 FLOOD_MIN_YEARS = 10  # a station needs this many years of monthly history before it can be called "flood"
+LOW_FLOW_RATIO = 0.25  # flow below this share of the typical yearly peak is not flood-relevant, whatever its rank
 FLAT_MIN_READINGS = 6  # this many identical recent flow readings = placeholder/estimated value, not a measurement
 
 # Fallback centres for regions without lat/lon in scenarios.json (new regions should set lat/lon there).
@@ -229,7 +230,21 @@ def assess_station(readings, base, window_hours=12):
 
     if flat:
         pct, peak, ratio = None, None, None
-    if peak is not None and mean_24h >= peak and len(hist) >= FLOOD_MIN_YEARS:
+    # A high rank for the month only matters for floods when the flow is a real share of a flood flow and
+    # the record is long enough. In low-flow seasons a trickle can be the "100th percentile": 05CE011-type
+    # Prairie creeks in October ran at 1-3% of their typical yearly peak while ranking 95-100th.
+    note = None
+    if metric == "discharge" and not flat and pct is not None:
+        if len(hist) < FLOOD_MIN_YEARS:
+            note = "short record: fewer than 10 years of history for this month"
+        elif peak and mean_24h < LOW_FLOW_RATIO * peak:
+            note = "high for the season but far below flood flows"
+    raw_pct = pct
+    if note:
+        pct, peak, ratio = None, None, None
+    if note:
+        status = "above_normal" if raw_pct >= 75 else "normal"
+    elif peak is not None and mean_24h >= peak and len(hist) >= FLOOD_MIN_YEARS:
         status = "flood"
     elif (ratio or 0) >= 0.8 or (pct or 0) >= 95:
         status = "very_high"
@@ -258,6 +273,8 @@ def assess_station(readings, base, window_hours=12):
         "pct_of_flood_peak": None if ratio is None else round(ratio * 100),
         "status": status,
         "flat_readings": flat,
+        "percentile_raw": raw_pct,
+        "note": note,
     }
 
 
