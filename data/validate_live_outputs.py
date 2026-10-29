@@ -1,4 +1,13 @@
-"""Fail when a live-data refresh is incomplete, stale, or contract-invalid."""
+"""Fail when a live-data refresh is incomplete or invalid; warn when part of it is stale.
+
+Hard failures: a missing or invalid live-layer manifest, a layer file that is not GeoJSON or
+does not match its manifest entry, no live layer refreshed in this run, a risk file that fails
+the contract, or a risk index that does not match the risk files.
+
+Warnings (GitHub annotations): a regional map layer that is missing, or a risk file that is
+older than --max-age-minutes or expired. A failed pipeline leaves the last published file in
+place (restore_published_snapshot.py), and the dashboard labels it stale.
+"""
 
 import argparse
 import json
@@ -12,7 +21,9 @@ import referencing
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 CONTRACTS_DIR = ROOT / "api" / "contracts"
-LAYER_FILES = (
+LIVE_MANIFEST = DATA_DIR / "pipeline" / "live" / "manifest.json"
+LAYER_STATUSES = ("ok", "stale", "error")
+REGIONAL_LAYER_FILES = (
     "active_fires.geojson",
     "active_fire_extents.geojson",
     "fire_weather_alerts.geojson",
@@ -28,6 +39,10 @@ RISK_PATHS = {
     "flood": DATA_DIR / "pipeline" / "risk" / "{region}_flood.json",
     "severe_storm": DATA_DIR / "samples" / "{region}_severe_storm.json",
 }
+
+
+def warn(message: str) -> None:
+    print(f"::warning::{message}")
 
 
 def load_json(path: Path) -> dict:
@@ -73,17 +88,66 @@ def risk_validator() -> jsonschema.Draft202012Validator:
     return jsonschema.Draft202012Validator(schema, registry=registry)
 
 
-def validate_layers() -> None:
-    for filename in LAYER_FILES:
+def load_feature_collection(path: Path) -> dict:
+    document = load_json(path)
+    if document.get("type") != "FeatureCollection" or not isinstance(
+        document.get("features"), list
+    ):
+        raise ValueError(f"{path.relative_to(ROOT)}: expected a GeoJSON FeatureCollection")
+    return document
+
+
+def validate_regional_layers() -> None:
+    for filename in REGIONAL_LAYER_FILES:
         path = DATA_DIR / "pipeline" / filename
-        document = load_json(path)
-        if document.get("type") != "FeatureCollection" or not isinstance(
-            document.get("features"), list
-        ):
-            raise ValueError(
-                f"{path.relative_to(ROOT)}: expected a GeoJSON FeatureCollection"
-            )
+        if not path.exists():
+            warn(f"{path.relative_to(ROOT)}: regional layer is missing")
+            continue
+        document = load_feature_collection(path)
         print(f"layer ok: {filename} ({len(document['features'])} features)")
+
+
+def validate_live_layers(now: datetime, max_age: timedelta) -> None:
+    manifest = load_json(LIVE_MANIFEST)
+    layers = manifest.get("layers")
+    if not isinstance(layers, list) or not layers:
+        raise ValueError(f"{LIVE_MANIFEST.relative_to(ROOT)}: expected a list of layers")
+    built = parse_time(manifest.get("generatedAt"), "generatedAt", LIVE_MANIFEST)
+    if built > now + timedelta(minutes=5) or now - built > max_age:
+        raise ValueError(
+            f"{LIVE_MANIFEST.relative_to(ROOT)}: generatedAt is outside the refresh window"
+        )
+    seen, refreshed = set(), 0
+    for layer in layers:
+        layer_id = layer.get("id")
+        if not isinstance(layer_id, str) or layer_id in seen:
+            raise ValueError(f"{LIVE_MANIFEST.relative_to(ROOT)}: missing or repeated id {layer_id!r}")
+        seen.add(layer_id)
+        if layer.get("status") not in LAYER_STATUSES:
+            raise ValueError(f"{LIVE_MANIFEST.relative_to(ROOT)}: {layer_id} has an invalid status")
+        source = layer.get("source") or {}
+        if not source.get("name") or not source.get("url"):
+            raise ValueError(f"{LIVE_MANIFEST.relative_to(ROOT)}: {layer_id} has no source")
+        path = DATA_DIR / str(layer.get("path"))
+        if not path.resolve().is_relative_to(DATA_DIR):
+            raise ValueError(f"{LIVE_MANIFEST.relative_to(ROOT)}: {layer_id} path is outside data/")
+        document = load_feature_collection(path)
+        if layer.get("featureCount") != len(document["features"]):
+            raise ValueError(
+                f"{path.relative_to(ROOT)}: {len(document['features'])} features, "
+                f"manifest says {layer.get('featureCount')}"
+            )
+        generated = parse_time(layer.get("generatedAt"), "generatedAt", path)
+        parse_time(layer.get("expiresAt"), "expiresAt", path)
+        if layer.get("observedAt") is not None:
+            parse_time(layer["observedAt"], "observedAt", path)
+        if layer["status"] == "ok" and generated == built:
+            refreshed += 1
+        else:
+            warn(f"{path.relative_to(ROOT)}: live layer is {layer['status']}: {layer.get('error')}")
+        print(f"live layer {layer['status']}: {layer_id} ({len(document['features'])} features)")
+    if not refreshed:
+        raise ValueError("No live layer was refreshed in this run")
 
 
 def validate_risks(
@@ -118,11 +182,9 @@ def validate_risks(
             if generated > now + timedelta(minutes=5):
                 raise ValueError(f"{path.relative_to(ROOT)}: generatedAt is in the future")
             if now - generated > max_age:
-                raise ValueError(
-                    f"{path.relative_to(ROOT)}: generatedAt is older than {max_age}"
-                )
+                warn(f"{path.relative_to(ROOT)}: generatedAt is older than {max_age}")
             if expires <= now:
-                raise ValueError(f"{path.relative_to(ROOT)}: snapshot is already expired")
+                warn(f"{path.relative_to(ROOT)}: snapshot is already expired")
             expected[(region_id, hazard)] = (
                 path.relative_to(DATA_DIR).as_posix(),
                 document["generatedAt"],
@@ -170,14 +232,15 @@ def main() -> None:
         "--max-age-minutes",
         type=int,
         default=120,
-        help="Maximum accepted age for newly generated snapshots (default: 120)",
+        help="Age limit for the live manifest; older risk files only warn (default: 120)",
     )
     args = parser.parse_args()
     if args.max_age_minutes <= 0:
         parser.error("--max-age-minutes must be positive")
     now = datetime.now(timezone.utc)
     max_age = timedelta(minutes=args.max_age_minutes)
-    validate_layers()
+    validate_live_layers(now, max_age)
+    validate_regional_layers()
     expected = validate_risks(now, max_age)
     validate_index(now, max_age, expected)
     print("Live-data refresh validation passed.")

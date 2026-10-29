@@ -96,9 +96,41 @@ Run the scripts as needed:
 
 ### Automated live-data refresh
 
-`.github/workflows/refresh-live-data.yml` runs every 30 minutes (at minutes 7 and 37) and can also be started manually with **Run workflow**. It refreshes wildfire, flood, and hurricane/severe-storm snapshots, rebuilds the risk index, and rejects missing, stale, or contract-invalid output with `data/validate_live_outputs.py`.
+`.github/workflows/refresh-live-data.yml` refreshes the data and deploys the site to GitHub Pages. It starts at minutes 7 and 37 of each hour, after each push to `main`, and from **Run workflow**. The workflow does not commit the generated files.
 
-Successful runs upload a `live-hazard-data-<run-id>` Actions artifact retained for two days. This artifact is for inspection and the later Pages-deployment step; it does not update the published site yet. GitHub only schedules workflows from the default branch, so the schedule becomes active after this workflow is merged there.
+The `build` job does these steps:
+
+1. It restores the files that the site published last (`data/restore_published_snapshot.py`).
+2. It runs the wildfire, flood and hurricane pipelines for the five regions.
+3. It builds the live map layers for all of Canada (`data/build_live_layers.py`).
+4. It rebuilds the risk index.
+5. It validates the output (`data/validate_live_outputs.py`).
+6. It uploads the site as a GitHub Pages artifact.
+
+The `deploy` job publishes the artifact. It runs only on the default branch.
+
+A failed regional pipeline does not stop the deployment. Its last published files stay, and the dashboard shows them as stale after `expiresAt`. The `report` job then fails the run, so the failure shows in the Actions list. A failed live-layer source keeps its previous layer with the status `stale`. Validation stops the deployment if no live layer refreshed, or if a file is not valid.
+
+The workflow keeps two caches. The hurricane history cache changes each week. The flood baseline cache gets a new entry only when a run adds station histories.
+
+GitHub only starts scheduled workflows from the default branch. The schedule starts after this workflow is merged into `main`.
+
+#### Set up GitHub Pages for the workflow (one time)
+
+1. Open the repository **Settings** on GitHub.
+2. Open **Pages**.
+3. Set **Source** to **GitHub Actions**.
+4. Open **Actions**, select **Refresh live hazard data**, and select **Run workflow** on `main`.
+
+The first run cannot restore a previous snapshot, because the site has no live layers yet. This is normal.
+
+#### Live data in the dashboard
+
+The dashboard checks `data/pipeline/live/manifest.json` and `data/pipeline/risk/index.json` every 5 minutes. It does not check while the browser tab is hidden. It loads only the layers that changed, and it does not reload the page. **Check for updates** below the map does the check immediately.
+
+The **Live layers across Canada** panel below the map has one control for each layer. Each row shows the status (Live, Stale, Source error, Load error), the feature count, `observedAt`, `generatedAt` and the source. A hazard tab turns on a default set of layers. You can then turn layers on or off.
+
+To see live layers on a local server, run `.venv/bin/python data/build_live_layers.py` first. The `data/pipeline/live/` folder is git-ignored.
 
 The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The pipelines write risk-response JSON and map layers under `data/pipeline/` and `data/samples/`. The frontend discovers risk files through `data/pipeline/risk/index.json`, uses embedded demonstration values when a snapshot is unavailable, and labels stale data after `expiresAt`.
 

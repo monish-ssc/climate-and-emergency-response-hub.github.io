@@ -2,7 +2,7 @@
 
 ClimateGuard AI is a two-day hackathon prototype for a **Climate & Emergency Response Intelligence Hub**. It helps emergency teams explore climate-related hazards, understand a simple risk score, and produce a preparedness briefing.
 
-`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Regional risk and event layers load from the generated files under `data/`; embedded scenario values remain as a clearly labeled fallback. The prototype is not suitable for real emergency decisions.
+`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Regional risk and Canada-wide live map layers load from the generated files under `data/`. A scheduled GitHub Actions workflow refreshes them every 30 minutes and deploys them to GitHub Pages. Embedded scenario values remain as a clearly labeled fallback. The prototype is not suitable for real emergency decisions.
 
 Developers continuing the project should start with the [developer guide](docs/developer-guide.md).
 

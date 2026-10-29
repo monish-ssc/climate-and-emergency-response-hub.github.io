@@ -120,8 +120,15 @@ def distance_km(lat1, lon1, lat2, lon2):
 
 
 def fetch_baseline(stn, month):
-    mm = to_frame(fetch("hydrometric-monthly-mean", STATION_NUMBER=stn))
-    pk = to_frame(fetch("hydrometric-annual-peaks", STATION_NUMBER=stn))
+    # only the columns used below: about half the download, which matters for Canada-wide refreshes
+    mm = to_frame(fetch(
+        "hydrometric-monthly-mean", STATION_NUMBER=stn, skipGeometry="true",
+        properties="DATE,MONTHLY_MEAN_DISCHARGE,MONTHLY_MEAN_LEVEL",
+    ))
+    pk = to_frame(fetch(
+        "hydrometric-annual-peaks", STATION_NUMBER=stn, skipGeometry="true",
+        properties="DATA_TYPE_EN,PEAK_CODE_EN,PEAK",
+    ))
     out = {"month": month}
     for metric, mean_col, peak_type in (
         ("discharge", "MONTHLY_MEAN_DISCHARGE", "Discharge"),
@@ -168,7 +175,7 @@ def load_baselines(stations, month):
 # ---------- score: one station ----------
 
 
-def assess_station(readings, base):
+def assess_station(readings, base, window_hours=12):
     metric = "discharge" if readings["DISCHARGE"].notna().any() else "level"
     col = metric.upper()
     s = readings.dropna(subset=[col]).sort_values("DATETIME")
@@ -183,8 +190,9 @@ def assess_station(readings, base):
         else None
     )
     # trend = last 12 h mean vs the 12 h before; 12 h windows cancel out the ~12.4 h tide cycle
-    recent = s.loc[t > t.iloc[-1] - pd.Timedelta(hours=12), col]
-    earlier = s.loc[t <= t.iloc[-1] - pd.Timedelta(hours=12), col]
+    # (the Canada-wide layer uses shorter windows to keep its download small)
+    recent = s.loc[t > t.iloc[-1] - pd.Timedelta(hours=window_hours), col]
+    earlier = s.loc[t <= t.iloc[-1] - pd.Timedelta(hours=window_hours), col]
     end, start = float(recent.mean()), (
         float(earlier.mean()) if len(earlier) else float(recent.mean())
     )
