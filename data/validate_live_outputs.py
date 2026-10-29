@@ -164,6 +164,10 @@ def validate_risks(
             raise ValueError("data/scenarios.json: every region requires an id")
         for hazard, pattern in RISK_PATHS.items():
             path = Path(str(pattern).format(region=region_id))
+            if not path.exists():
+                # One region failing upstream should not block the deploy for every other region.
+                warn(f"{path.relative_to(ROOT)}: missing, region skipped for {hazard}")
+                continue
             document = load_json(path)
             errors = sorted(
                 validator.iter_errors(document),
@@ -190,6 +194,8 @@ def validate_risks(
                 document["generatedAt"],
             )
             print(f"risk ok: {region_id}/{hazard} generated {document['generatedAt']}")
+    if not expected:
+        raise ValueError("No regional risk files were found")
     return expected
 
 

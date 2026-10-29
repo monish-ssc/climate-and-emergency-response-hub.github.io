@@ -2,7 +2,8 @@
   "metadata": {
     "source": "ClimateGuard AI hackathon fixtures",
     "generatedAt": "2026-10-28T00:00:00Z",
-    "isSimulated": true
+    "isSimulated": true,
+    "note": "temperatureC/windKmh on the original five regions are simulated placeholders; risk data comes from the pipelines."
   },
   "regions": [
     {
@@ -46,6 +47,48 @@
       "temperatureC": 33,
       "windKmh": 50,
       "replayScenario": "2023_BC_2023-K52767"
+    },
+    {
+      "id": "st-johns",
+      "label": "St. John's, NL",
+      "lat": 47.5615,
+      "lon": -52.7126
+    },
+    {
+      "id": "yellowknife",
+      "label": "Yellowknife, NT",
+      "lat": 62.454,
+      "lon": -114.3718
+    },
+    {
+      "id": "winnipeg",
+      "label": "Winnipeg, MB",
+      "lat": 49.8951,
+      "lon": -97.1384
+    },
+    {
+      "id": "fort-mcmurray",
+      "label": "Fort McMurray, AB",
+      "lat": 56.7264,
+      "lon": -111.3803
+    },
+    {
+      "id": "toronto",
+      "label": "Toronto, ON",
+      "lat": 43.6532,
+      "lon": -79.3832
+    },
+    {
+      "id": "prince-albert",
+      "label": "Prince Albert, SK",
+      "lat": 53.2033,
+      "lon": -105.7531
+    },
+    {
+      "id": "montreal",
+      "label": "Montréal, QC",
+      "lat": 45.5019,
+      "lon": -73.5674
     }
   ]
 }
