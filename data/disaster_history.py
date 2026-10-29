@@ -2,6 +2,7 @@
 disaster_history.py - historical disaster context per region and hazard, from the Canadian Disaster Database.
 
 Input:  data/raw/cdd/cdd-extract.xlsx (or .csv): the CDD extract from Public Safety Canada / Open Government.
+        Without it, the script rebuilds from data/history/cdd_events_clean.csv (written by an earlier run).
 Output: data/history/disaster_history.json  - per region and hazard: past disaster counts, impact statistics,
                                               an evacuation baseline for resource planning, and the most
                                               relevant past events (for AI briefings and the dashboard)
@@ -210,9 +211,25 @@ def region_hazard(df, region, hazard, last_year):
     }
 
 
+def load_clean_csv():
+    """The cleaned CSV this script wrote last time; lets it run without the raw CDD extract."""
+    path = OUT_DIR / "cdd_events_clean.csv"
+    df = pd.read_csv(path, encoding="utf-8")
+    df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
+    df["end_date"] = pd.to_datetime(df["end_date"], errors="coerce")
+    df["provinces"] = df["provinces"].fillna("").astype(str).str.split()
+    return df, path
+
+
 def main():
-    raw, path = load_raw()
-    df = clean(raw)
+    if any(p.exists() for p in INPUTS):
+        raw, path = load_raw()
+        df = clean(raw)
+    elif (OUT_DIR / "cdd_events_clean.csv").exists():
+        print("Raw CDD extract not found; rebuilding from history/cdd_events_clean.csv")
+        df, path = load_clean_csv()
+    else:
+        load_raw()  # exits with the "not found" message
     built = datetime.now(timezone.utc).replace(microsecond=0)
     first, last = df["start_date"].min(), df["start_date"].max()
     regions = json.loads((DATA_DIR / "scenarios.json").read_text(encoding="utf-8"))["regions"]
