@@ -1313,6 +1313,42 @@ svg.leaflet-image-layer.leaflet-interactive path {
         background: #e4eedb;
         font-size: 13px;
       }
+      .place-card .pc-close {
+        border: 0;
+        background: none;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        color: var(--ink-2);
+      }
+      .place-card .pc-detail {
+        margin: 0 0 4px;
+        font-size: 14px;
+        color: var(--ink-2);
+      }
+      .place-card .pc-comm {
+        margin: 2px 0 0;
+        padding-left: 18px;
+        font-size: 13px;
+      }
+      .place-card .pc-brief-head {
+        margin-top: 14px;
+        font-size: 15px;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--ink);
+      }
+      .watch-list li.on {
+        background: var(--lichen-2);
+        box-shadow: inset 4px 0 0 var(--spruce);
+      }
+      .focus-ring {
+        animation: ringpulse 1.6s ease-out infinite;
+      }
+      @keyframes ringpulse {
+        0% { stroke-opacity: 1; }
+        100% { stroke-opacity: 0.25; }
+      }
       .ai-badge.template {
         background: #f6ecd2;
       }
@@ -2995,6 +3031,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
           </div>
 
           <div class="side">
+            <section class="panel brief-card place-card" id="placeCard" hidden aria-live="polite" aria-labelledby="pcHeading">
+              <div class="bc-top">
+                <h2 id="pcHeading">Selected place</h2>
+                <button class="pc-close" id="pcClose" type="button" aria-label="Close the selected place">×</button>
+              </div>
+              <h3 class="bc-title" id="pcTitle"></h3>
+              <p class="pc-detail" id="pcDetail"></p>
+              <div id="pcCommWrap">
+                <h4>Communities affected</h4>
+                <ul class="pc-comm" id="pcComm"></ul>
+              </div>
+              <div id="pcBrief">
+                <h4 class="pc-brief-head" id="pcBriefHead">AI briefing: situation and preparedness actions</h4>
+                <div class="ai-badge" id="pcBadge"></div>
+                <p class="bc-sit" id="pcSituation"></p>
+                <h4>Recommended preparedness actions</h4>
+                <ol class="bc-actions" id="pcActions"></ol>
+              </div>
+              <p class="hint" id="pcNone"></p>
+              <div class="bc-buttons">
+                <button class="btn ghost" data-goto="briefing" id="pcFull" type="button">Full briefing and public advisory (EN/FR)</button>
+                <button class="btn ghost" id="pcClear" type="button">Clear selection</button>
+              </div>
+            </section>
             <div class="panel" id="areaPanel" aria-live="polite">
               <div class="area-top">
                 <div>
@@ -4739,6 +4799,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             fillColor: colour,
             fillOpacity: 0.95,
           })
+            .on("click", () => {
+              const id = p.agency_fire_id || p.national_fire_id;
+              focusPlace(placeFor(`fire-${id}`, {
+                hazard: "wildfire",
+                label: `Wildfire ${id}`,
+                detail: `${p.stage_label || "status unknown"}, ${size}`,
+                lat: at[0],
+                lon: at[1],
+              }));
+            })
             .bindTooltip(`Fire ${escapeHTML(p.agency_fire_id || p.national_fire_id)} · ${escapeHTML(p.stage_label)}`, { className: "tip" })
             .bindPopup(
               livePopup(
@@ -4779,6 +4849,15 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
               fillColor: colour,
               fillOpacity: 0.9,
             })
+              .on("click", () =>
+                focusPlace(placeFor(`river-${p.station_number}`, {
+                  hazard: "flood",
+                  label: properCase(p.station_name || "River station"),
+                  detail: `${label}${percentile}`,
+                  lat: at[0],
+                  lon: at[1],
+                })),
+              )
               .bindTooltip(`${escapeHTML(p.station_name)} · ${escapeHTML(label)}`, { className: "tip" })
               .bindPopup(
                 livePopup(
@@ -4984,6 +5063,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       }
 
       function selectProv(id) {
+        clearFocus(false);
         prov = id;
         dataAdapter.population.selectedId = REGION_CSD[id] || null;
         $("regionSelect").value = id;
@@ -5115,11 +5195,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         renderResourcePanel();
         renderWatchlist();
         if (brief.state === "idle") void loadBriefings();
-        const ai = currentBriefing();
+        const ai = brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`);
         if (isAI(ai) && ai.briefing.actions?.[0]) {
           $("areaRec").innerHTML = `${escapeHTML(ai.briefing.actions[0].action)} <small style="display:block;color:var(--ink-2)">AI draft for review · see the Briefing tab</small>`;
         }
         renderBriefingTab();
+        renderPlaceCard();
       }
       function syncMapChrome() {
         const det = mode === "detail",
@@ -5187,6 +5268,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       function enterDetail() {
         const region = REGIONS.find((item) => item.id === prov);
         if (!region?.replayScenario) return;
+        clearFocus(false);
         mode = "detail";
         selected = null;
         renderPopulationLayer();
@@ -5306,12 +5388,18 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
               .sort((a, b) => b.step - a.step)[0] || null
           );
         }
+        if (focus) {
+          const fb = brief.byKey.get(`watch/${focus.id}`);
+          if (fb) return fb;
+        }
         return brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`) || null;
       }
       const isAI = (b) => b && b.model && b.model !== "template";
       // "[F2, F5]" -> small links to the numbered facts
+      const ISO_TIME = /\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?Z\b/g;
+      const readableTimes = (text) => String(text || "").replace(ISO_TIME, (t) => formatSnapshotTime(t));
       function withCites(text) {
-        return escapeHTML(text).replace(/\[(F\d+(?:\s*,\s*F?\d+)*)\]/g, (m, ids) =>
+        return escapeHTML(readableTimes(text)).replace(/\[(F\d+(?:\s*,\s*F?\d+)*)\]/g, (m, ids) =>
           ids
             .split(/\s*,\s*/)
             .map((id) => {
@@ -5345,7 +5433,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           region = REGIONS.find((r) => r.id === b.regionId);
         $("aiTitle").textContent = d.title;
         $("aiMeta").textContent =
-          b.kind === "replay"
+          b.kind === "watch"
+            ? `Place to watch · data as of ${formatSnapshotTime(b.asOf)} · screening score ${b.score} of 100 (${b.level})`
+            : b.kind === "replay"
             ? `Historical replay · ${region?.name || ""} · situation at ${replayTime(b.asOf, { year: "numeric", timeZoneName: "short" })}`
             : `${region?.name || ""} · data as of ${formatSnapshotTime(b.asOf)} · risk ${b.score} of 100 (${b.level})`;
         $("aiBadge").textContent = briefingBadge(b);
@@ -5370,6 +5460,123 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    PLACES TO WATCH (data/pipeline/live/watchlist.json, built by
    build_watchlist.py in the refresh workflow)
    ================================================================= */
+      /* =================================================================
+   SELECTED PLACE (#6, #7): a fire or river station picked on the map or
+   in "Places to watch". Shows the communities it affects and the
+   briefing written for it (briefings.json key watch/<id>).
+   ================================================================= */
+      let focus = null,
+        focusLayer = null;
+      const hotspotById = (id) => (watch.doc?.hotspots || []).find((g) => g.id === id) || null;
+      // the watchlist entry for a marker, or what the marker itself says
+      function placeFor(id, fallback) {
+        return hotspotById(id) || { id, unlisted: true, level: "low", score: null, communities: [], ...fallback };
+      }
+      function focusPlace(place, { fly = false } = {}) {
+        if (!place || mode === "detail") return;
+        focus = place;
+        if (brief.state === "idle") void loadBriefings();
+        drawFocus();
+        if (fly && map && place.lat != null) {
+          const pts = [[place.lat, place.lon], ...(place.communities || []).map((c) => [c.lat, c.lon])];
+          map.flyToBounds(L.latLngBounds(pts).pad(0.4), { maxZoom: 9, duration: reduced ? 0 : 1 });
+        }
+        renderWatchlist();
+        renderPlaceCard();
+        renderBriefingTab();
+        const card = $("placeCard");
+        if (card && !card.hidden) {
+          // line the card up under the sticky header, beside the map
+          const top = card.getBoundingClientRect().top + window.scrollY - (document.querySelector("header.top")?.offsetHeight || 80) - 12;
+          if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
+          if (!reduced) {
+            card.classList.remove("flash");
+            void card.offsetWidth;
+            card.classList.add("flash");
+          }
+        }
+      }
+      function clearFocus(render = true) {
+        if (!focus) return;
+        focus = null;
+        drawFocus();
+        if (render) {
+          renderWatchlist();
+          renderPlaceCard();
+          renderBriefingTab();
+        }
+      }
+      function drawFocus() {
+        if (!map) return;
+        if (!focusLayer) focusLayer = L.layerGroup().addTo(map);
+        focusLayer.clearLayers();
+        if (!focus || focus.lat == null) return;
+        const col = (LEVEL_STYLE[focus.level] || LEVEL_STYLE.low)[1];
+        (focus.communities || []).forEach((c) =>
+          L.circleMarker([c.lat, c.lon], { radius: 6, color: "#fff", weight: 2, fillColor: col, fillOpacity: 1 })
+            .bindTooltip(`${escapeHTML(c.name)} · ${c.score}`, { className: "tip" })
+            .addTo(focusLayer),
+        );
+        L.circleMarker([focus.lat, focus.lon], {
+          radius: 17,
+          color: "#17251E",
+          weight: 3,
+          fill: false,
+          interactive: false,
+          className: "focus-ring",
+        }).addTo(focusLayer);
+      }
+      function renderPlaceCard() {
+        const card = $("placeCard");
+        if (!card) return;
+        card.hidden = !focus || mode === "detail";
+        if (card.hidden) return;
+        const g = focus,
+          lvl = LEVEL_STYLE[g.level] || LEVEL_STYLE.low,
+          noun = g.hazard === "flood" ? "river station" : "wildfire";
+        card.style.setProperty("--bc-level", g.unlisted ? "#7fa06a" : lvl[1]);
+        $("pcHeading").textContent = g.unlisted ? "Selected on the map" : `Place to watch · ${titleCase(noun)}`;
+        $("pcTitle").innerHTML =
+          escapeHTML(g.label) +
+          (g.unlisted ? "" : ` <span class="band ${LEVEL_BAND[g.level] || "b-low"}">${lvl[0]} · ${g.score}</span>`);
+        $("pcDetail").textContent = titleCase(g.detail || "");
+        const comms = g.communities || [];
+        $("pcCommWrap").hidden = !comms.length;
+        $("pcComm").innerHTML =
+          comms
+            .slice(0, 5)
+            .map((c) => `<li><b>${escapeHTML(c.name)}</b>, ${escapeHTML(c.province || "")} · ${fmt(c.population)} people · score ${c.score}</li>`)
+            .join("") +
+          (g.communityCount > 5 ? `<li>and ${g.communityCount - 5} more (${fmt(g.population)} people in total)</li>` : "");
+        const b = g.unlisted ? null : brief.byKey.get(`watch/${g.id}`);
+        $("pcBrief").hidden = !b;
+        $("pcFull").hidden = !b;
+        $("pcNone").textContent = g.unlisted
+          ? `No community of 1,000+ people is above Low because of this ${noun}, so there is no briefing for it.`
+          : b
+            ? "Screening only, not an official warning."
+            : brief.state === "ready" || brief.state === "error"
+              ? "A briefing is written for the top 8 places to watch at each refresh; this one has none yet."
+              : "Loading the briefing…";
+        if (!b) return;
+        const d = b.briefing,
+          ai = isAI(b),
+          clean = (t) => escapeHTML(readableTimes(t).replace(/\s*\[F[\d, F-]+\]/g, ""));
+        $("pcBriefHead").textContent = ai
+          ? "AI briefing: situation and preparedness actions"
+          : "Briefing: situation and preparedness actions";
+        $("pcBadge").textContent = ai
+          ? `AI draft · GitHub Models (${b.model.split("/").pop()}) · grounded in our data · needs human review`
+          : "Template from the same facts (AI draft pending) · needs human review";
+        $("pcBadge").className = "ai-badge" + (ai ? "" : " template");
+        $("pcSituation").innerHTML = clean(d.situation);
+        $("pcActions").innerHTML = d.actions
+          .map((a) => `<li><b>${clean(a.action)}</b><small>${clean(a.rationale)}</small></li>`)
+          .join("");
+      }
+      $("pcClose").onclick = () => clearFocus();
+      $("pcClear").onclick = () => clearFocus();
+
       const watch = { state: "idle", doc: null };
       async function loadWatchlist() {
         if (watch.state === "loading") return;
@@ -5397,6 +5604,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           return;
         }
         const spots = (watch.doc.hotspots || []).slice(0, 10);
+        if (focus && !focus.unlisted) focus = hotspotById(focus.id) || focus; // keep the card current after a refresh
         $("watchList").innerHTML = spots.length
           ? spots
               .map((g, i) => {
@@ -5409,10 +5617,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("watchList")
           .querySelectorAll("li[data-i]")
           .forEach((li) => {
-            const go = () => {
-              const c = spots[+li.dataset.i].communities[0];
-              if (map && c) map.flyTo([c.lat, c.lon], 8, { duration: reduced ? 0 : 1 });
-            };
+            const go = () => focusPlace(spots[+li.dataset.i], { fly: true });
+            li.classList.toggle("on", !!focus && spots[+li.dataset.i].id === focus.id);
             li.onclick = go;
             li.onkeydown = (e) => {
               if (e.key === "Enter") go();
