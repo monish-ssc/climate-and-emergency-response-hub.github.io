@@ -79,7 +79,8 @@ Reply with JSON only, in exactly this shape:
                  "fr": {"headline": "...", "body": "...", "whatToDo": ["...", "..."]}}}
 Give 3 to 5 actions. Confidence: high if the facts are recent and consistent, low if key data is
 missing or stale. The public alert is for residents, has no citations and no numbers that are not in
-the facts, and must not claim an official order."""
+the facts, and must not claim an official order. Do not calculate new numbers and do not add numbers
+from outside the facts (road numbers, phone numbers, counts); copy numbers exactly as the facts give them."""
 
 
 # ---------- helpers ----------
@@ -200,7 +201,10 @@ def add_context(facts, ref, region, hazard):
         ctx["hosts"] = (f"F{len(facts.items) + 1}", hosts)
         facts.add("Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): "
                   + "; ".join(f"{c['name']} ({n(c['population'])} residents, {n(d)} km)" for c, d in hosts) + ".")
-    facts.add("Assumption: plan group lodging for about 20% of evacuees (an adjustable planning assumption, not data).")
+    lodging = "about 20% of evacuees"
+    if pop and pop.get("population"):
+        lodging += f", about {n(round(pop['population'] * 0.2))} people if all {n(pop['population'])} residents leave"
+    facts.add(f"Assumption: plan group lodging for {lodging} (an adjustable planning assumption, not data).")
     return ctx
 
 
@@ -374,8 +378,12 @@ NUM = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 CLOCK = re.compile(r"\b\d{1,2}(?::\d{2}|\s?h\s?\d{2})\b")  # 1:00, 13 h 00 - times, not quantities
 
 
+# common planning time windows ("within 48 hours", "72-hour kit") are wording, not data
+WINDOW = re.compile(r"\b(?:12|24|36|48|72)[\s\u00a0-]*(?:h\b|hours?\b|heures?\b)", re.I)
+
+
 def numbers(text, french=False):
-    text = CLOCK.sub(" ", text or "")
+    text = WINDOW.sub(" ", CLOCK.sub(" ", text or ""))
     if french:
         # French Canadian: "1 684" and "17,3" are 1684 and 17.3
         text = re.sub(r"(?<=\d)[\s\u00a0\u202f](?=\d{3}\b)", "", text)
@@ -577,9 +585,11 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
         print("GITHUB_TOKEN not set: writing template briefings only")
         offline = True
 
-    # most urgent first: replays (written once), then live by level, then the oldest
+    # most urgent first: replays (written once), then live by level. Subjects whose last AI answer
+    # failed the checks go to the back, so they cannot use up every run's calls while the rest wait.
     todo = [s for s in subjects if needs_refresh(s, old.get(s["key"]), now)]
-    todo.sort(key=lambda s: (s["kind"] != "replay", LEVEL_ORDER.get(s["level"], 9), s["key"]))
+    todo.sort(key=lambda s: (s["kind"] != "replay", bool((old.get(s["key"]) or {}).get("aiRejected")),
+                             LEVEL_ORDER.get(s["level"], 9), s["key"]))
     calls, written, failed, models = 0, 0, 0, list(MODELS)
     results = {}
     for s in todo:

@@ -5874,9 +5874,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           ),
           air?.aqhiPlus != null
             ? stat(
-                `${air.display} <span class="band ${{ low: "b-low", moderate: "b-mod", high: "b-high", "very high": "b-ext" }[air.category] || "b-low"}">${escapeHTML(titleCase(air.category))}</span>`,
-                "Smoke (AQHI+)",
-                `${escapeHTML(station?.name || "Nearest station")}${station ? `, ${station.distanceKm} km away` : ""}`,
+                `${air.display} <span class="band ${{ low: "b-low", moderate: "b-mod", high: "b-high", "very high": "b-ext" }[air.category] || "b-low"}">${escapeHTML(titleCase(air.category))} health risk</span>`,
+                "Smoke health index (AQHI+)",
+                `${escapeHTML(station?.name || "Nearest station")}${station ? `, ${station.distanceKm} km away` : ""} · changes with the wind; not part of the risk score`,
               )
             : stat("–", "Smoke (AQHI+)", "No station reading at this time"),
         ].join("");
