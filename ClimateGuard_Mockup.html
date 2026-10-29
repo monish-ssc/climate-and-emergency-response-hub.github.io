@@ -1071,6 +1071,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
         padding-left: 8px;
         border-left: 1px solid var(--line);
       }
+      .population-key { padding: 14px 20px; border-top: 1px solid var(--line); font-size: 13px; }
+      .population-bands { display: flex; gap: 8px 16px; flex-wrap: wrap; margin-top: 8px; }
+      .population-bands span { display: inline-flex; gap: 5px; align-items: center; }
+      .population-bands i { width: 16px; height: 12px; border: 1px solid #789086; border-radius: 3px; }
+      .population-search { display: block; margin: 14px 0; font-size: 13px; color: var(--ink-2); }
+      .population-search input { width: 100%; padding: 9px 12px; margin-top: 4px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); }
+      .population-row { display: flex; justify-content: space-between; gap: 12px; width: 100%; text-align: left; padding: 8px 0; border: 0; background: transparent; }
+      .population-row small { display: block; font-size: 12px; color: var(--ink-2); }
+      .population-row .population-value { text-align: right; white-space: nowrap; }
       .facility-popup {
         min-width: 210px;
         color: var(--ink);
@@ -2549,7 +2558,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
         <div class="clock">
           <span class="txt"
-            >Scenario time: <b id="clockTxt">Day 3, 14:00</b></span
+            ><span id="clockLabel">Population as of:</span> <b id="clockTxt">Loading…</b></span
           ><span class="sample">Historical replay</span>
         </div>
       </div>
@@ -2649,6 +2658,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                       <span class="sw" style="background: var(--spruce)"></span>
                       <span id="facilityToggleLabel">Health facilities (2020)</span>
                     </button>
+                    <button class="chip" id="populationToggle" type="button" aria-pressed="true">
+                      <span class="sw" style="background:#2c7fb8"></span>
+                      Population density
+                    </button>
                   </div>
                 </div>
                 <div
@@ -2680,8 +2693,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 class="lmap"
                 id="map"
                 role="region"
-                aria-label="Map of the BC Interior showing the fire, smoke advisory and communities"
+                aria-label="Map of Canada showing population density and hazard layers"
               ></div>
+              <section class="population-key" id="populationLegend" aria-label="Population density legend">
+                <b>Population density · people/km²</b>
+                <div class="population-bands">
+                  <span><i style="background:#edf8b1"></i>&lt;1</span>
+                  <span><i style="background:#c7e9b4"></i>1–10</span>
+                  <span><i style="background:#7fcdbb"></i>10–100</span>
+                  <span><i style="background:#41b6c4"></i>100–1,000</span>
+                  <span><i style="background:#225ea8"></i>1,000+</span>
+                  <span><i style="background:#d4d8d5"></i>Unavailable</span>
+                </div>
+                <p class="hint" id="populationStatus" role="status">Loading Statistics Canada population estimates…</p>
+              </section>
               <section
                 class="live-layers"
                 id="liveLayers"
@@ -2819,7 +2844,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 </div>
               </div>
             </div>
-            <div class="panel facs-panel">
+            <div class="panel facs-panel" id="scenarioFacilities">
               <h2>Shelters and hospitals</h2>
               <p class="hint">Nearest to the communities at highest risk</p>
               <div class="facs" id="facs"></div>
@@ -2860,20 +2885,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
               </button>
             </div>
             <div class="panel">
-              <h2>Communities at risk</h2>
-              <p class="hint">
+              <h2 id="communityPanelTitle">Population by community</h2>
+              <p class="hint" id="communityPanelHint">
                 BC Interior wildfire, ranked by risk score from 0 to 100. Select
                 one to fly to it on the map.
               </p>
+              <label class="population-search" id="populationSearchWrap">
+                Find a community
+                <input id="populationSearch" type="search" placeholder="City, town or province" />
+              </label>
+              <p class="hint" id="populationSelection" aria-live="polite"></p>
+              <button class="btn ghost" id="populationReset" type="button">Canada totals</button>
               <ol class="rank" id="rank"></ol>
-              <p class="formula">
+              <p class="formula" id="communityFormula">
                 Score = 45% hazard, 20% people, 20% vulnerability, 15% history
               </p>
             </div>
           </div>
         </div>
 
-        <div class="brief-strip">
+        <div class="brief-strip" id="scenarioBriefing">
           <svg class="leaf" viewBox="0 0 48 48" aria-hidden="true">
             <circle cx="24" cy="24" r="23" fill="#fff" />
             <path d="M14 33c0-11 8-19 21-20-1 13-9 21-20 21" fill="#6F9A5A" />
@@ -3780,6 +3811,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           error: null,
         },
         facilitiesPromise: null,
+        population: { state: "idle", enabled: true, metadata: null, communities: [], selectedId: null, geometry: null, geometryState: "idle" },
         selectionRequest: 0,
       };
 
@@ -4046,6 +4078,136 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         return dataAdapter.facilitiesPromise;
       }
 
+      const REGION_CSD = {
+        vancouver: "5915022", calgary: "4806016", halifax: "1209034",
+        clinton: "5933028", "west-kelowna": "5935029",
+      };
+      const populationNumber = (value, decimals = 0) =>
+        Number.isFinite(value) ? value.toLocaleString("en-CA", { maximumFractionDigits: decimals }) : "Unavailable";
+      const populationSearchKey = (value) =>
+        value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+      function densityColour(value) {
+        if (!Number.isFinite(value)) return "#d4d8d5";
+        return value >= 1000 ? "#225ea8" : value >= 100 ? "#41b6c4" :
+          value >= 10 ? "#7fcdbb" : value >= 1 ? "#c7e9b4" : "#edf8b1";
+      }
+      async function loadPopulationData() {
+        const state = dataAdapter.population;
+        state.state = "loading";
+        renderPopulationDashboard();
+        try {
+          const document = await fetchJSON("data/pipeline/population_summary.json");
+          if (!Array.isArray(document.communities) || !document.metadata?.year) throw new Error("Invalid population summary");
+          state.metadata = document.metadata;
+          state.communities = document.communities.sort((a, b) => (b.population ?? -1) - (a.population ?? -1));
+          state.state = "ready";
+          renderPopulationDashboard();
+          await loadPopulationGeometry();
+        } catch (error) {
+          state.state = "error";
+          state.error = error;
+          renderPopulationDashboard();
+        }
+      }
+      async function loadPopulationGeometry() {
+        const state = dataAdapter.population;
+        if (state.geometry || state.geometryState === "loading") return;
+        state.geometryState = "loading";
+        renderPopulationDashboard();
+        try {
+          const document = await fetchJSON("data/pipeline/population_density.geojson");
+          if (document.type !== "FeatureCollection" || !Array.isArray(document.features)) throw new Error("Invalid population boundaries");
+          if (document.metadata?.year !== state.metadata?.year) throw new Error("Population year differs between map and summary");
+          state.geometry = document;
+          state.geometryState = "ready";
+          renderPopulationLayer();
+        } catch (error) {
+          state.geometryState = "error";
+          state.error = error;
+        }
+        renderPopulationDashboard();
+      }
+      function populationPopup(properties) {
+        return `<div class="facility-popup"><b>${escapeHTML(properties.name)}</b><small>${escapeHTML(properties.province)}</small>
+          <p>Population (${properties.year}): <b>${populationNumber(properties.population)}</b>
+          Density: <b>${populationNumber(properties.density, 2)} people/km²</b>
+          Land area: ${populationNumber(properties.land_area_km2, 2)} km²</p>
+          <small>Statistics Canada · July 1 annual estimate · 2021 census boundaries</small></div>`;
+      }
+      function renderPopulationLayer() {
+        if (!map || !populationOverlay) return;
+        populationOverlay.clearLayers();
+        const state = dataAdapter.population;
+        if (mode !== "canada" || !state.enabled || !state.geometry) return;
+        L.geoJSON(state.geometry, {
+          style: (feature) => ({
+            fillColor: densityColour(feature.properties.density), fillOpacity: 0.66,
+            color: feature.properties.csduid === state.selectedId ? "#17251e" : "#678477",
+            weight: feature.properties.csduid === state.selectedId ? 2.5 : 0.4,
+          }),
+          onEachFeature: (feature, layer) => {
+            layer.on("click", () => selectPopulationCommunity(feature.properties.csduid, false));
+            layer.bindPopup(populationPopup(feature.properties), { maxWidth: 300 });
+          },
+        }).addTo(populationOverlay).eachLayer((layer) => layer.bringToBack());
+      }
+      function selectPopulationCommunity(id, fly = true) {
+        const state = dataAdapter.population,
+          community = state.communities.find((item) => item.csduid === id);
+        if (!community) return;
+        state.selectedId = id;
+        renderPopulationDashboard();
+        populationOverlay?.eachLayer((collection) => collection.eachLayer((layer) => {
+          const selected = layer.feature.properties.csduid === id;
+          layer.setStyle({ color: selected ? "#17251e" : "#678477", weight: selected ? 2.5 : 0.4 });
+          if (selected && !fly) layer.openPopup();
+        }));
+        if (map && fly) map.flyTo([community.centre_lat, community.centre_lon],
+          community.land_area_km2 > 5000 ? 6 : community.land_area_km2 > 500 ? 8 : 10,
+          { duration: reduced ? 0 : 0.8 });
+      }
+      function renderPopulationDashboard() {
+        if (mode !== "canada") return;
+        const state = dataAdapter.population, metadata = state.metadata,
+          community = state.communities.find((item) => item.csduid === state.selectedId),
+          title = community ? `${community.name}, ${community.province}` : "Canada",
+          population = community ? community.population : metadata?.totalPopulation,
+          density = community ? community.density : metadata?.density,
+          land = community ? community.land_area_km2 : metadata?.landAreaWithPopulationKm2,
+          loading = state.state === "loading" || state.state === "idle",
+          value = (number, digits = 0) => loading ? "…" : populationNumber(number, digits);
+        $("summary").innerHTML = `
+          <div class="stat"><div class="num">${value(population)}</div><div class="lbl">Population estimate</div><div class="sub">${escapeHTML(title)} · ${metadata?.year ?? (loading ? "Loading" : "Unavailable")}</div></div>
+          <div class="stat"><div class="num">${value(density, 2)}</div><div class="lbl">People per km²</div><div class="sub">${community ? "Population ÷ official land area" : "Areas with population estimates"}</div></div>
+          <div class="stat"><div class="num">${value(land, 2)}</div><div class="lbl">${community ? "Land area" : "Covered land area"} · km²</div><div class="sub">2021 census subdivision boundaries</div></div>
+          <div class="stat"><div class="num">${value(metadata?.populatedBoundaryCount)}</div><div class="lbl">Communities with estimates</div><div class="sub">${metadata ? `${metadata.missingPopulationCount} unavailable · ${metadata.boundaryCount} boundaries` : "Statistics Canada"}</div></div>`;
+        $("clockTxt").textContent = metadata ? `July 1, ${metadata.year}` : "Loading population";
+        $("clockLabel").textContent = "Population as of:";
+        document.querySelector(".clock .sample").textContent = "Population estimate";
+        $("communityPanelTitle").textContent = "Population by community";
+        $("communityPanelHint").textContent = "Search Canadian census subdivisions. Select a community to show its population, density and location.";
+        $("populationSelection").textContent = community ? `Selected: ${title}` : "Showing Canada totals";
+        $("communityFormula").innerHTML = metadata
+          ? `July 1, ${metadata.year} annual estimates · density uses official land area. <a href="${escapeHTML(metadata.source.url)}" target="_blank" rel="noopener">Statistics Canada source</a>` : "";
+        $("populationToggle").setAttribute("aria-pressed", String(state.enabled));
+        $("populationToggle").setAttribute("aria-busy", String(loading || state.geometryState === "loading"));
+        $("populationStatus").textContent = state.state === "error"
+          ? "Population estimates could not be loaded. Select Population density to retry."
+          : !metadata ? "Loading Statistics Canada population estimates…"
+          : `July 1, ${metadata.year} estimates · ${fmt(metadata.boundaryCount)} census subdivisions · ${metadata.missingPopulationCount} populations unavailable.${state.geometryState === "loading" ? " Loading boundaries…" : state.geometryState === "error" ? " Map boundaries could not be loaded; select Population density to retry." : " Select a boundary for details."}`;
+        $("populationLegend").hidden = !state.enabled;
+        const query = populationSearchKey($("populationSearch").value.trim()),
+          matching = state.communities.filter((item) => populationSearchKey(`${item.name} ${item.province}`).includes(query)).slice(0, 10);
+        $("rank").innerHTML = matching.length ? matching.map((item) => `
+          <li><button type="button" class="population-row" data-csd="${item.csduid}">
+            <span><b>${escapeHTML(item.name)}</b><small>${escapeHTML(item.province)}</small></span>
+            <span class="population-value"><b>${populationNumber(item.population)}</b><small>${populationNumber(item.density, 2)} people/km²</small></span>
+          </button></li>`).join("") : `<li>${loading ? "Loading population estimates…" : state.state === "error" ? "Population data unavailable" : "No matching communities"}</li>`;
+        $("rank").querySelectorAll("[data-csd]").forEach((button) => {
+          button.onclick = () => selectPopulationCommunity(button.dataset.csd);
+        });
+      }
+
       function formatSnapshotTime(value) {
         if (!value || Number.isNaN(Date.parse(value))) return "time unavailable";
         return new Intl.DateTimeFormat("en-CA", {
@@ -4220,6 +4382,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         overlay = null,
         liveOverlay = null,
         facilityOverlay = null,
+        populationOverlay = null,
         base = null,
         markers = {},
         windCtl = null,
@@ -4289,6 +4452,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         overlay = L.layerGroup().addTo(map);
         map.createPane("facilitiesPane").style.zIndex = 390;
         facilityOverlay = L.layerGroup().addTo(map);
+        populationOverlay = L.layerGroup().addTo(map);
         syncMapChrome();
       }
       let baseBtns = null;
@@ -4530,7 +4694,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             const feature = group.features[0],
               label = feature.properties?.name || "Health facility";
             L.circleMarker(centre, {
-              pane: "facilitiesPane",
+              pane: "overlayPane",
               radius: 5,
               color: "#fff",
               weight: 1.5,
@@ -4543,7 +4707,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             return;
           }
           const marker = L.circleMarker(centre, {
-            pane: "facilitiesPane",
+            pane: "overlayPane",
             radius: Math.min(20, 7 + Math.log2(count) * 2),
             color: "#fff",
             weight: 2,
@@ -4879,8 +5043,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
 
       function selectProv(id) {
         prov = id;
+        dataAdapter.population.selectedId = REGION_CSD[id] || null;
         $("regionSelect").value = id;
         renderArea();
+        renderPopulationDashboard();
         if (mode === "canada") drawCanada();
         void loadSelectionData();
       }
@@ -5006,6 +5172,17 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("legDet").hidden = !det;
         $("sevBar").hidden = det;
         $("liveLayers").hidden = det;
+        $("populationLegend").hidden = det || !dataAdapter.population.enabled;
+        $("populationSearchWrap").hidden = det;
+        $("populationSelection").hidden = det;
+        $("populationReset").hidden = det;
+        $("scenarioFacilities").hidden = !det;
+        $("scenarioBriefing").hidden = !det;
+        if (det) {
+          $("communityPanelTitle").textContent = "Communities at risk · sample scenario";
+          $("communityPanelHint").textContent = "Illustrative BC Interior communities, ranked by simulated risk.";
+          $("communityFormula").textContent = "Sample score = 45% hazard, 20% people, 20% vulnerability, 15% history";
+        }
         $("tlBar").hidden = !det;
         $("legInc").hidden = hazard !== "wildfire";
         $("legHealth").hidden =
@@ -5045,6 +5222,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       }
       function enterDetail(k) {
         mode = "detail";
+        renderPopulationLayer();
         renderFacilities();
         renderLiveLayers();
         syncMapChrome();
@@ -5065,6 +5243,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         renderSituation();
         renderFacilities();
         renderLiveLayers();
+        renderPopulationLayer();
         if (map)
           map.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : 1.4 });
       }
@@ -5146,11 +5325,18 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    ================================================================= */
       let day = 3;
       function renderSituation() {
+        if (mode === "canada") {
+          renderPopulationDashboard();
+          drawCanada();
+          return;
+        }
         const D = DAYS[day],
           st = dayStats(day),
           prevSt = day > 1 ? dayStats(day - 1) : null;
         const t = `Day ${day}, 14:00`;
         $("clockTxt").textContent = t;
+        $("clockLabel").textContent = "Scenario time:";
+        document.querySelector(".clock .sample").textContent = "Historical replay";
         $("tlTxt").textContent = t;
         $("tlNote").textContent = D.proj ? "(projection)" : "";
         const dAbove = prevSt ? st.above - prevSt.above : 0;
@@ -5291,6 +5477,30 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         if (facilities.enabled && facilities.state !== "ready") {
           void loadFacilityData();
         }
+      };
+      $("populationToggle").onclick = () => {
+        const state = dataAdapter.population;
+        if (state.state === "error") {
+          state.enabled = true;
+          void loadPopulationData();
+          return;
+        }
+        if (state.geometryState === "error") {
+          state.enabled = true;
+          void loadPopulationGeometry();
+          return;
+        }
+        state.enabled = !state.enabled;
+        renderPopulationLayer();
+        renderPopulationDashboard();
+      };
+      $("populationSearch").oninput = () => renderPopulationDashboard();
+      $("populationReset").onclick = () => {
+        dataAdapter.population.selectedId = null;
+        $("populationSearch").value = "";
+        renderPopulationDashboard();
+        renderPopulationLayer();
+        map?.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : 0.8 });
       };
 
       /* =================================================================
@@ -5721,6 +5931,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       renderSituation();
       setLang("en");
       renderChecks();
+      void loadPopulationData();
       void loadSelectionData();
       initLivePanel();
       applyLivePreset();

@@ -138,6 +138,30 @@ The healthcare pipeline saves cleaned CSVs, regional summaries, and `data/health
 
 ## Run the frontend
 
+### Population density
+
+The Canada overview loads real annual Statistics Canada population estimates and
+2021 census subdivision boundaries. Density is the estimate divided by official
+`LANDAREA` in km². Missing populations or densities remain unavailable. The map
+starts with density enabled; search by community/province or select a boundary to
+inspect its population, density and land area. Canada totals use the subdivisions
+with available estimates. The sample wildfire replay remains a separate view.
+
+To regenerate the committed browser files:
+
+```bash
+.venv/bin/python data/build_population_map.py --boundaries data/raw/boundaries/lcsd000b21a_e.shp
+```
+
+The builder detects a truncated shapefile and recovers the official archive into
+the ignored `data/population/boundaries/` cache, using its Data for Canada archive
+mirror if the official download returns HTTP 403. It preserves the supplied file.
+Population downloads stay in `data/population/`; use `--source-zip` to reuse one.
+Only `data/pipeline/population_density.geojson` and `population_summary.json` need
+to ship with the site. Display polygons are simplified by 100 metres, while all
+numbers use the original official land areas. These are annual estimates dated
+in the UI, not a live population counter.
+
 The frontend does not need a build step or package install.
 
 From the repository root, run:

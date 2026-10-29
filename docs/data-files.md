@@ -13,6 +13,8 @@ The pipelines in `data/` write plain JSON files. The dashboard can load them wit
 | Hurricane risk, one region | `data/samples/<regionId>_severe_storm.json` | `hurricane_pipeline.py` |
 | Wildfire map layers | `data/pipeline/active_fires.geojson`, `active_fire_extents.geojson`, `fire_weather_alerts.geojson` | `wildfire_pipeline.py` |
 | Flood map layers | `data/pipeline/stations.geojson`, `river_conditions_latest.geojson`, `active_alerts.geojson` | `flood_pipeline.py` |
+| Population density boundaries | `data/pipeline/population_density.geojson` | `build_population_map.py` |
+| Population cards and community search | `data/pipeline/population_summary.json` | `build_population_map.py` |
 | Hurricane map layers | `data/pipeline/hurricane_tracks_latest.geojson`, `hurricane_historical_storms.geojson`, `hurricane_active_alerts.geojson` (git-ignored; regenerate) | `hurricane_pipeline.py` |
 | List of replays | `data/scenarios/index.json` | `build_replay.py` |
 | One replay (time steps) | `data/scenarios/<fireId>/timeline.json` | `build_replay.py` |
