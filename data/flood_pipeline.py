@@ -191,6 +191,11 @@ def assess_station(readings, base, window_hours=12):
     t = pd.to_datetime(s["DATETIME"])
     value, mean_24h = float(s[col].iloc[-1]), float(s[col].mean())
     hist, peak = base[metric]["month_means"], base[metric]["median_annual_peak"]
+    if metric == "level":
+        # Real-time water levels are often reported against a different gauge datum than the
+        # historical record (e.g. 08LF027 Deadman River: 4.27 m live vs yearly maxima of 1.2-2.5 m),
+        # so live levels are not compared with history. Level-only stations report their trend only.
+        hist, peak = [], None
 
     # history is monthly means, so rank the 24 h mean (an instant high tide would beat every monthly mean)
     pct = (
