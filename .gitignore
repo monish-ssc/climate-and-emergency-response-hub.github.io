@@ -209,6 +209,12 @@ tempCodeRunnerFile.py
 data/raw/ibtracs/
 data/pipeline/hurricane_*.geojson
 
+# Cached hydrometric baselines (restored separately in the live-data workflow)
+data/pipeline/baselines.json
+
+# Canada-wide live layers (built and deployed to GitHub Pages by the live-data workflow)
+data/pipeline/live/
+
 # Downloaded population source and generated analysis
 data/population/
 

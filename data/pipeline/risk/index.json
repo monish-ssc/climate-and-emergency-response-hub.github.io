@@ -1,16 +1,16 @@
 {
- "builtAt": "2026-10-28T22:05:26Z",
+ "builtAt": "2026-10-29T14:04:12Z",
  "entries": [
   {
    "regionId": "calgary",
    "regionLabel": "Calgary, AB",
    "hazard": "flood",
-   "score": 48,
-   "level": "moderate",
+   "score": 53,
+   "level": "high",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T18:50:36Z",
-   "expiresAt": "2026-10-28T19:50:36Z",
-   "path": "samples/calgary_flood.json"
+   "generatedAt": "2026-10-29T14:03:37Z",
+   "expiresAt": "2026-10-29T15:03:37Z",
+   "path": "pipeline/risk/calgary_flood.json"
   },
   {
    "regionId": "calgary",
@@ -19,8 +19,8 @@
    "score": 0,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T21:03:55Z",
-   "expiresAt": "2026-10-28T22:03:55Z",
+   "generatedAt": "2026-10-29T14:04:06Z",
+   "expiresAt": "2026-10-29T15:04:06Z",
    "path": "samples/calgary_severe_storm.json"
   },
   {
@@ -30,9 +30,31 @@
    "score": 6,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T20:54:51Z",
-   "expiresAt": "2026-10-28T21:54:51Z",
+   "generatedAt": "2026-10-29T14:00:21Z",
+   "expiresAt": "2026-10-29T15:00:21Z",
    "path": "pipeline/risk/calgary_wildfire.json"
+  },
+  {
+   "regionId": "clinton",
+   "regionLabel": "Clinton, BC",
+   "hazard": "flood",
+   "score": 80,
+   "level": "critical",
+   "dataMode": "live",
+   "generatedAt": "2026-10-29T14:03:37Z",
+   "expiresAt": "2026-10-29T15:03:37Z",
+   "path": "pipeline/risk/clinton_flood.json"
+  },
+  {
+   "regionId": "clinton",
+   "regionLabel": "Clinton, BC",
+   "hazard": "severe_storm",
+   "score": 0,
+   "level": "low",
+   "dataMode": "live",
+   "generatedAt": "2026-10-29T14:04:06Z",
+   "expiresAt": "2026-10-29T15:04:06Z",
+   "path": "samples/clinton_severe_storm.json"
   },
   {
    "regionId": "clinton",
@@ -41,9 +63,20 @@
    "score": 18,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T20:54:51Z",
-   "expiresAt": "2026-10-28T21:54:51Z",
+   "generatedAt": "2026-10-29T14:00:21Z",
+   "expiresAt": "2026-10-29T15:00:21Z",
    "path": "pipeline/risk/clinton_wildfire.json"
+  },
+  {
+   "regionId": "halifax",
+   "regionLabel": "Halifax, NS",
+   "hazard": "flood",
+   "score": 0,
+   "level": "low",
+   "dataMode": "live",
+   "generatedAt": "2026-10-29T14:03:37Z",
+   "expiresAt": "2026-10-29T15:03:37Z",
+   "path": "pipeline/risk/halifax_flood.json"
   },
   {
    "regionId": "halifax",
@@ -52,8 +85,8 @@
    "score": 0,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T21:03:55Z",
-   "expiresAt": "2026-10-28T22:03:55Z",
+   "generatedAt": "2026-10-29T14:04:06Z",
+   "expiresAt": "2026-10-29T15:04:06Z",
    "path": "samples/halifax_severe_storm.json"
   },
   {
@@ -63,8 +96,8 @@
    "score": 0,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T20:54:51Z",
-   "expiresAt": "2026-10-28T21:54:51Z",
+   "generatedAt": "2026-10-29T14:00:21Z",
+   "expiresAt": "2026-10-29T15:00:21Z",
    "path": "pipeline/risk/halifax_wildfire.json"
   },
   {
@@ -74,9 +107,9 @@
    "score": 50,
    "level": "high",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T18:50:36Z",
-   "expiresAt": "2026-10-28T19:50:36Z",
-   "path": "samples/vancouver_flood.json"
+   "generatedAt": "2026-10-29T14:03:37Z",
+   "expiresAt": "2026-10-29T15:03:37Z",
+   "path": "pipeline/risk/vancouver_flood.json"
   },
   {
    "regionId": "vancouver",
@@ -85,8 +118,8 @@
    "score": 0,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T21:03:55Z",
-   "expiresAt": "2026-10-28T22:03:55Z",
+   "generatedAt": "2026-10-29T14:04:06Z",
+   "expiresAt": "2026-10-29T15:04:06Z",
    "path": "samples/vancouver_severe_storm.json"
   },
   {
@@ -96,9 +129,31 @@
    "score": 13,
    "level": "low",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T20:54:51Z",
-   "expiresAt": "2026-10-28T21:54:51Z",
+   "generatedAt": "2026-10-29T14:00:21Z",
+   "expiresAt": "2026-10-29T15:00:21Z",
    "path": "pipeline/risk/vancouver_wildfire.json"
+  },
+  {
+   "regionId": "west-kelowna",
+   "regionLabel": "West Kelowna, BC",
+   "hazard": "flood",
+   "score": 17,
+   "level": "low",
+   "dataMode": "live",
+   "generatedAt": "2026-10-29T14:03:37Z",
+   "expiresAt": "2026-10-29T15:03:37Z",
+   "path": "pipeline/risk/west-kelowna_flood.json"
+  },
+  {
+   "regionId": "west-kelowna",
+   "regionLabel": "West Kelowna, BC",
+   "hazard": "severe_storm",
+   "score": 0,
+   "level": "low",
+   "dataMode": "live",
+   "generatedAt": "2026-10-29T14:04:06Z",
+   "expiresAt": "2026-10-29T15:04:06Z",
+   "path": "samples/west-kelowna_severe_storm.json"
   },
   {
    "regionId": "west-kelowna",
@@ -107,8 +162,8 @@
    "score": 30,
    "level": "moderate",
    "dataMode": "live",
-   "generatedAt": "2026-10-28T20:54:51Z",
-   "expiresAt": "2026-10-28T21:54:51Z",
+   "generatedAt": "2026-10-29T14:00:21Z",
+   "expiresAt": "2026-10-29T15:00:21Z",
    "path": "pipeline/risk/west-kelowna_wildfire.json"
   }
  ]

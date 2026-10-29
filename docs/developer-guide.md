@@ -4,21 +4,21 @@ This guide explains how ClimateGuard AI is set up and where to add new work.
 
 ## What the project does
 
-ClimateGuard AI is a hackathon prototype for exploring climate-related emergency risks in Canada. The dashboard lets a user choose a region and a hazard, view a simulated risk score, and generate a sample preparedness briefing.
+ClimateGuard AI is a hackathon prototype for exploring climate-related emergency risks in Canada. The dashboard lets a user choose a region and hazard, view a pipeline risk snapshot when available, and generate a sample preparedness briefing.
 
 The project is split into two main parts:
 
 - A supplied, self-contained HTML frontend.
 - A backend skeleton for future weather, risk, and AI integrations.
 
-The current dashboard uses simulated data. It must not be used for real emergency decisions.
+The dashboard combines provisional public-data snapshots with simulated fallback scenarios. It must not be used for real emergency decisions.
 
 ## Project layout
 
 ```text
 .
 ├── index.html
-├── ClimateGuard_AI_Interactive_Dashboard.html
+├── ClimateGuard_Mockup.html
 ├── api/
 │   ├── contracts/
 │   └── examples/
@@ -38,11 +38,11 @@ The current dashboard uses simulated data. It must not be used for real emergenc
 
 ### Frontend
 
-`ClimateGuard_AI_Interactive_Dashboard.html` is the main frontend. It contains its own HTML, CSS, JavaScript, map image, and mock scenario data. Keep it as the single source of truth for the user interface.
+`ClimateGuard_Mockup.html` is the main frontend. It contains its own HTML, CSS, JavaScript, maps, a static JSON adapter, and mock fallback scenarios. Keep it as the single source of truth for the user interface.
 
 `index.html` is a small GitHub Pages entry point. It sends the browser to the main dashboard.
 
-Avoid creating a second frontend or splitting the supplied HTML into separate files during the hackathon. If the frontend needs live data, add a small API adapter inside the existing script and leave the rest of the page intact.
+Avoid creating a second frontend or splitting the supplied HTML into separate files during the hackathon. Keep future data adapters inside the existing script and preserve the demonstration fallback.
 
 ### API contracts
 
@@ -71,7 +71,7 @@ Keep provider-specific code inside `providers`. The rest of the backend should w
 
 `data/scenarios.json` is the offline fallback fixture. It lets the demo continue if a live provider is unavailable. Any screen using this file must clearly say that the data is simulated.
 
-The scripts in `data/` are separate data-exploration tools; they are not connected to the dashboard or backend yet. The weather scripts fetch live, provisional data from ECCC, while the healthcare pipeline downloads a public facility inventory from Open Government Canada. Downloads require internet access. Run all commands below from the repository root.
+The scripts in `data/` produce the static snapshots consumed by the dashboard. The weather scripts fetch live, provisional data from ECCC, while the healthcare pipeline downloads a public facility inventory from Open Government Canada. Downloads require internet access. Run all commands below from the repository root.
 
 Create a virtual environment once (skip creation if `.venv/` already exists), then install the declared dependencies:
 
@@ -94,9 +94,47 @@ Run the scripts as needed:
 .venv/bin/python data/healthcare_data_pipeline.py
 ```
 
-The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The flood pipeline writes risk-response JSON and map layers under `data/pipeline/`. These outputs are not used by the frontend automatically; connect them through the backend/API before presenting them in the dashboard.
+### Automated live-data refresh
 
-The healthcare pipeline saves cleaned CSVs, regional summaries, and `data/healthcare/facilities.geojson` with facility locations, source information, and timestamps. Optional hazard analysis requires `geopandas>=1.0` and valid polygons in `data/hazard_zones.geojson`; otherwise exposure is unknown (`null`). It suggests up to three alternatives within 50 km straight-line distance, without verifying safety or capacity.
+`.github/workflows/refresh-live-data.yml` refreshes the data and deploys the site to GitHub Pages. It starts at minutes 7 and 37 of each hour, after each push to `main`, and from **Run workflow**. The workflow does not commit the generated files.
+
+The `build` job does these steps:
+
+1. It restores the files that the site published last (`data/restore_published_snapshot.py`).
+2. It runs the wildfire, flood and hurricane pipelines for the five regions.
+3. It builds the live map layers for all of Canada (`data/build_live_layers.py`).
+4. It rebuilds the risk index.
+5. It validates the output (`data/validate_live_outputs.py`).
+6. It uploads the site as a GitHub Pages artifact.
+
+The `deploy` job publishes the artifact. It runs only on the default branch.
+
+A failed regional pipeline does not stop the deployment. Its last published files stay, and the dashboard shows them as stale after `expiresAt`. The `report` job then fails the run, so the failure shows in the Actions list. A failed live-layer source keeps its previous layer with the status `stale`. Validation stops the deployment if no live layer refreshed, or if a file is not valid.
+
+The workflow keeps two caches. The hurricane history cache changes each week. The flood baseline cache gets a new entry only when a run adds station histories.
+
+GitHub only starts scheduled workflows from the default branch. The schedule starts after this workflow is merged into `main`.
+
+#### Set up GitHub Pages for the workflow (one time)
+
+1. Open the repository **Settings** on GitHub.
+2. Open **Pages**.
+3. Set **Source** to **GitHub Actions**.
+4. Open **Actions**, select **Refresh live hazard data**, and select **Run workflow** on `main`.
+
+The first run cannot restore a previous snapshot, because the site has no live layers yet. This is normal.
+
+#### Live data in the dashboard
+
+The dashboard checks `data/pipeline/live/manifest.json` and `data/pipeline/risk/index.json` every 5 minutes. It does not check while the browser tab is hidden. It loads only the layers that changed, and it does not reload the page. **Check for updates** below the map does the check immediately.
+
+The **Live layers across Canada** panel below the map has one control for each layer. Each row shows the status (Live, Stale, Source error, Load error), the feature count, `observedAt`, `generatedAt` and the source. A hazard tab turns on a default set of layers. You can then turn layers on or off.
+
+To see live layers on a local server, run `.venv/bin/python data/build_live_layers.py` first. The `data/pipeline/live/` folder is git-ignored.
+
+The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The pipelines write risk-response JSON and map layers under `data/pipeline/` and `data/samples/`. The frontend discovers risk files through `data/pipeline/risk/index.json`, uses embedded demonstration values when a snapshot is unavailable, and labels stale data after `expiresAt`.
+
+The healthcare pipeline saves cleaned CSVs, regional summaries, and `data/healthcare/facilities.geojson` with facility locations, source information, and timestamps. The Canada overview loads that GeoJSON on demand from the **Health facilities** map control and clusters visible points in the browser. The committed inventory contains 7,525 map-ready records and was last modified at source in 2020; it does not verify current operating status or capacity. Optional hazard analysis requires `geopandas>=1.0` and valid polygons in `data/hazard_zones.geojson`; otherwise exposure is unknown (`null`). It suggests up to three alternatives within 50 km straight-line distance, without verifying safety or capacity.
 
 ## Run the frontend
 
@@ -114,11 +152,11 @@ Then open:
 http://localhost:8000/
 ```
 
-You can also open `ClimateGuard_AI_Interactive_Dashboard.html` directly, but a local server is better when testing API requests.
+Open `http://localhost:8000/`; `index.html` launches `ClimateGuard_Mockup.html`. Do not open the HTML through `file://`, because browser `fetch()` cannot reliably load the data files that way.
 
-## Connect the frontend to the API
+## Future API connection
 
-The HTML and API use slightly different hazard names. Translate them in one small adapter function:
+The static adapter already translates the HTML hazard names to the contract names. A future API adapter must preserve the same mapping:
 
 | Dashboard value | API value      |
 | --------------- | -------------- |
@@ -137,15 +175,14 @@ A simple request flow should look like this:
 
 Do not send provider credentials or LLM keys to the browser. Store secrets in the backend platform's environment settings.
 
-## Suggested order of work
+## Suggested next work
 
-1. Choose a backend runtime and add its setup files under `backend/`.
-2. Implement `/api/risk` with `data/scenarios.json` first.
-3. Add contract tests for the risk response.
-4. Connect one live weather provider through `backend/src/providers/`.
-5. Add the small frontend API adapter with a safe mock-data fallback.
-6. Implement `/api/briefing` using approved guidance.
-7. Test the full demo with the network available and unavailable.
+1. Generate missing flood layers and refresh expired snapshots.
+2. Add automated browser coverage for live, stale, unavailable and empty states.
+3. Choose a backend runtime if dynamic endpoints are still required.
+4. Implement `/api/risk` using the existing risk-response contract.
+5. Implement `/api/briefing` using approved guidance.
+6. Test the full demo with the network available and unavailable.
 
 Starting with the local fixture makes it easier to test the full request flow before depending on external services.
 

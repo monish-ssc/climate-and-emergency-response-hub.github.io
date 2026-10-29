@@ -1,0 +1,160 @@
+name: Refresh live hazard data
+
+on:
+  schedule:
+    # Offset from the top of the hour to reduce GitHub Actions scheduling delays.
+    - cron: "7,37 * * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-live-hazard-data
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build hazard snapshots and site
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONUNBUFFERED: "1"
+    outputs:
+      failed_pipelines: ${{ steps.failures.outputs.list }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Read GitHub Pages settings
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Calculate reference-data cache key
+        id: reference_cache_key
+        shell: bash
+        run: echo "week=$(date -u +%G-%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore hurricane history
+        uses: actions/cache@v5
+        with:
+          path: data/raw/ibtracs/ibtracs.last3years.list.v04r01.csv
+          key: ibtracs-${{ runner.os }}-${{ steps.reference_cache_key.outputs.week }}
+          restore-keys: |
+            ibtracs-${{ runner.os }}-
+
+      # Station histories fill over several runs, so a run that adds histories saves a new entry.
+      - name: Restore flood baselines
+        uses: actions/cache/restore@v5
+        with:
+          path: data/pipeline/baselines.json
+          key: flood-baselines-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            flood-baselines-${{ runner.os }}-
+
+      - name: Record flood baseline version
+        id: baselines_before
+        run: echo "hash=${{ hashFiles('data/pipeline/baselines.json') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Install pipeline dependencies
+        run: python -m pip install --requirement requirements.txt
+
+      - name: Restore the last published snapshot
+        run: python data/restore_published_snapshot.py --base-url "${{ steps.pages.outputs.base_url }}"
+
+      # A failed regional pipeline keeps the last published snapshot; the report job fails the run.
+      - name: Refresh wildfire data
+        id: wildfire
+        continue-on-error: true
+        run: python data/wildfire_pipeline.py
+
+      - name: Refresh flood data
+        id: flood
+        continue-on-error: true
+        run: python data/flood_pipeline.py
+
+      - name: Refresh hurricane and severe-storm data
+        id: hurricane
+        continue-on-error: true
+        run: python data/hurricane_pipeline.py
+
+      - name: Build Canada-wide live layers
+        run: python data/build_live_layers.py
+
+      - name: Rebuild risk index
+        run: python data/build_risk_index.py
+
+      - name: Validate refreshed outputs
+        run: python data/validate_live_outputs.py
+
+      - name: Save flood baselines
+        if: >-
+          always() && hashFiles('data/pipeline/baselines.json') != '' &&
+          hashFiles('data/pipeline/baselines.json') != steps.baselines_before.outputs.hash
+        uses: actions/cache/save@v5
+        with:
+          path: data/pipeline/baselines.json
+          key: flood-baselines-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Assemble site
+        run: |
+          rsync -a --delete \
+            --exclude '.git*' --exclude '.github' --exclude '_site' \
+            --exclude '__pycache__' --exclude 'tests' --exclude 'backend' \
+            --exclude 'data/raw' --exclude 'data/pipeline/baselines.json' \
+            --exclude '*.part' \
+            ./ _site/
+          du -sh _site
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: List failed pipelines
+        id: failures
+        if: always()
+        shell: bash
+        run: |
+          failed=""
+          [ "${{ steps.wildfire.outcome }}" = "failure" ] && failed="$failed wildfire"
+          [ "${{ steps.flood.outcome }}" = "failure" ] && failed="$failed flood"
+          [ "${{ steps.hurricane.outcome }}" = "failure" ] && failed="$failed hurricane"
+          echo "list=${failed# }" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    # Pages only accepts deployments from the default branch.
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy site artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  report:
+    name: Report failed pipelines
+    needs: [build, deploy]
+    if: always() && needs.build.outputs.failed_pipelines != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail the run
+        run: |
+          echo "::error::Pipelines failed: ${{ needs.build.outputs.failed_pipelines }}. Their last published snapshots were kept."
+          exit 1

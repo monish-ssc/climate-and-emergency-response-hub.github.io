@@ -13,6 +13,7 @@ Source: ECCC MSC GeoMet OGC API (https://api.weather.gc.ca), free, no API key. D
 import json
 import math
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -53,17 +54,27 @@ def iso(dt):
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def get_json(url):
+def get_json(url, attempts=4):
     req = urllib.request.Request(
         url, headers={"User-Agent": "climate-hub-hackathon/0.1"}
     )
-    try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(
-            f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:300]}"
-        ) from None
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:300]}"
+            if e.code < 500 and e.code not in (408, 425, 429):
+                raise RuntimeError(detail) from None
+            error = detail
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            error = str(e)
+        if attempt + 1 == attempts:
+            raise RuntimeError(
+                f"Request failed after {attempts} attempts: {error}"
+            ) from None
+        time.sleep(2**attempt)
+    raise AssertionError("unreachable")
 
 
 def fetch(collection, **params):
@@ -109,8 +120,15 @@ def distance_km(lat1, lon1, lat2, lon2):
 
 
 def fetch_baseline(stn, month):
-    mm = to_frame(fetch("hydrometric-monthly-mean", STATION_NUMBER=stn))
-    pk = to_frame(fetch("hydrometric-annual-peaks", STATION_NUMBER=stn))
+    # only the columns used below: about half the download, which matters for Canada-wide refreshes
+    mm = to_frame(fetch(
+        "hydrometric-monthly-mean", STATION_NUMBER=stn, skipGeometry="true",
+        properties="DATE,MONTHLY_MEAN_DISCHARGE,MONTHLY_MEAN_LEVEL",
+    ))
+    pk = to_frame(fetch(
+        "hydrometric-annual-peaks", STATION_NUMBER=stn, skipGeometry="true",
+        properties="DATA_TYPE_EN,PEAK_CODE_EN,PEAK",
+    ))
     out = {"month": month}
     for metric, mean_col, peak_type in (
         ("discharge", "MONTHLY_MEAN_DISCHARGE", "Discharge"),
@@ -157,7 +175,7 @@ def load_baselines(stations, month):
 # ---------- score: one station ----------
 
 
-def assess_station(readings, base):
+def assess_station(readings, base, window_hours=12):
     metric = "discharge" if readings["DISCHARGE"].notna().any() else "level"
     col = metric.upper()
     s = readings.dropna(subset=[col]).sort_values("DATETIME")
@@ -172,8 +190,9 @@ def assess_station(readings, base):
         else None
     )
     # trend = last 12 h mean vs the 12 h before; 12 h windows cancel out the ~12.4 h tide cycle
-    recent = s.loc[t > t.iloc[-1] - pd.Timedelta(hours=12), col]
-    earlier = s.loc[t <= t.iloc[-1] - pd.Timedelta(hours=12), col]
+    # (the Canada-wide layer uses shorter windows to keep its download small)
+    recent = s.loc[t > t.iloc[-1] - pd.Timedelta(hours=window_hours), col]
+    earlier = s.loc[t <= t.iloc[-1] - pd.Timedelta(hours=window_hours), col]
     end, start = float(recent.mean()), (
         float(earlier.mean()) if len(earlier) else float(recent.mean())
     )
@@ -510,7 +529,7 @@ def main():
         "regions"
     ]
 
-    all_stations, all_conds, all_alerts = [], [], []
+    all_stations, all_conds, all_alerts, failures = [], [], [], []
     for region in regions:
         if region["id"] not in REGION_CENTRES:
             print(f"\n{region['id']}: no centre in REGION_CENTRES, skipped")
@@ -520,6 +539,7 @@ def main():
             doc, stations, conds, alerts = run_region(region, now, since)
         except Exception as e:  # noqa: BLE001
             print(f"  FAILED: {e}")
+            failures.append(region["id"])
             continue
         all_stations += stations
         all_conds += conds
@@ -556,8 +576,11 @@ def main():
     write_geojson(OUT_DIR / "river_conditions_latest.geojson", all_conds)
     write_geojson(OUT_DIR / "active_alerts.geojson", all_alerts)
     print(
-        f"\nSaved: {OUT_DIR}/stations.geojson, river_conditions_latest.geojson, active_alerts.geojson, risk/*.json"
+        f"\nSaved: {OUT_DIR}/stations.geojson, river_conditions_latest.geojson, "
+        "active_alerts.geojson, risk/*.json"
     )
+    if failures:
+        raise RuntimeError(f"Flood refresh failed for regions: {', '.join(failures)}")
 
 
 if __name__ == "__main__":

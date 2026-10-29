@@ -1,0 +1,72 @@
+{
+  "contractVersion": "1.0",
+  "requestId": "dc2c2d6e-8c0a-43a1-bb13-97af3536fd6f",
+  "region": {
+    "id": "calgary",
+    "label": "Calgary, AB"
+  },
+  "hazard": "flood",
+  "assessment": {
+    "score": 53,
+    "level": "high",
+    "summary": "14 river stations reporting within 50 km. Highest: ROSEBUD RIVER BELOW CARSTAIRS CREEK (very high, 98 percentile for the month, rising). 0 flood-related weather alert(s) in effect.",
+    "factors": [
+      {
+        "key": "river_percentile",
+        "label": "Highest river reading vs. history for this month",
+        "value": 98,
+        "unit": "percentile",
+        "contribution": 48.0,
+        "explanation": "Last-24 h mean ranked against past monthly means for this month."
+      },
+      {
+        "key": "flood_peak_proximity",
+        "label": "Highest flow as share of typical annual peak",
+        "value": 17,
+        "unit": "%",
+        "contribution": 0.0,
+        "explanation": "100% = median yearly peak (~2-year flood)."
+      },
+      {
+        "key": "rising_stations",
+        "label": "Above-normal stations still rising",
+        "value": 1,
+        "unit": "stations",
+        "contribution": 5,
+        "explanation": "Stations at or above the 75th percentile with a rising 24 h trend."
+      },
+      {
+        "key": "flood_alerts",
+        "label": "Active rain, flood or storm-surge alerts",
+        "value": 0,
+        "unit": "alerts",
+        "contribution": 0,
+        "explanation": "None in effect."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "name": "ECCC Real-time hydrometric data",
+      "url": "https://api.weather.gc.ca/collections/hydrometric-realtime",
+      "observedAt": "2026-10-29T13:35:00Z",
+      "retrievedAt": "2026-10-29T14:03:37Z"
+    },
+    {
+      "name": "ECCC Historical hydrometric data (monthly means, annual peaks)",
+      "url": "https://api.weather.gc.ca/collections/hydrometric-monthly-mean",
+      "observedAt": "2026-10-29T14:03:37Z",
+      "retrievedAt": "2026-10-29T14:03:37Z"
+    },
+    {
+      "name": "ECCC Weather alerts",
+      "url": "https://api.weather.gc.ca/collections/weather-alerts",
+      "observedAt": "2026-10-29T14:03:37Z",
+      "retrievedAt": "2026-10-29T14:03:37Z"
+    }
+  ],
+  "dataMode": "live",
+  "generatedAt": "2026-10-29T14:03:37Z",
+  "expiresAt": "2026-10-29T15:03:37Z",
+  "disclaimer": "Automated screening from provisional ECCC data; not an official flood forecast."
+}

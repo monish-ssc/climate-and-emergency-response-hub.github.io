@@ -1,6 +1,6 @@
 {
   "contractVersion": "1.0",
-  "requestId": "b43e1dd9-0132-4b03-ad1f-c96f937dc6d0",
+  "requestId": "e8961dbc-c644-4328-a28e-f592ae01710d",
   "region": {
     "id": "calgary",
     "label": "Calgary, AB"
@@ -41,24 +41,24 @@
     {
       "name": "ECCC Canadian Hurricane Centre tracks",
       "url": "https://api.weather.gc.ca/collections/hurricanes-track-realtime",
-      "observedAt": "2026-10-28T21:03:55Z",
-      "retrievedAt": "2026-10-28T21:03:55Z"
+      "observedAt": "2026-10-29T14:04:06Z",
+      "retrievedAt": "2026-10-29T14:04:06Z"
     },
     {
       "name": "ECCC Weather alerts",
       "url": "https://api.weather.gc.ca/collections/weather-alerts",
-      "observedAt": "2026-10-28T21:03:55Z",
-      "retrievedAt": "2026-10-28T21:03:55Z"
+      "observedAt": "2026-10-29T14:04:06Z",
+      "retrievedAt": "2026-10-29T14:04:06Z"
     },
     {
       "name": "NOAA IBTrACS v04r01 historical storm tracks",
       "url": "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.last3years.list.v04r01.csv",
       "observedAt": "2026-10-27T00:00:00Z",
-      "retrievedAt": "2026-10-28T21:03:58Z"
+      "retrievedAt": "2026-10-29T12:14:56Z"
     }
   ],
   "dataMode": "live",
-  "generatedAt": "2026-10-28T21:03:55Z",
-  "expiresAt": "2026-10-28T22:03:55Z",
+  "generatedAt": "2026-10-29T14:04:06Z",
+  "expiresAt": "2026-10-29T15:04:06Z",
   "disclaimer": "Unvalidated prototype screening from provisional ECCC tracks and alerts; not an official hurricane forecast or a measure of local wind, rain or surge. Historical NOAA tracks provide context only. Follow official ECCC guidance."
 }

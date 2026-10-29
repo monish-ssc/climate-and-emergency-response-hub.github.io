@@ -6,6 +6,8 @@ The pipelines in `data/` write plain JSON files. The dashboard can load them wit
 
 | What | Path | Written by |
 | --- | --- | --- |
+| List of live map layers across Canada (use this) | `data/pipeline/live/manifest.json` (git-ignored; built by the workflow) | `build_live_layers.py` |
+| One live map layer | `data/pipeline/live/<layerId>.geojson` | `build_live_layers.py` |
 | List of available risk files (use this) | `data/pipeline/risk/index.json` | `build_risk_index.py` |
 | Flood and wildfire risk, one region | `data/pipeline/risk/<regionId>_flood.json`, `<regionId>_wildfire.json` | `flood_pipeline.py`, `wildfire_pipeline.py` |
 | Hurricane risk, one region | `data/samples/<regionId>_severe_storm.json` | `hurricane_pipeline.py` |
@@ -30,7 +32,7 @@ Dashboard tab to `hazard` (from `api/README.md`):
 
 Region ids come from `data/scenarios.json`: `vancouver`, `calgary`, `halifax`, `clinton`, `west-kelowna`. Each region has `lat`/`lon` for the map.
 
-> **Open question for the team:** the dashboard's built-in region list is provinces (`bc`, `ab`, ...), while the pipelines use these city regions. Either add these regions to the dashboard or decide which region each province shows.
+The dashboard selector uses these same five city-region ids, so a selected region can be matched directly against the risk index.
 
 What to show from a risk file:
 
@@ -43,6 +45,35 @@ What to show from a risk file:
 - `disclaimer`: show it near the score
 
 `data/pipeline/risk/index.json` lists every file with its region, hazard, score, level, time and `path`, so the dashboard can find any file, show what's available, or colour a region list without loading every file.
+
+## Live map layers (all of Canada)
+
+The dashboard map shows these layers. The regional map layers in the next section only contain features near the five regions.
+
+`build_live_layers.py` writes one GeoJSON file for each map control in `data/pipeline/live/`. It also writes `manifest.json`, which lists the layers in the order of the map controls. Load the manifest first. Then load each layer from `data/<path>`.
+
+| Layer id | Contents | Source |
+| --- | --- | --- |
+| `active_fires` | Active wildfires. Fires that are out, or that have no update for 60 days, are removed. | CWFIS (NRCan) |
+| `fire_weather_alerts` | Heat, smoke, air quality and fire alerts | ECCC weather alerts |
+| `river_conditions` | Each real-time river station that reported in the last 6 h, with the latest reading, the trend and the flood status | ECCC hydrometric data |
+| `rain_alerts` | Rain, flood, hurricane, tropical-storm and other weather alerts | ECCC weather alerts |
+| `hurricane_forecast` | Forecast tracks, error cones and storm centres. The `kind` property is `track`, `cone` or `centre`. | ECCC Canadian Hurricane Centre |
+| `storm_surge_alerts`, `thunderstorm_alerts`, `tornado_alerts`, `snowstorm_alerts`, `wind_alerts` | Alerts of one type | ECCC weather alerts |
+
+Each alert is in one layer only. The first match in `ALERT_CATEGORIES` sets the layer. For example, a "snow squall warning" is a snowstorm alert and not a wind alert. Alert features keep the alert properties without the long text, and add a `category` property.
+
+Each manifest entry has these fields:
+
+- `id`, `label` and `path` (relative to `data/`).
+- `status`: `ok` (refreshed in this run), `stale` (the refresh failed, so the previous file stays), or `error` (the refresh failed and no previous file exists, so the layer is empty).
+- `featureCount`.
+- `observedAt`: the newest observation or publication in the layer. An empty layer uses the query time.
+- `generatedAt` and `expiresAt`: `expiresAt` is 90 minutes after `generatedAt`. Show the layer as stale after `expiresAt`.
+- `source`: `name` and `url`.
+- `error`: the error message, or `null`.
+
+The river status needs the history of each station. The histories are kept in `data/pipeline/baselines.json`. Each run gets a maximum of 800 missing histories (`--baseline-budget`), so the full cache fills after approximately four runs. Until then, a station has `"baseline": "pending"` and `"status": "unknown"`.
 
 ## Wildfire map layers
 
@@ -109,8 +140,9 @@ From the repository root (see `docs/developer-guide.md` for the `.venv` setup):
 .venv/bin/python data/flood_pipeline.py
 .venv/bin/python data/wildfire_pipeline.py
 .venv/bin/python data/hurricane_pipeline.py
+.venv/bin/python data/build_live_layers.py  # Canada-wide map layers
 .venv/bin/python data/build_risk_index.py   # run after the pipelines
 .venv/bin/python data/build_replay.py       # only when replays change; uses saved history, works offline
 ```
 
-Then commit the updated files in `data/pipeline/` and `data/scenarios/`.
+The scheduled workflow does these steps every 30 minutes and deploys the result to GitHub Pages. Do not commit the generated files for a normal refresh. Commit the files in `data/scenarios/` when the replays change.

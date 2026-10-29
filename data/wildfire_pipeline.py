@@ -17,6 +17,7 @@ build_replay.py imports score_region / build_risk_doc from this file, so replaye
 import json
 import math
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -68,13 +69,27 @@ def iso(dt):
     return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def get_json(url, timeout=120):
-    req = urllib.request.Request(url, headers={"User-Agent": "climate-hub-hackathon/0.1"})
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:300]}") from None
+def get_json(url, timeout=120, attempts=4):
+    req = urllib.request.Request(
+        url, headers={"User-Agent": "climate-hub-hackathon/0.1"}
+    )
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:300]}"
+            if e.code < 500 and e.code not in (408, 425, 429):
+                raise RuntimeError(detail) from None
+            error = detail
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            error = str(e)
+        if attempt + 1 == attempts:
+            raise RuntimeError(
+                f"Request failed after {attempts} attempts: {error}"
+            ) from None
+        time.sleep(2**attempt)
+    raise AssertionError("unreachable")
 
 
 def cwfis(layer, cql=None, sort_by=None, count=10000):
@@ -504,7 +519,7 @@ def main():
     risk_dir.mkdir(parents=True, exist_ok=True)
 
     fires, active_url = fetch_active_fires(now)
-    all_fires, all_extents, all_alerts = [], [], []
+    all_fires, all_extents, all_alerts, failures = [], [], [], []
     for region in load_regions():
         if not region_centre(region):
             print(f"\n{region['id']}: no centre (add lat/lon in scenarios.json), skipped")
@@ -514,6 +529,7 @@ def main():
             doc, fire_rows, extents, alerts = run_region(region, fires, active_url, now)
         except Exception as e:  # noqa: BLE001
             print(f"  FAILED: {e}")
+            failures.append(region["id"])
             continue
         all_fires += fire_rows
         all_extents += extents
@@ -531,6 +547,8 @@ def main():
     write_geojson(OUT_DIR / "fire_weather_alerts.geojson", all_alerts)
     print(f"\nSaved: {OUT_DIR}/active_fires.geojson, active_fire_extents.geojson, "
           f"fire_weather_alerts.geojson, risk/*_wildfire.json")
+    if failures:
+        raise RuntimeError(f"Wildfire refresh failed for regions: {', '.join(failures)}")
 
 
 if __name__ == "__main__":

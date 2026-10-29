@@ -9,8 +9,8 @@
   ---------------------------------------------------------------
   HOW TO CUSTOMIZE
   1. Colours: edit the tokens in :root below. Everything reads from them.
-  2. Data: all sample numbers live in the DATA section of the <script>
-     (DAYS, COMMUNITIES, WHATIF, PLAN). Swap in your API responses there.
+  2. Data: regional risk and event layers load from data/. The embedded DATA
+     section (DAYS, COMMUNITIES, WHATIF, PLAN) remains the safe demo fallback.
   3. Loader: tune LOADER_MS (how long the globe spins) in the script.
   4. Fonts: Google Fonts link below. Fallbacks are system fonts.
   Everything is inlined: the map works offline with the "Simple" style.
@@ -1012,6 +1012,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
       .chip[aria-pressed="false"] .sw {
         opacity: 0.35;
+      }
+      .overview-layers {
+        padding-left: 8px;
+        border-left: 1px solid var(--line);
+      }
+      .facility-popup {
+        min-width: 210px;
+        color: var(--ink);
+        line-height: 1.35;
+      }
+      .facility-popup b,
+      .facility-popup small {
+        display: block;
+      }
+      .facility-popup small {
+        margin-top: 2px;
+        color: var(--ink-2);
+      }
+      .facility-popup p {
+        margin: 9px 0 0;
+        padding-top: 8px;
+        border-top: 1px solid var(--line);
+        color: var(--ink-2);
+        font-size: 12px;
       }
       .map {
         display: block;
@@ -2070,7 +2094,121 @@ svg.leaflet-image-layer.leaflet-interactive path {
       #areaGo {
         width: 100%;
       }
-
+      .data-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        width: fit-content;
+        margin-top: 8px;
+        padding: 5px 9px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--lichen-2);
+        color: var(--ink-2);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .data-status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--moss);
+      }
+      .data-status[data-state="loading"]::before {
+        background: var(--mustard);
+        animation: pulse 1s ease-in-out infinite alternate;
+      }
+      .data-status[data-state="stale"]::before,
+      .data-status[data-state="unavailable"]::before,
+      .data-status[data-state="error"]::before {
+        background: var(--amber);
+      }
+      .data-status[data-state="error"]::before {
+        background: var(--ember);
+      }
+      .data-status[data-state="live"] {
+        color: var(--spruce);
+      }
+      .data-sources {
+        margin-top: 6px;
+        color: var(--ink-2);
+        font-size: 12px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+      .data-sources a,
+      .live-meta a {
+        color: inherit;
+      }
+      /* ---------- Live layers panel ---------- */
+      .live-layers {
+        padding: 14px 20px 16px;
+        border-top: 1px solid var(--line);
+      }
+      .live-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 14px;
+        margin-bottom: 10px;
+      }
+      .live-head h3 {
+        font-size: 16px;
+      }
+      .live-head .hint {
+        flex: 1 1 240px;
+        margin: 0;
+        font-size: 13px;
+      }
+      .live-list {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .live-row {
+        display: grid;
+        grid-template-columns: minmax(0, 17rem) 6.5rem minmax(0, 1fr);
+        align-items: center;
+        gap: 4px 12px;
+      }
+      .live-row .chip {
+        justify-self: start;
+        text-align: left;
+      }
+      .live-row .data-status {
+        margin-top: 0;
+      }
+      .live-meta {
+        min-width: 0;
+        color: var(--ink-2);
+        font-size: 12px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+      .live-key {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+        margin: 12px 0 0;
+        color: var(--ink-2);
+        font-size: 12px;
+      }
+      .live-key span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      @media (max-width: 820px) {
+        .live-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+        .live-meta {
+          grid-column: 1 / -1;
+        }
+      }
       /* ---------- Leaflet map styling ---------- */
       .lmap {
         height: 540px;
@@ -2316,13 +2454,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
           </svg>
           <div>
             <h1>Climate & Emergency Response Hub</h1>
-            <p>BC Interior, sample wildfire scenario</p>
+            <p>Regional risk snapshots and sample preparedness scenarios</p>
           </div>
         </div>
         <div class="clock">
           <span class="txt"
             >Scenario time: <b id="clockTxt">Day 3, 14:00</b></span
-          ><span class="sample">Historical reply</span>
+          ><span class="sample">Historical replay</span>
         </div>
       </div>
     </header>
@@ -2367,7 +2505,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <div class="mh-title">
                   <h2 id="mapTitle">Canada overview</h2>
                   <p class="hint" id="mapSub">
-                    Pick a hazard, then select a province or territory.
+                    Pick a hazard, then select a region.
                   </p>
                 </div>
                 <div class="ov-ctrl" id="ovCtrl">
@@ -2403,8 +2541,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
                   </div>
                   <select
                     id="regionSelect"
-                    aria-label="Province or territory"
+                    aria-label="Region"
                   ></select>
+                  <div
+                    class="layers overview-layers"
+                    role="group"
+                    aria-label="Reference map layers"
+                  >
+                    <button
+                      class="chip"
+                      id="facilityToggle"
+                      type="button"
+                      aria-pressed="false"
+                      aria-busy="false"
+                      title="Show the map-ready ODHF facility inventory. Operating status, capacity and hazard exposure are not verified."
+                    >
+                      <span class="sw" style="background: var(--spruce)"></span>
+                      <span id="facilityToggleLabel">Health facilities (2020)</span>
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="layers"
@@ -2437,6 +2592,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 role="region"
                 aria-label="Map of the BC Interior showing the fire, smoke advisory and communities"
               ></div>
+              <section
+                class="live-layers"
+                id="liveLayers"
+                aria-labelledby="liveLayersTitle"
+              >
+                <div class="live-head">
+                  <h3 id="liveLayersTitle">Live layers across Canada</h3>
+                  <p class="hint" id="liveSummary" role="status">
+                    Loading the live layers…
+                  </p>
+                  <button class="chip" id="liveCheck" type="button">
+                    Check for updates
+                  </button>
+                </div>
+                <ul class="live-list" id="liveList"></ul>
+                <p class="live-key" id="liveKey">
+                  <b>River status</b>
+                </p>
+              </section>
               <div class="legend" id="legOv">
                 <b style="color: var(--ink)">Risk</b>
                 <span
@@ -2462,6 +2636,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                       fill="#D9822B"
                     /></svg
                   >Active incident: select it to open the scenario</span
+                >
+                <span id="legHealth" hidden
+                  ><span class="dotk" style="background: var(--spruce)"></span
+                  >Health facility or clustered facilities · 2020 inventory</span
                 >
               </div>
               <div class="legend" id="legDet" hidden>
@@ -2564,6 +2742,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <div>
                   <h2 id="areaName">British Columbia</h2>
                   <p class="hint" id="areaSub" style="margin: 2px 0 0"></p>
+                  <div
+                    class="data-status"
+                    id="areaDataStatus"
+                    data-state="loading"
+                    role="status"
+                  >Loading latest data…</div>
+                  <div class="data-sources" id="areaDataSources" hidden></div>
                 </div>
                 <span class="area-ico" id="areaIco"></span>
               </div>
@@ -2994,8 +3179,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         ODHF, Open-Meteo</span
       >
       <span
-        >Prototype: all figures on this screen are sample or simulated
-        data</span
+        >Prototype: pipeline snapshots are labeled with freshness; timelines,
+        plans and recommendations remain demonstrations</span
       >
     </footer>
     <div class="toast" id="toast" role="status"></div>
@@ -3124,163 +3309,69 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             "Projection: four communities above the threshold and 46,200 people at risk. Request regional shelter support now; local capacity cannot cover it.",
         },
       };
-      // Province / territory overview (from the team's ClimateGuard map). base = risk 0-100 per hazard
+      // Pipeline regions. `base` values are retained only as a safe demonstration fallback.
       const REGIONS = [
         {
-          id: "bc",
-          name: "British Columbia",
-          short: "BC",
-          sub: "Pacific coast and interior",
-          lon: -125.6,
-          lat: 55.2,
-          base: { wildfire: 84, rain: 55, hurricane: 16 },
-          temp: 31,
-          wind: 45,
+          id: "vancouver",
+          name: "Vancouver, BC",
+          short: "VAN",
+          sub: "Pacific coast",
+          lon: -123.1207,
+          lat: 49.2827,
+          base: { wildfire: 43, rain: 55, hurricane: 16 },
+          temp: 29,
+          wind: 38,
           rain: 55,
         },
         {
-          id: "ab",
-          name: "Alberta",
-          short: "AB",
+          id: "calgary",
+          name: "Calgary, AB",
+          short: "YYC",
           sub: "Prairies and foothills",
-          lon: -114.5,
-          lat: 54.7,
-          base: { wildfire: 77, rain: 33, hurricane: 9 },
-          temp: 29,
-          wind: 58,
+          lon: -114.0719,
+          lat: 51.0447,
+          base: { wildfire: 37, rain: 48, hurricane: 9 },
+          temp: 24,
+          wind: 52,
           rain: 34,
         },
         {
-          id: "sk",
-          name: "Saskatchewan",
-          short: "SK",
-          sub: "Central Prairies",
-          lon: -106,
-          lat: 53.4,
-          base: { wildfire: 64, rain: 28, hurricane: 9 },
-          temp: 27,
-          wind: 46,
-          rain: 20,
-        },
-        {
-          id: "mb",
-          name: "Manitoba",
-          short: "MB",
-          sub: "Prairies and Red River",
-          lon: -98.4,
-          lat: 54.1,
-          base: { wildfire: 52, rain: 74, hurricane: 10 },
-          temp: 25,
-          wind: 40,
-          rain: 80,
-        },
-        {
-          id: "on",
-          name: "Ontario",
-          short: "ON",
-          sub: "Central Canada",
-          lon: -84,
-          lat: 50.7,
-          base: { wildfire: 43, rain: 70, hurricane: 18 },
-          temp: 24,
-          wind: 43,
-          rain: 78,
-        },
-        {
-          id: "qc",
-          name: "Quebec",
-          short: "QC",
-          sub: "St. Lawrence region",
-          lon: -71.5,
-          lat: 49.8,
-          base: { wildfire: 62, rain: 63, hurricane: 30 },
-          temp: 23,
-          wind: 41,
-          rain: 71,
-        },
-        {
-          id: "nb",
-          name: "New Brunswick",
-          short: "NB",
-          sub: "Atlantic Canada",
-          lon: -66.4,
-          lat: 46.5,
-          base: { wildfire: 37, rain: 79, hurricane: 72 },
-          temp: 22,
-          wind: 83,
-          rain: 94,
-        },
-        {
-          id: "ns",
-          name: "Nova Scotia",
-          short: "NS",
+          id: "halifax",
+          name: "Halifax, NS",
+          short: "YHZ",
           sub: "Atlantic coast",
-          lon: -63.6,
-          lat: 45.0,
-          base: { wildfire: 42, rain: 80, hurricane: 91 },
-          temp: 24,
-          wind: 112,
-          rain: 103,
-        },
-        {
-          id: "pe",
-          name: "Prince Edward Island",
-          short: "PE",
-          sub: "Gulf of St. Lawrence",
-          lon: -63,
-          lat: 46.2,
-          base: { wildfire: 25, rain: 61, hurricane: 78 },
-          temp: 21,
-          wind: 93,
-          rain: 69,
-        },
-        {
-          id: "nl",
-          name: "Newfoundland and Labrador",
-          short: "NL",
-          sub: "Atlantic Canada",
-          lon: -56.7,
-          lat: 49.6,
-          base: { wildfire: 36, rain: 73, hurricane: 86 },
+          lon: -63.5752,
+          lat: 44.6488,
+          base: { wildfire: 42, rain: 80, hurricane: 50 },
           temp: 18,
-          wind: 106,
+          wind: 66,
           rain: 98,
         },
         {
-          id: "yt",
-          name: "Yukon",
-          short: "YT",
-          sub: "Northern Canada",
-          lon: -135,
-          lat: 64.5,
-          base: { wildfire: 68, rain: 19, hurricane: 5 },
-          temp: 18,
-          wind: 31,
-          rain: 16,
+          id: "clinton",
+          name: "Clinton, BC",
+          short: "CLI",
+          sub: "BC Interior",
+          lon: -121.5911,
+          lat: 51.0903,
+          base: { wildfire: 64, rain: 28, hurricane: 9 },
+          temp: 31,
+          wind: 44,
+          rain: 20,
+          replayScenario: "2026_BC_2026-C40983",
         },
         {
-          id: "nt",
-          name: "Northwest Territories",
-          short: "NT",
-          sub: "Northern Canada",
-          lon: -119,
-          lat: 64.7,
-          base: { wildfire: 89, rain: 22, hurricane: 5 },
-          temp: 21,
-          wind: 38,
-          rain: 21,
-        },
-        {
-          id: "nu",
-          name: "Nunavut",
-          short: "NU",
-          sub: "Arctic Canada",
-          lon: -94,
-          lat: 67.5,
-          base: { wildfire: 8, rain: 14, hurricane: 4 },
-          temp: 5,
-          wind: 31,
-          rain: 15,
+          id: "west-kelowna",
+          name: "West Kelowna, BC",
+          short: "WK",
+          sub: "Okanagan Valley",
+          lon: -119.5833,
+          lat: 49.8625,
+          base: { wildfire: 84, rain: 55, hurricane: 16 },
+          temp: 33,
+          wind: 50,
+          rain: 55,
+          replayScenario: "2023_BC_2023-K52767",
         },
       ];
       const HAZARDS = {
@@ -3493,6 +3584,18 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    ================================================================= */
       const $ = (id) => document.getElementById(id);
       const fmt = (n) => n.toLocaleString("en-CA");
+      const escapeHTML = (value) =>
+        String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const band = (s) =>
         s >= 80
@@ -3521,6 +3624,357 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           need,
           gap: Math.max(0, need - cap),
           cap,
+        };
+      }
+
+      /* =================================================================
+   STATIC DATA ADAPTER
+   Loads pipeline snapshots from GitHub Pages and keeps the embedded
+   demonstration values as a safe fallback.
+   ================================================================= */
+      const HAZARD_DATA_KEY = {
+        wildfire: "wildfire",
+        rain: "flood",
+        hurricane: "severe_storm",
+      };
+      // Canada-wide live layers from data/build_live_layers.py, in the order of the map controls.
+      const LIVE_MANIFEST = "data/pipeline/live/manifest.json";
+      const LIVE_REFRESH_MS = 5 * 60 * 1000;
+      const LIVE_LAYERS = {
+        active_fires: { label: "Active wildfires", colour: "#B8432F", kind: "fires", noun: ["fire", "fires"] },
+        fire_weather_alerts: { label: "Fire-weather alerts", colour: "#A0522D", kind: "alerts" },
+        river_conditions: { label: "River stations and flooding conditions", colour: "#3E7FA6", kind: "rivers", noun: ["station", "stations"] },
+        rain_alerts: { label: "Rain and severe-weather alerts", colour: "#2B6A8F", kind: "alerts", dash: "6 4" },
+        hurricane_forecast: { label: "Hurricane forecast tracks", colour: "#537DA6", kind: "hurricane", noun: ["forecast shape", "forecast shapes"] },
+        storm_surge_alerts: { label: "Storm-surge alerts", colour: "#1F4E79", kind: "alerts", dash: "10 4" },
+        thunderstorm_alerts: { label: "Thunderstorm alerts", colour: "#7A5C99", kind: "alerts", dash: "2 4" },
+        tornado_alerts: { label: "Tornado alerts", colour: "#4A2C5E", kind: "alerts", dash: "10 3 2 3" },
+        snowstorm_alerts: { label: "Snowstorm and winter alerts", colour: "#6C8EA4", kind: "alerts", dash: "6 3" },
+        wind_alerts: { label: "Wind alerts", colour: "#5B7F4A", kind: "alerts", dash: "1 5" },
+      };
+      // Layers switched on when a hazard is selected; people can then change them.
+      const LIVE_PRESETS = {
+        wildfire: ["active_fires", "fire_weather_alerts"],
+        rain: ["river_conditions", "rain_alerts", "thunderstorm_alerts"],
+        hurricane: ["hurricane_forecast", "storm_surge_alerts", "wind_alerts", "tornado_alerts"],
+      };
+      const ALERT_FILL = { yellow: "#C9A227", orange: "#D9822B", red: "#B8432F" };
+      const FIRE_STAGE_COLOUR = { OC: "#B8432F", BH: "#D9822B", UC: "#C9A227" };
+      // Drawn in this order, so the most severe stations are on top.
+      const RIVER_STATUS = {
+        unknown: ["No history yet", "#9AA7AD", 3],
+        normal: ["Normal", "#3E7FA6", 3.5],
+        above_normal: ["Above normal", "#C9A227", 5],
+        high: ["High", "#D9822B", 5.5],
+        very_high: ["Very high", "#B8432F", 6],
+        flood: ["Flood", "#7A1F12", 7],
+      };
+      const dataAdapter = {
+        riskIndex: null,
+        riskIndexPromise: null,
+        riskCache: new Map(),
+        selection: { key: "", state: "idle", data: null, error: null },
+        live: {
+          state: "idle",
+          manifest: null,
+          error: null,
+          checkedAt: 0,
+          layers: {},
+          enabled: new Set(),
+        },
+        facilities: {
+          enabled: false,
+          state: "idle",
+          features: [],
+          metadata: null,
+          error: null,
+        },
+        facilitiesPromise: null,
+        selectionRequest: 0,
+      };
+
+      async function fetchJSON(path) {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+        return response.json();
+      }
+
+      async function loadRiskIndex() {
+        if (dataAdapter.riskIndex) return dataAdapter.riskIndex;
+        dataAdapter.riskIndexPromise ??= fetchJSON(
+          "data/pipeline/risk/index.json",
+        ).then((index) => {
+          dataAdapter.riskIndex = index;
+          return index;
+        });
+        return dataAdapter.riskIndexPromise;
+      }
+
+      function riskEntry(regionId, uiHazard) {
+        const hazardKey = HAZARD_DATA_KEY[uiHazard];
+        return dataAdapter.riskIndex?.entries?.find(
+          (entry) =>
+            entry.regionId === regionId && entry.hazard === hazardKey,
+        );
+      }
+
+      // quiet: a background refresh keeps the current card until the new data arrives
+      async function loadSelectionData({ quiet = false } = {}) {
+        const request = ++dataAdapter.selectionRequest;
+        const key = `${prov}/${hazard}`;
+        if (!quiet) {
+          dataAdapter.selection = {
+            key,
+            state: "loading",
+            data: null,
+            error: null,
+          };
+          renderArea();
+        }
+        try {
+          await loadRiskIndex();
+          if (request !== dataAdapter.selectionRequest) return;
+          const entry = riskEntry(prov, hazard);
+          if (!entry) {
+            dataAdapter.selection = {
+              key,
+              state: "unavailable",
+              data: null,
+              error: null,
+            };
+          } else {
+            const path = `data/${entry.path}`;
+            let data = dataAdapter.riskCache.get(path);
+            if (!data) {
+              data = await fetchJSON(path);
+              dataAdapter.riskCache.set(path, data);
+            }
+            if (request !== dataAdapter.selectionRequest) return;
+            const stale = data.expiresAt && Date.now() > Date.parse(data.expiresAt);
+            dataAdapter.selection = {
+              key,
+              state: stale ? "stale" : "live",
+              data,
+              error: null,
+            };
+          }
+        } catch (error) {
+          if (request !== dataAdapter.selectionRequest) return;
+          dataAdapter.riskIndexPromise = null;
+          if (quiet) return;
+          dataAdapter.selection = { key, state: "error", data: null, error };
+        }
+        renderArea();
+        if (mode === "canada") drawCanada();
+      }
+
+      function liveEntry(id) {
+        return dataAdapter.live.manifest?.layers?.find((layer) => layer.id === id);
+      }
+
+      async function loadLiveLayer(id) {
+        const entry = liveEntry(id),
+          previous = dataAdapter.live.layers[id];
+        dataAdapter.live.layers[id] = { features: [], ...previous, state: "loading" };
+        renderLivePanel();
+        try {
+          const document = await fetchJSON(`data/${entry.path}`);
+          if (
+            document.type !== "FeatureCollection" ||
+            !Array.isArray(document.features)
+          ) {
+            throw new Error(`${entry.path} is not a GeoJSON FeatureCollection`);
+          }
+          dataAdapter.live.layers[id] = {
+            state: "ready",
+            features: document.features,
+            generatedAt: entry.generatedAt,
+            error: null,
+          };
+        } catch (error) {
+          // keep the previous copy on the map; the panel reports the error
+          dataAdapter.live.layers[id] = {
+            state: "error",
+            features: previous?.features || [],
+            generatedAt: previous?.generatedAt,
+            error,
+          };
+        }
+      }
+
+      // Fetch enabled layers that are new, changed in the manifest, or failed last time.
+      async function loadEnabledLiveLayers() {
+        const pending = [...dataAdapter.live.enabled].filter((id) => {
+          const entry = liveEntry(id),
+            layer = dataAdapter.live.layers[id];
+          return (
+            entry &&
+            layer?.state !== "loading" &&
+            (layer?.state === "error" || layer?.generatedAt !== entry.generatedAt)
+          );
+        });
+        if (!pending.length) return;
+        await Promise.all(pending.map(loadLiveLayer));
+        renderLiveLayers();
+        renderLivePanel();
+        syncMapChrome();
+      }
+
+      async function refreshLiveData() {
+        const live = dataAdapter.live;
+        if (!live.manifest) live.state = "loading";
+        renderLivePanel();
+        try {
+          const manifest = await fetchJSON(LIVE_MANIFEST);
+          if (!Array.isArray(manifest.layers)) {
+            throw new Error("The live manifest has no layer list");
+          }
+          live.manifest = manifest;
+          live.state = "ready";
+          live.error = null;
+        } catch (error) {
+          // keep showing the last manifest that loaded
+          live.error = error;
+          if (!live.manifest) live.state = "error";
+        }
+        live.checkedAt = Date.now();
+        renderLivePanel();
+        syncMapChrome();
+        await loadEnabledLiveLayers();
+      }
+
+      async function refreshRiskData() {
+        const index = await fetchJSON("data/pipeline/risk/index.json");
+        if (index.builtAt !== dataAdapter.riskIndex?.builtAt) {
+          dataAdapter.riskIndex = index;
+          dataAdapter.riskIndexPromise = Promise.resolve(index);
+          dataAdapter.riskCache.clear();
+          await loadSelectionData({ quiet: true });
+          if (mode === "canada") drawCanada();
+          return;
+        }
+        const selection = dataAdapter.selection;
+        if (
+          selection.state === "live" &&
+          Date.now() > Date.parse(selection.data?.expiresAt)
+        ) {
+          selection.state = "stale";
+          renderArea();
+        }
+      }
+
+      // Poll for new snapshots without a page reload; pause while the tab is hidden.
+      function startLiveRefresh() {
+        const check = () =>
+          Promise.allSettled([refreshLiveData(), refreshRiskData()]);
+        setInterval(() => {
+          if (!document.hidden) void check();
+        }, LIVE_REFRESH_MS);
+        document.addEventListener("visibilitychange", () => {
+          if (
+            !document.hidden &&
+            Date.now() - dataAdapter.live.checkedAt >= LIVE_REFRESH_MS
+          )
+            void check();
+        });
+        $("liveCheck").onclick = () => void check();
+        void refreshLiveData();
+      }
+
+      function applyLivePreset() {
+        dataAdapter.live.enabled = new Set(LIVE_PRESETS[hazard]);
+        renderLivePanel();
+        renderLiveLayers();
+        void loadEnabledLiveLayers();
+      }
+
+      function toggleLiveLayer(id) {
+        const enabled = dataAdapter.live.enabled;
+        if (enabled.has(id)) enabled.delete(id);
+        else enabled.add(id);
+        renderLivePanel();
+        renderLiveLayers();
+        syncMapChrome();
+        void loadEnabledLiveLayers();
+      }
+
+      function facilitySourceYear() {
+        const modifiedAt = dataAdapter.facilities.metadata?.source?.modifiedAt,
+          year = modifiedAt ? new Date(modifiedAt).getUTCFullYear() : NaN;
+        return Number.isFinite(year) ? String(year) : "date unavailable";
+      }
+
+      function updateFacilityControl() {
+        const facilities = dataAdapter.facilities,
+          button = $("facilityToggle"),
+          label = $("facilityToggleLabel");
+        button.setAttribute("aria-pressed", facilities.enabled);
+        button.setAttribute("aria-busy", facilities.state === "loading");
+        if (facilities.state === "loading") {
+          label.textContent = "Loading health facilities…";
+        } else if (facilities.state === "ready") {
+          label.textContent = `Health facilities · ${fmt(facilities.features.length)} · ${facilitySourceYear()}`;
+        } else if (facilities.state === "error") {
+          label.textContent = "Health facilities unavailable";
+        } else {
+          label.textContent = "Health facilities (2020)";
+        }
+      }
+
+      async function loadFacilityData() {
+        if (dataAdapter.facilities.state === "ready") return;
+        if (dataAdapter.facilitiesPromise) return dataAdapter.facilitiesPromise;
+        dataAdapter.facilities.state = "loading";
+        dataAdapter.facilities.error = null;
+        updateFacilityControl();
+        syncMapChrome();
+        dataAdapter.facilitiesPromise = fetchJSON(
+          "data/healthcare/facilities.geojson",
+        )
+          .then((document) => {
+            if (
+              document.type !== "FeatureCollection" ||
+              !Array.isArray(document.features)
+            ) {
+              throw new Error("Facility data is not a GeoJSON FeatureCollection");
+            }
+            dataAdapter.facilities.state = "ready";
+            dataAdapter.facilities.features = document.features;
+            dataAdapter.facilities.metadata = document.metadata || null;
+            updateFacilityControl();
+            syncMapChrome();
+            renderFacilities();
+          })
+          .catch((error) => {
+            dataAdapter.facilities.state = "error";
+            dataAdapter.facilities.error = error;
+            dataAdapter.facilitiesPromise = null;
+            updateFacilityControl();
+            syncMapChrome();
+            renderFacilities();
+          });
+        return dataAdapter.facilitiesPromise;
+      }
+
+      function formatSnapshotTime(value) {
+        if (!value || Number.isNaN(Date.parse(value))) return "time unavailable";
+        return new Intl.DateTimeFormat("en-CA", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZoneName: "short",
+        }).format(new Date(value));
+      }
+
+      function formatFactor(factor) {
+        if (!factor) return { label: "Indicator", value: "Unavailable" };
+        const value = Number.isFinite(factor.value)
+          ? factor.value.toLocaleString("en-CA", { maximumFractionDigits: 1 })
+          : String(factor.value ?? "Unavailable");
+        return {
+          label: factor.label,
+          value: `${value}${factor.unit ? ` ${factor.unit}` : ""}`,
         };
       }
 
@@ -3674,6 +4128,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       ];
       let map = null,
         overlay = null,
+        liveOverlay = null,
+        facilityOverlay = null,
         base = null,
         markers = {},
         windCtl = null,
@@ -3688,10 +4144,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           zoomControl: true,
           scrollWheelZoom: false,
           attributionControl: true,
+          preferCanvas: true,
           minZoom: 2,
         }).fitBounds(CANADA_BOUNDS);
         map.on("focus", () => map.scrollWheelZoom.enable());
         map.on("blur", () => map.scrollWheelZoom.disable());
+        map.on("moveend", () => renderFacilities());
         setBasemap("simple");
         L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
         // basemap switcher
@@ -3736,7 +4194,11 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           },
         });
         backCtl = new BK().addTo(map);
+        // Live layers share the overlay renderer: a canvas in a higher pane would block their clicks.
+        liveOverlay = L.layerGroup().addTo(map);
         overlay = L.layerGroup().addTo(map);
+        map.createPane("facilitiesPane").style.zIndex = 390;
+        facilityOverlay = L.layerGroup().addTo(map);
         syncMapChrome();
       }
       let baseBtns = null;
@@ -3896,18 +4358,29 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       /* ---------- Canada overview ---------- */
       let mode = "canada",
         hazard = "wildfire",
-        prov = "bc",
+        prov = "vancouver",
         severity = 0;
       const clamp = (x) => Math.max(0, Math.min(100, x));
-      const provScore = (r) => clamp(r.base[hazard] + severity);
-      const provCat = (n) =>
-        n >= 85
-          ? ["Critical", "#B8432F"]
+      const LEVEL_STYLE = {
+        low: ["Low", "#7FA06A"],
+        moderate: ["Moderate", "#C9A227"],
+        high: ["High", "#D9822B"],
+        critical: ["Critical", "#B8432F"],
+      };
+      const provScore = (r) => {
+        const entry = riskEntry(r.id, hazard);
+        return clamp((entry?.score ?? r.base[hazard]) + severity);
+      };
+      const provCat = (n, level) => {
+        if (severity === 0 && LEVEL_STYLE[level]) return LEVEL_STYLE[level];
+        return n >= 85
+          ? LEVEL_STYLE.critical
           : n >= 65
-            ? ["High", "#D9822B"]
+            ? LEVEL_STYLE.high
             : n >= 40
-              ? ["Moderate", "#C9A227"]
-              : ["Low", "#7FA06A"];
+              ? LEVEL_STYLE.moderate
+              : LEVEL_STYLE.low;
+      };
       const HZ_ICON = {
         wildfire:
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 01-11 0c0-3 1.8-4.4 2.3-6.4 1 1 1.4 2.3 1.6 3.3 1.4-2.2 1.9-4.6 1.6-7.6z" fill="currentColor"/></svg>',
@@ -3915,14 +4388,96 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         hurricane:
           '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path d="M3.5 10.5C5.5 4.5 14 3 18.5 7M20.5 13.5c-2 6-10.5 7.5-15 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
       };
+      function facilityPopup(feature) {
+        const properties = feature.properties || {},
+          name = escapeHTML(properties.name || "Health facility"),
+          type = escapeHTML(properties.type || "Facility type unavailable"),
+          location = [properties.municipality, properties.province?.toUpperCase()]
+            .filter(Boolean)
+            .map(escapeHTML)
+            .join(", "),
+          address = properties.address
+            ? `<small>${escapeHTML(properties.address)}</small>`
+            : "";
+        return `<div class="facility-popup"><b>${name}</b><small>${type}</small>${location ? `<small>${location}</small>` : ""}${address}<p>Reference inventory; source last modified in ${facilitySourceYear()}. Operating status, capacity and hazard exposure are not verified.</p></div>`;
+      }
+      function renderFacilities() {
+        if (!map || !facilityOverlay) return;
+        facilityOverlay.clearLayers();
+        const facilities = dataAdapter.facilities;
+        if (
+          mode !== "canada" ||
+          !facilities.enabled ||
+          facilities.state !== "ready"
+        )
+          return;
+        const bounds = map.getBounds().pad(0.12),
+          zoom = map.getZoom(),
+          cellSize = zoom >= 9 ? 48 : 64,
+          groups = new Map();
+        facilities.features.forEach((feature) => {
+          const coordinates = feature.geometry?.coordinates;
+          if (
+            feature.geometry?.type !== "Point" ||
+            !Array.isArray(coordinates) ||
+            coordinates.length < 2
+          )
+            return;
+          const latlng = L.latLng(coordinates[1], coordinates[0]);
+          if (!bounds.contains(latlng)) return;
+          const point = map.project(latlng, zoom),
+            key = `${Math.floor(point.x / cellSize)}:${Math.floor(point.y / cellSize)}`,
+            group = groups.get(key) || { features: [], lat: 0, lng: 0 };
+          group.features.push(feature);
+          group.lat += latlng.lat;
+          group.lng += latlng.lng;
+          groups.set(key, group);
+        });
+        groups.forEach((group) => {
+          const count = group.features.length,
+            centre = [group.lat / count, group.lng / count];
+          if (count === 1) {
+            const feature = group.features[0],
+              label = feature.properties?.name || "Health facility";
+            L.circleMarker(centre, {
+              pane: "facilitiesPane",
+              radius: 5,
+              color: "#fff",
+              weight: 1.5,
+              fillColor: "#1E4636",
+              fillOpacity: 0.9,
+            })
+              .bindTooltip(String(label), { className: "tip" })
+              .bindPopup(facilityPopup(feature), { maxWidth: 300 })
+              .addTo(facilityOverlay);
+            return;
+          }
+          const marker = L.circleMarker(centre, {
+            pane: "facilitiesPane",
+            radius: Math.min(20, 7 + Math.log2(count) * 2),
+            color: "#fff",
+            weight: 2,
+            fillColor: "#1E4636",
+            fillOpacity: 0.82,
+          })
+            .bindTooltip(`${fmt(count)} health facilities`, {
+              className: "tip",
+            })
+            .addTo(facilityOverlay);
+          marker.on("click", () =>
+            map.flyTo(centre, Math.min(12, zoom + 2), {
+              duration: reduced ? 0 : 0.7,
+            }),
+          );
+        });
+      }
       function drawCanada() {
         if (!map) return;
         overlay.clearLayers();
-        const shortLbl = innerWidth < 700,
-          ATL = ["nb", "ns", "pe", "nl"];
         REGIONS.forEach((r) => {
-          const n = provScore(r),
-            col = provCat(n)[1],
+          const entry = riskEntry(r.id, hazard),
+            n = provScore(r),
+            col = provCat(n, entry?.level)[1],
             sel = r.id === prov;
           L.circle([r.lat, r.lon], {
             radius: (90 + n * 3.2) * 1000,
@@ -3940,54 +4495,361 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           })
             .bindTooltip(r.short, {
               permanent: true,
-              direction: ["pe", "qc"].includes(r.id)
-                ? "top"
-                : r.id === "nb"
-                  ? "left"
-                  : "bottom",
-              offset: ["pe", "qc"].includes(r.id)
-                ? [0, -8]
-                : r.id === "nb"
-                  ? [-8, 0]
-                  : [0, 8],
+              direction: "bottom",
+              offset: [0, 8],
               className: "prov",
             })
             .addTo(overlay);
           m.on("click", () => selectProv(r.id));
         });
-        if (hazard === "wildfire") {
-          L.marker(FIRE_CENTER, {
-            icon: L.divIcon({
-              className: "",
-              html: '<div class="ico-fire"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5c.8 3.6 5.5 5.4 5.5 10.7a5.5 5.5 0 01-11 0c0-3 1.8-4.4 2.3-6.4 1 1 1.4 2.3 1.6 3.3 1.4-2.2 1.9-4.6 1.6-7.6z" fill="#D9822B"/></svg></div>',
-              iconSize: [30, 30],
-              iconAnchor: [15, 15],
-            }),
-            zIndexOffset: 1000,
-            keyboard: true,
-            title: "Fire K-2041",
+      }
+      /* ---------- Live layers ---------- */
+      const titleCase = (value) =>
+        String(value || "").replace(/^\w/, (c) => c.toUpperCase());
+      function livePopup(title, lines, note) {
+        return `<div class="facility-popup"><b>${escapeHTML(title)}</b>${lines
+          .filter(Boolean)
+          .map((line) => `<small>${escapeHTML(line)}</small>`)
+          .join("")}${note ? `<p>${escapeHTML(note)}</p>` : ""}</div>`;
+      }
+      function pointLatLng(feature) {
+        const c = feature.geometry?.coordinates;
+        return feature.geometry?.type === "Point" && Array.isArray(c)
+          ? [c[1], c[0]]
+          : null;
+      }
+      function drawFires(features) {
+        features.forEach((feature) => {
+          const p = feature.properties || {},
+            at = pointLatLng(feature),
+            colour = FIRE_STAGE_COLOUR[p.stage] || "#8C938A";
+          if (!at) return;
+          if (p.radius_km > 0.3)
+            L.circle(at, {
+              radius: p.radius_km * 1000,
+              color: colour,
+              weight: 1,
+              fillColor: colour,
+              fillOpacity: 0.18,
+              interactive: false,
+            }).addTo(liveOverlay);
+          const size = Number.isFinite(p.size_ha)
+            ? `${fmt(Math.round(p.size_ha))} ha`
+            : "size not reported";
+          L.circleMarker(at, {
+            radius: p.stage === "OC" ? 6 : 5,
+            color: "#fff",
+            weight: 1.5,
+            fillColor: colour,
+            fillOpacity: 0.95,
           })
-            .bindTooltip(
-              "Fire K-2041, BC Interior<br><small>Select to open the scenario</small>",
-              { direction: "right", offset: [16, 0], className: "tip" },
+            .bindTooltip(`Fire ${escapeHTML(p.agency_fire_id || p.national_fire_id)} · ${escapeHTML(p.stage_label)}`, { className: "tip" })
+            .bindPopup(
+              livePopup(
+                `Fire ${p.agency_fire_id || p.national_fire_id || ""}`,
+                [
+                  `${titleCase(p.stage_label)} · ${size}`,
+                  p.agency ? `Agency: ${p.agency}` : "",
+                  `Status updated ${formatSnapshotTime(p.status_date)}`,
+                ],
+                "Agency-reported CWFIS data. The circle is an approximate extent from the reported size.",
+              ),
+              { maxWidth: 300 },
             )
-            .on("click", () => enterDetail())
-            .addTo(overlay);
+            .addTo(liveOverlay);
+        });
+      }
+      function drawRivers(features) {
+        const order = Object.keys(RIVER_STATUS);
+        [...features]
+          .sort(
+            (a, b) =>
+              order.indexOf(a.properties?.status) -
+              order.indexOf(b.properties?.status),
+          )
+          .forEach((feature) => {
+            const p = feature.properties || {},
+              at = pointLatLng(feature),
+              [label, colour, radius] =
+                RIVER_STATUS[p.status] || RIVER_STATUS.unknown;
+            if (!at) return;
+            const percentile = Number.isFinite(p.percentile_for_month)
+              ? `, ${p.percentile_for_month} percentile for the month`
+              : "";
+            L.circleMarker(at, {
+              radius,
+              color: "#fff",
+              weight: 1,
+              fillColor: colour,
+              fillOpacity: 0.9,
+            })
+              .bindTooltip(`${escapeHTML(p.station_name)} · ${escapeHTML(label)}`, { className: "tip" })
+              .bindPopup(
+                livePopup(
+                  p.station_name || "River station",
+                  [
+                    `${p.station_number || ""} · ${p.province || ""}`,
+                    `${label}${percentile}`,
+                    `Latest ${p.value} ${p.unit || ""} (${p.metric}), ${p.trend}`,
+                    `Observed ${formatSnapshotTime(p.observed_at)}`,
+                  ],
+                  p.baseline === "ready"
+                    ? `Provisional ECCC data. The percentile compares the mean of the last ${p.window_hours} h with past monthly means.`
+                    : "The status needs this station's history. The history loads over the next refresh runs.",
+                ),
+                { maxWidth: 300 },
+              )
+              .addTo(liveOverlay);
+          });
+      }
+      function drawAlerts(features, style) {
+        L.geoJSON(
+          { type: "FeatureCollection", features },
+          {
+            style: (feature) => ({
+              color: style.colour,
+              weight: 1.6,
+              dashArray: style.dash || null,
+              fillColor: ALERT_FILL[feature.properties?.risk_colour_en] || "#8C938A",
+              fillOpacity: 0.16,
+            }),
+            onEachFeature: (feature, layer) => {
+              const p = feature.properties || {};
+              layer
+                .bindTooltip(`${escapeHTML(titleCase(p.alert_name_en))} · ${escapeHTML(p.feature_name_en)}`, { className: "tip", sticky: true })
+                .bindPopup(
+                  livePopup(
+                    titleCase(p.alert_name_en || "Weather alert"),
+                    [
+                      [p.feature_name_en, p.province?.toUpperCase()]
+                        .filter(Boolean)
+                        .join(", "),
+                      p.risk_colour_en ? `Risk colour: ${p.risk_colour_en}` : "",
+                      `Issued ${formatSnapshotTime(p.publication_datetime)}`,
+                      `Expires ${formatSnapshotTime(p.expiration_datetime)}`,
+                    ],
+                    "ECCC weather alert. Read the full text on weather.gc.ca.",
+                  ),
+                  { maxWidth: 300 },
+                );
+            },
+          },
+        ).addTo(liveOverlay);
+      }
+      function drawHurricanes(features, style) {
+        const describe = (p) => [
+          p.storm_type || p.classification
+            ? titleCase(String(p.storm_type || p.classification).toLowerCase())
+            : "",
+          p.forecast_datetime ? `Forecast for ${formatSnapshotTime(p.forecast_datetime)}` : "",
+          Number.isFinite(p.max_wind_kt) ? `Maximum wind ${p.max_wind_kt} kt` : "",
+          `Published ${formatSnapshotTime(p.publication_datetime)}`,
+        ];
+        L.geoJSON(
+          { type: "FeatureCollection", features },
+          {
+            style: (feature) =>
+              feature.properties?.kind === "cone"
+                ? { color: style.colour, weight: 1, dashArray: "4 4", fillColor: style.colour, fillOpacity: 0.12 }
+                : { color: style.colour, weight: 2.5, fill: false },
+            pointToLayer: (feature, latlng) =>
+              L.circleMarker(latlng, {
+                radius: 5,
+                color: "#fff",
+                weight: 1.5,
+                fillColor: style.colour,
+                fillOpacity: 0.95,
+              }),
+            onEachFeature: (feature, layer) => {
+              const p = feature.properties || {},
+                part = { cone: "forecast error cone", track: "forecast track", centre: "forecast position" }[p.kind] || "forecast";
+              layer
+                .bindTooltip(`${escapeHTML(p.storm_name || "Storm")} · ${part}`, { className: "tip", sticky: true })
+                .bindPopup(
+                  livePopup(
+                    `${p.storm_name || "Storm"}: ${part}`,
+                    describe(p),
+                    "ECCC Canadian Hurricane Centre forecast. Follow official ECCC guidance.",
+                  ),
+                  { maxWidth: 300 },
+                );
+            },
+          },
+        ).addTo(liveOverlay);
+      }
+      function renderLiveLayers() {
+        if (!map || !liveOverlay) return;
+        liveOverlay.clearLayers();
+        if (mode !== "canada") return;
+        Object.entries(LIVE_LAYERS).forEach(([id, style]) => {
+          const features = dataAdapter.live.layers[id]?.features;
+          if (!dataAdapter.live.enabled.has(id) || !features?.length) return;
+          if (style.kind === "fires") drawFires(features);
+          else if (style.kind === "rivers") drawRivers(features);
+          else if (style.kind === "hurricane") drawHurricanes(features, style);
+          else drawAlerts(features, style);
+        });
+        // live features were added last; keep the region markers on top
+        overlay.eachLayer((layer) => layer.bringToFront?.());
+      }
+      // [state, label] for the status badge of one layer
+      function liveLayerStatus(id) {
+        const live = dataAdapter.live,
+          entry = liveEntry(id),
+          layer = live.layers[id];
+        if (!entry)
+          return live.state === "error" || live.manifest
+            ? ["error", "Unavailable"]
+            : ["loading", "Loading"];
+        if (layer?.state === "loading") return ["loading", "Loading"];
+        if (layer?.state === "error") return ["error", "Load error"];
+        if (entry.status === "error") return ["error", "Source error"];
+        if (entry.status === "stale" || Date.now() > Date.parse(entry.expiresAt))
+          return ["stale", "Stale"];
+        return ["live", "Live"];
+      }
+      function initLivePanel() {
+        $("liveList").innerHTML = Object.entries(LIVE_LAYERS)
+          .map(
+            ([id, style]) => `<li class="live-row" data-live="${id}">
+    <button class="chip" type="button" aria-pressed="false"><span class="sw" style="background:${style.colour}"></span><span class="live-label">${escapeHTML(style.label)}</span></button>
+    <span class="data-status" data-state="loading">Loading</span>
+    <span class="live-meta"></span></li>`,
+          )
+          .join("");
+        $("liveList")
+          .querySelectorAll(".live-row")
+          .forEach((row) => {
+            row.querySelector("button").onclick = () =>
+              toggleLiveLayer(row.dataset.live);
+          });
+        $("liveKey").insertAdjacentHTML(
+          "beforeend",
+          Object.values(RIVER_STATUS)
+            .map(
+              ([label, colour]) =>
+                `<span><span class="dotk" style="background:${colour}"></span>${label}</span>`,
+            )
+            .join("") +
+            "<span>Alert areas: the outline shows the layer, the fill shows the ECCC risk colour.</span>",
+        );
+      }
+      // Updates rows in place, so keyboard focus stays on the control.
+      function renderLivePanel() {
+        const live = dataAdapter.live,
+          counts = { live: 0, stale: 0, error: 0, loading: 0 };
+        $("liveList")
+          .querySelectorAll(".live-row")
+          .forEach((row) => {
+            const id = row.dataset.live,
+              style = LIVE_LAYERS[id],
+              entry = liveEntry(id),
+              [state, label] = liveLayerStatus(id),
+              badge = row.querySelector(".data-status");
+            counts[state]++;
+            row.querySelector("button").setAttribute("aria-pressed", live.enabled.has(id));
+            row.querySelector(".live-label").textContent = entry?.label || style.label;
+            badge.dataset.state = state;
+            badge.textContent = label;
+            if (!entry) {
+              row.querySelector(".live-meta").textContent =
+                state === "loading" ? "" : "This layer is not in the latest snapshot.";
+              return;
+            }
+            const count = Number.isFinite(entry.featureCount)
+              ? `${fmt(entry.featureCount)} ${(style.noun || ["alert area", "alert areas"])[entry.featureCount === 1 ? 0 : 1]}`
+              : "Count unavailable";
+            const problem =
+              live.layers[id]?.state === "error"
+                ? ` · ${live.layers[id].error?.message || "The file did not load"}`
+                : entry.error
+                  ? ` · ${entry.error}`
+                  : "";
+            row.querySelector(".live-meta").innerHTML =
+              `${escapeHTML(count)} · Observed ${escapeHTML(formatSnapshotTime(entry.observedAt))} · Generated ${escapeHTML(formatSnapshotTime(entry.generatedAt))} · Source: <a href="${escapeHTML(entry.source?.url)}" target="_blank" rel="noopener">${escapeHTML(entry.source?.name || "unknown")}</a>${escapeHTML(problem)}`;
+          });
+        const checked = live.checkedAt
+          ? formatSnapshotTime(new Date(live.checkedAt).toISOString())
+          : "";
+        if (live.state === "error") {
+          $("liveSummary").textContent = `The live layers could not load (${live.error?.message || "request failed"}). The map retries every 5 minutes.`;
+        } else if (!live.manifest) {
+          $("liveSummary").textContent = "Loading the live layers…";
+        } else {
+          const parts = [`${counts.live} live`];
+          if (counts.stale) parts.push(`${counts.stale} stale`);
+          if (counts.error) parts.push(`${counts.error} with errors`);
+          $("liveSummary").textContent =
+            `Snapshot generated ${formatSnapshotTime(live.manifest.generatedAt)}: ${parts.join(", ")}. ` +
+            (live.error
+              ? `The last check at ${checked} failed; the map shows the previous snapshot.`
+              : `Checked ${checked}. The map checks for new data every 5 minutes.`);
         }
       }
+
       function selectProv(id) {
         prov = id;
         $("regionSelect").value = id;
         renderArea();
         if (mode === "canada") drawCanada();
+        void loadSelectionData();
       }
       function renderArea() {
         const r = REGIONS.find((x) => x.id === prov),
           h = HAZARDS[hazard],
-          n = provScore(r),
-          c = provCat(n);
+          key = `${prov}/${hazard}`,
+          selection =
+            dataAdapter.selection.key === key
+              ? dataAdapter.selection
+              : { state: "loading", data: null },
+          snapshot = selection.data,
+          entry = riskEntry(prov, hazard),
+          n = clamp(
+            (snapshot?.assessment?.score ?? entry?.score ?? r.base[hazard]) +
+              severity,
+          ),
+          c = provCat(
+            n,
+            severity === 0
+              ? snapshot?.assessment?.level ?? entry?.level
+              : null,
+          ),
+          status = $("areaDataStatus");
         $("areaName").textContent = r.name;
-        $("areaSub").textContent = `${r.sub}, ${h.label.toLowerCase()} outlook`;
+        $("areaSub").textContent = `${r.sub} · ${h.label.toLowerCase()} outlook`;
+        $("areaPanel").setAttribute(
+          "aria-busy",
+          selection.state === "loading" ? "true" : "false",
+        );
+        status.dataset.state = selection.state;
+        status.title = "";
+        if (selection.state === "live") {
+          status.textContent = `${snapshot.dataMode === "live" ? "Live" : "Cached"} snapshot · generated ${formatSnapshotTime(snapshot.generatedAt)}`;
+        } else if (selection.state === "stale") {
+          status.textContent = `Stale snapshot · expired ${formatSnapshotTime(snapshot.expiresAt)}`;
+        } else if (selection.state === "unavailable") {
+          status.textContent = "Demonstration mode · snapshot unavailable";
+        } else if (selection.state === "error") {
+          status.textContent = "Demonstration mode · data could not load";
+          status.title = selection.error?.message || "Data request failed";
+        } else {
+          status.textContent = "Loading latest data…";
+        }
+        const sourcesEl = $("areaDataSources");
+        sourcesEl.hidden = !snapshot?.sources?.length;
+        if (snapshot?.sources?.length) {
+          const observed = snapshot.sources
+            .map((source) => source.observedAt)
+            .filter((value) => !Number.isNaN(Date.parse(value)))
+            .sort((a, b) => Date.parse(a) - Date.parse(b))
+            .pop();
+          sourcesEl.innerHTML = `Observed ${escapeHTML(formatSnapshotTime(observed))} · Sources: ${snapshot.sources
+            .map(
+              (source) =>
+                `<a href="${escapeHTML(source.url)}" target="_blank" rel="noopener">${escapeHTML(source.name)}</a>`,
+            )
+            .join(", ")}`;
+        }
         $("areaIco").innerHTML = HZ_ICON[hazard]
           .replace('fill="currentColor"', `fill="${c[1]}"`)
           .replace('stroke="currentColor"', `stroke="${c[1]}"`);
@@ -3996,25 +4858,39 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         $("areaScore").textContent = `Risk index ${n} of 100`;
         $("areaFill").style.width = n + "%";
         $("areaFill").style.background = c[1];
-        $("areaReason").textContent =
-          n >= 85
-            ? "Very elevated. Check official agency alerts now."
-            : n >= 65
-              ? "Elevated conditions call for a closer preparedness review."
-              : n >= 40
-                ? "Some conditions are worth monitoring."
-                : "Low relative risk under this scenario.";
-        const v1 =
-            hazard === "wildfire"
-              ? r.temp
-              : hazard === "rain"
-                ? r.rain + severity
-                : r.wind + severity,
-          v2 = hazard === "hurricane" ? r.rain + severity : r.wind;
-        $("m1l").textContent = h.m1;
-        $("m2l").textContent = h.m2;
-        $("m1").textContent = Math.max(0, v1) + h.units[0];
-        $("m2").textContent = Math.max(0, v2) + h.units[1];
+        $("areaReason").textContent = snapshot?.assessment?.summary
+          ? snapshot.assessment.summary
+          : selection.state === "loading"
+            ? "Loading the latest regional assessment. Demonstration values are shown temporarily."
+            : n >= 85
+              ? "Very elevated demonstration scenario. Check official agency alerts now."
+              : n >= 65
+                ? "Elevated demonstration conditions call for a closer preparedness review."
+                : n >= 40
+                  ? "Some demonstration conditions are worth monitoring."
+                  : "Low relative risk under this demonstration scenario.";
+        if (snapshot?.assessment?.factors?.length) {
+          const factor1 = formatFactor(snapshot.assessment.factors[0]),
+            factor2 = formatFactor(
+              snapshot.assessment.factors[1] || snapshot.assessment.factors[0],
+            );
+          $("m1l").textContent = factor1.label;
+          $("m2l").textContent = factor2.label;
+          $("m1").textContent = factor1.value;
+          $("m2").textContent = factor2.value;
+        } else {
+          const v1 =
+              hazard === "wildfire"
+                ? r.temp
+                : hazard === "rain"
+                  ? r.rain + severity
+                  : r.wind + severity,
+            v2 = hazard === "hurricane" ? r.rain + severity : r.wind;
+          $("m1l").textContent = h.m1;
+          $("m2l").textContent = h.m2;
+          $("m1").textContent = Math.max(0, v1) + h.units[0];
+          $("m2").textContent = Math.max(0, v2) + h.units[1];
+        }
         $("areaRec").textContent =
           h.brief[n >= 65 ? 1 : 0] +
           " " +
@@ -4022,34 +4898,65 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             ? "Escalate with local emergency management."
             : "Check conditions against official guidance.");
         const showGo =
-          mode === "detail" || (hazard === "wildfire" && prov === "bc");
+          mode === "detail" || (hazard === "wildfire" && r.replayScenario);
         $("areaGo").hidden = !showGo;
         $("areaGo").textContent =
           mode === "detail"
-            ? "Back to Canada overview"
-            : "Open the BC Interior wildfire";
+            ? "Back to region overview"
+            : "Open the sample wildfire timeline";
       }
       function syncMapChrome() {
-        const det = mode === "detail";
+        const det = mode === "detail",
+          region = REGIONS.find((item) => item.id === prov),
+          live = dataAdapter.live,
+          facilities = dataAdapter.facilities;
         $("ovCtrl").hidden = det;
         $("detailCtrl").hidden = !det;
         $("legOv").hidden = det;
         $("legDet").hidden = !det;
         $("sevBar").hidden = det;
+        $("liveLayers").hidden = det;
         $("tlBar").hidden = !det;
         $("legInc").hidden = hazard !== "wildfire";
+        $("legHealth").hidden =
+          det || !facilities.enabled || facilities.state !== "ready";
         $("mapTitle").textContent = det
-          ? "BC Interior, Fire K-2041"
-          : "Canada overview";
-        $("mapSub").textContent = det
-          ? "Sample wildfire scenario. Use the timeline to replay it."
-          : "Pick a hazard, then select a province or territory.";
+          ? `${region.name}, sample wildfire timeline`
+          : "Canadian region overview";
+        if (det) {
+          $("mapSub").textContent =
+            "Demonstration scenario. Use the timeline to replay it.";
+        } else if (live.state === "error") {
+          $("mapSub").textContent =
+            "Live map layers are unavailable. Regional risk cards remain available with demonstration fallback.";
+        } else if (!live.manifest) {
+          $("mapSub").textContent = "Loading the live map layers…";
+        } else {
+          const shown = [...live.enabled],
+            mapped = shown.reduce(
+              (total, id) => total + (live.layers[id]?.features?.length || 0),
+              0,
+            );
+          $("mapSub").textContent = shown.length
+            ? `${shown.length} live layer${shown.length === 1 ? "" : "s"} shown, ${fmt(mapped)} mapped feature${mapped === 1 ? "" : "s"} across Canada. Use the controls below the map to show or hide layers.`
+            : "No live layer is shown. Use the controls below the map to show layers.";
+        }
+        if (!det && facilities.enabled) {
+          if (facilities.state === "loading") {
+            $("mapSub").textContent += " Loading the health-facility inventory…";
+          } else if (facilities.state === "ready") {
+            $("mapSub").textContent += ` ${fmt(facilities.features.length)} map-ready health facilities are available from the ${facilitySourceYear()} inventory; operating status, capacity and hazard exposure are unverified.`;
+          } else if (facilities.state === "error") {
+            $("mapSub").textContent += " The health-facility inventory could not be loaded.";
+          }
+        }
         if (windCtl) windCtl.getContainer().style.display = det ? "" : "none";
         if (backCtl) backCtl.getContainer().style.display = det ? "" : "none";
       }
       function enterDetail(k) {
         mode = "detail";
-        if (prov !== "bc") selectProv("bc");
+        renderFacilities();
+        renderLiveLayers();
         syncMapChrome();
         renderArea();
         if (k) selected = k;
@@ -4066,6 +4973,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         syncMapChrome();
         renderArea();
         renderSituation();
+        renderFacilities();
+        renderLiveLayers();
         if (map)
           map.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : 1.4 });
       }
@@ -4249,14 +5158,14 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             document
               .querySelectorAll(".hz button")
               .forEach((x) => x.setAttribute("aria-pressed", x === b));
-            prov =
-              hazard === "hurricane" ? "ns" : hazard === "rain" ? "mb" : "bc";
             $("regionSelect").value = prov;
             $("sevLabel").textContent = HAZARDS[hazard].slider;
             $("sevValue").textContent = "+0%";
             syncMapChrome();
             renderArea();
             drawCanada();
+            void loadSelectionData();
+            applyLivePreset();
           }),
       );
       $("severity").oninput = (e) => {
@@ -4274,7 +5183,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       };
       $("areaGo").onclick = () =>
         mode === "detail" ? exitDetail() : enterDetail();
-      document.querySelectorAll(".chip").forEach(
+      document.querySelectorAll("#detailCtrl .chip").forEach(
         (c) =>
           (c.onclick = () => {
             const k = c.dataset.layer;
@@ -4283,6 +5192,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             drawMain(day);
           }),
       );
+      $("facilityToggle").onclick = () => {
+        const facilities = dataAdapter.facilities;
+        facilities.enabled = !facilities.enabled;
+        updateFacilityControl();
+        syncMapChrome();
+        renderFacilities();
+        if (facilities.enabled && facilities.state !== "ready") {
+          void loadFacilityData();
+        }
+      };
 
       /* =================================================================
    BRIEFING: advisory EN / FR
@@ -4660,10 +5579,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
 
       /* init */
       initMap();
+      updateFacilityControl();
+      syncMapChrome();
       renderArea();
       renderSituation();
       setLang("en");
       renderChecks();
+      void loadSelectionData();
+      initLivePanel();
+      applyLivePreset();
+      startLiveRefresh();
     </script>
   </body>
 </html>
