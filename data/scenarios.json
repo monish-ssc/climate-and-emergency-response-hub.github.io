@@ -3,82 +3,94 @@
     "source": "ClimateGuard regions used by every pipeline",
     "generatedAt": "2026-10-28T00:00:00Z",
     "isSimulated": false,
-    "note": "id, label (\"City, PR\"; the province code is read from the label) and centre coordinates. replayScenario links a region to its wildfire replay."
+    "note": "id, label (\"City, PR\"; the province code is read from the label) and centre coordinates, csduid (Statistics Canada census subdivision used for population). replayScenario links a region to its wildfire replay."
   },
   "regions": [
     {
       "id": "vancouver",
       "label": "Vancouver, BC",
       "lat": 49.2827,
-      "lon": -123.1207
+      "lon": -123.1207,
+      "csduid": "5915022"
     },
     {
       "id": "calgary",
       "label": "Calgary, AB",
       "lat": 51.0447,
-      "lon": -114.0719
+      "lon": -114.0719,
+      "csduid": "4806016"
     },
     {
       "id": "halifax",
       "label": "Halifax, NS",
       "lat": 44.6488,
-      "lon": -63.5752
+      "lon": -63.5752,
+      "csduid": "1209034"
     },
     {
       "id": "clinton",
       "label": "Clinton, BC",
       "lat": 51.0903,
       "lon": -121.5911,
-      "replayScenario": "2026_BC_2026-C40983"
+      "replayScenario": "2026_BC_2026-C40983",
+      "csduid": "5933028"
     },
     {
       "id": "west-kelowna",
       "label": "West Kelowna, BC",
       "lat": 49.8625,
       "lon": -119.5833,
-      "replayScenario": "2023_BC_2023-K52767"
+      "replayScenario": "2023_BC_2023-K52767",
+      "csduid": "5935029"
     },
     {
       "id": "st-johns",
       "label": "St. John's, NL",
       "lat": 47.5615,
-      "lon": -52.7126
+      "lon": -52.7126,
+      "csduid": "1001519"
     },
     {
       "id": "yellowknife",
       "label": "Yellowknife, NT",
       "lat": 62.454,
-      "lon": -114.3718
+      "lon": -114.3718,
+      "csduid": "6106023"
     },
     {
       "id": "winnipeg",
       "label": "Winnipeg, MB",
       "lat": 49.8951,
-      "lon": -97.1384
+      "lon": -97.1384,
+      "csduid": "4611040"
     },
     {
       "id": "fort-mcmurray",
       "label": "Fort McMurray, AB",
       "lat": 56.7264,
-      "lon": -111.3803
+      "lon": -111.3803,
+      "csduid": "4816037"
     },
     {
       "id": "toronto",
       "label": "Toronto, ON",
       "lat": 43.6532,
-      "lon": -79.3832
+      "lon": -79.3832,
+      "csduid": "3520005"
     },
     {
       "id": "prince-albert",
       "label": "Prince Albert, SK",
       "lat": 53.2033,
-      "lon": -105.7531
+      "lon": -105.7531,
+      "csduid": "4715066"
     },
     {
       "id": "montreal",
       "label": "Montréal, QC",
       "lat": 45.5019,
-      "lon": -73.5674
+      "lon": -73.5674,
+      "csduid": "2466023"
     }
   ]
 }

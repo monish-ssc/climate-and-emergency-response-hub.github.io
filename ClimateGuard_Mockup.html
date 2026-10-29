@@ -1222,6 +1222,36 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .watch-list .who small {
         display: block;
       }
+      .ai-badge {
+        display: inline-block;
+        margin: 4px 0 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #e4eedb;
+        font-size: 13px;
+      }
+      .ai-badge.template {
+        background: #f6ecd2;
+      }
+      .cite {
+        font-size: 11px;
+        vertical-align: super;
+        color: var(--spruce);
+        text-decoration: none;
+        margin-left: 1px;
+      }
+      .ai-facts {
+        margin-top: 14px;
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .ai-facts li:target {
+        background: #fff3c4;
+      }
+      .ai-sources {
+        font-size: 12px;
+        color: var(--ink-2);
+      }
       .res-body .fac small i {
         font-style: normal;
         opacity: 0.8;
@@ -2974,148 +3004,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <!-- ============ BRIEFING ============ -->
       <section class="view" id="v-briefing" hidden>
         <div class="grid-brief">
-          <article class="doc">
+          <article class="doc" id="aiDoc" aria-live="polite">
             <div class="doc-head">
               <div>
-                <h2>Situation briefing, BC Interior</h2>
-                <div class="meta">
-                  Day 3, 14:00. Written from scored data only. Previous
-                  briefing: Day 2, 14:00.
-                </div>
+                <h2 id="aiTitle">Preparedness briefing</h2>
+                <div class="meta" id="aiMeta">Loading…</div>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap">
-                <button
-                  class="btn ghost"
-                  data-toast="Briefing regenerated from the latest scores"
-                >
-                  Regenerate
-                </button>
                 <button class="btn ghost" onclick="window.print()">
                   Export PDF
                 </button>
               </div>
             </div>
-
+            <div class="ai-badge" id="aiBadge"></div>
             <h3>What is happening</h3>
-            <p>
-              Wildfire K-2041 is out of control at 4,200 ha, about 60% larger
-              than on Day 2. Winds from the southwest at 25 km/h are pushing it
-              northeast. A smoke advisory covers the area downwind, and the
-              river near Community E is at its 92nd percentile for this date.
-              <span class="src"
-                ><span>CWFIS</span><span>ECCC GeoMet</span
-                ><span>Water Survey</span></span
-              >
-            </p>
-
-            <h3>Who is at risk</h3>
-            <div style="overflow-x: auto">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Community</th>
-                    <th class="r">Score</th>
-                    <th class="r">People</th>
-                    <th>Main driver</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Community B</td>
-                    <td class="r">
-                      <span class="score"
-                        >86 <span class="band b-ext">Extreme</span></span
-                      >
-                    </td>
-                    <td class="r">4,800</td>
-                    <td>Fire 3 km away, downwind</td>
-                  </tr>
-                  <tr>
-                    <td>Community A</td>
-                    <td class="r">
-                      <span class="score"
-                        >71 <span class="band b-high">High</span></span
-                      >
-                    </td>
-                    <td class="r">12,400</td>
-                    <td>Fire 9 km away, smoke</td>
-                  </tr>
-                  <tr>
-                    <td>Community D</td>
-                    <td class="r">
-                      <span class="score"
-                        >58 <span class="band b-mod">Moderate</span></span
-                      >
-                    </td>
-                    <td class="r">2,100</td>
-                    <td>No hospital within 50 km, 24% aged 65+</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p style="margin-top: 6px">
-              <span class="src" style="margin: 0"
-                ><span>Statistics Canada</span><span>ODHF</span></span
-              >
-            </p>
-
-            <h3>What changed since Day 2</h3>
-            <ul class="changes">
-              <li>
-                Community B rose from High (64) to Extreme (86) as the fire
-                front closed from 8 km to 3 km.
-              </li>
-              <li>
-                Community A entered the High band because of the new smoke
-                advisory.
-              </li>
-              <li>
-                People in communities above the threshold rose from 4,800 to
-                17,200.
-              </li>
-            </ul>
-
+            <p id="aiSituation"></p>
             <h3>Recommended preparedness actions</h3>
-            <ol class="actions">
-              <li>
-                <div>
-                  <b
-                    >Open the reception centre at the Community C arena (1,200
-                    spaces).</b
-                  ><small
-                    >Why: estimated shelter need of 3,440 is above current
-                    capacity.</small
-                  >
-                </div>
-              </li>
-              <li>
-                <div>
-                  <b
-                    >Alert care homes in Community B to prepare residents for
-                    possible relocation.</b
-                  ><small
-                    >Why: score 86, with the fire downwind and closing.</small
-                  >
-                </div>
-              </li>
-              <li>
-                <div>
-                  <b>Pre-position medical support in Community D.</b
-                  ><small
-                    >Why: no hospital within 50 km and an older
-                    population.</small
-                  >
-                </div>
-              </li>
-              <li>
-                <div>
-                  <b>Find 1,640 more shelter spaces outside the smoke area.</b
-                  ><small
-                    >Why: the shelter gap shown on the Situation screen.</small
-                  >
-                </div>
-              </li>
-            </ol>
+            <ol class="actions" id="aiActions"></ol>
+            <details class="ai-facts">
+              <summary>Facts the briefing was allowed to use</summary>
+              <ol id="aiFacts"></ol>
+            </details>
+            <p class="ai-sources" id="aiSources"></p>
           </article>
 
           <aside class="advisory" aria-labelledby="advH">
@@ -5104,6 +5014,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             : "Open the real wildfire replay";
         renderResourcePanel();
         renderWatchlist();
+        if (brief.state === "idle") void loadBriefings();
+        const ai = currentBriefing();
+        if (isAI(ai) && ai.briefing.actions?.[0]) {
+          $("areaRec").innerHTML = `${escapeHTML(ai.briefing.actions[0].action)} <small style="display:block;color:var(--ink-2)">AI draft for review · see the Briefing tab</small>`;
+        }
+        renderBriefingTab();
       }
       function syncMapChrome() {
         const det = mode === "detail",
@@ -5255,6 +5171,96 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         Object.keys(COMMUNITIES).forEach((k) =>
           cmtyMarker(k, scores[k], { label: false, small: true }).addTo(m._ov),
         );
+      }
+
+      /* =================================================================
+   AI BRIEFINGS (data/pipeline/live/briefings.json, written by
+   build_briefings.py with GitHub Models in the refresh workflow).
+   Every briefing is grounded in numbered facts and needs human review.
+   ================================================================= */
+      const brief = { state: "idle", doc: null, byKey: new Map() };
+      async function loadBriefings() {
+        if (brief.state === "loading") return;
+        brief.state = "loading";
+        try {
+          brief.doc = await fetchJSON("data/pipeline/live/briefings.json");
+          brief.byKey = new Map(brief.doc.briefings.map((b) => [b.key, b]));
+          brief.state = "ready";
+        } catch {
+          brief.state = "error";
+        }
+        renderArea();
+        if (mode === "detail") renderSituation();
+        renderBriefingTab();
+      }
+      // The briefing for what is on screen: the replay step, or the selected region and hazard
+      function currentBriefing() {
+        if (brief.state !== "ready") return null;
+        if (mode === "detail" && replay.state === "ready") {
+          return (
+            brief.doc.briefings
+              .filter((b) => b.kind === "replay" && b.fireId === replay.id && b.step <= replay.step)
+              .sort((a, b) => b.step - a.step)[0] || null
+          );
+        }
+        return brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`) || null;
+      }
+      const isAI = (b) => b && b.model && b.model !== "template";
+      // "[F2, F5]" -> small links to the numbered facts
+      function withCites(text) {
+        return escapeHTML(text).replace(/\[(F\d+(?:\s*,\s*F?\d+)*)\]/g, (m, ids) =>
+          ids
+            .split(/\s*,\s*/)
+            .map((id) => {
+              const k = id.replace(/^F?/, "F");
+              return `<a class="cite" href="#fact-${k}" title="Fact ${k}">${k}</a>`;
+            })
+            .join(""),
+        );
+      }
+      function briefingBadge(b) {
+        return isAI(b)
+          ? `AI draft · GitHub Models (${escapeHTML(b.model.split("/").pop())}) · written ${escapeHTML(formatSnapshotTime(b.generatedAt))}${b.stale ? " · update pending" : ""} · confidence ${escapeHTML(b.briefing.confidence)} · needs human review`
+          : "Template briefing (AI draft not written yet) · built from the same facts";
+      }
+      function renderBriefingTab() {
+        if (!$("aiDoc")) return;
+        const b = currentBriefing();
+        if (!b) {
+          $("aiTitle").textContent = "Preparedness briefing";
+          $("aiMeta").textContent =
+            brief.state === "error"
+              ? "Briefings are not available yet. The automatic refresh writes them."
+              : brief.state === "ready" && mode === "detail"
+                ? "No briefing yet at this point of the replay. Move the timeline to the first marker."
+                : "Loading…";
+          ["aiBadge", "aiSituation", "aiActions", "aiFacts", "aiSources"].forEach((id) => ($(id).innerHTML = ""));
+          setLang(advLang);
+          return;
+        }
+        const d = b.briefing,
+          region = REGIONS.find((r) => r.id === b.regionId);
+        $("aiTitle").textContent = d.title;
+        $("aiMeta").textContent =
+          b.kind === "replay"
+            ? `Historical replay · ${region?.name || ""} · situation at ${replayTime(b.asOf, { year: "numeric", timeZoneName: "short" })}`
+            : `${region?.name || ""} · data as of ${formatSnapshotTime(b.asOf)} · risk ${b.score} of 100 (${b.level})`;
+        $("aiBadge").textContent = briefingBadge(b);
+        $("aiBadge").className = "ai-badge" + (isAI(b) ? "" : " template");
+        $("aiSituation").innerHTML = withCites(d.situation);
+        $("aiActions").innerHTML = d.actions
+          .map((a) => `<li><div><b>${withCites(a.action)}</b><small>Why: ${withCites(a.rationale)}</small></div></li>`)
+          .join("");
+        $("aiFacts").innerHTML = (b.facts || [])
+          .map((f, i) => `<li id="fact-F${i + 1}">${escapeHTML(f)}</li>`)
+          .join("");
+        $("aiSources").innerHTML =
+          "Sources: " +
+          d.citations
+            .map((c) => `<a href="${escapeHTML(c.url)}" target="_blank" rel="noopener">${escapeHTML(c.title)}</a>`)
+            .join(" · ") +
+          (d.disclaimer ? `<br>${escapeHTML(d.disclaimer)}` : "");
+        setLang(advLang);
       }
 
       /* =================================================================
@@ -5812,6 +5818,19 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             : "No reception centre open yet.",
         ];
         const happened = replayEventsUpTo(step).pop();
+        const ai = currentBriefing();
+        if (isAI(ai)) {
+          $("bsTitle").textContent = `AI briefing, ${replayTime(ai.asOf, { timeZoneName: "short" })}`;
+          $("bsText").innerHTML =
+            `<b>${escapeHTML(ai.briefing.title)}.</b> ${escapeHTML(ai.briefing.situation.replace(/\s*\[F[\d, F]+\]/g, ""))}` +
+            `<span class="replay-event" style="display:block">Next: ${escapeHTML(ai.briefing.actions[0]?.action || "")}</span>` +
+            (happened
+              ? `<span class="replay-event" style="display:block">What actually happened (reported ${escapeHTML(replayDate(replay.steps[happened.index].t))}): ${escapeHTML(happened.text)} · <a href="${escapeHTML(happened.source)}" target="_blank" rel="noopener">source</a></span>`
+              : "") +
+            `<span class="replay-event" style="display:block">${escapeHTML(briefingBadge(ai))}</span>`;
+          drawReplayMap();
+          return;
+        }
         $("bsTitle").textContent = `Replay summary, ${replayTime(step.t, { timeZoneName: "short" })}`;
         $("bsText").innerHTML =
           escapeHTML(parts.filter(Boolean).join(" ")) +
@@ -6008,6 +6027,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             : "Check conditions against official guidance.");
         $("areaGo").hidden = false;
         $("areaGo").textContent = "Back to region overview";
+        renderBriefingTab();
       }
 
       /* =================================================================
@@ -6147,19 +6167,16 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    BRIEFING: advisory EN / FR
    ================================================================= */
       const ADV = {
-        en: `<div class="review">For review. This is not an official alert; a person must approve it before release.</div>
-    <h3>Evacuation alert: Community B</h3>
-    <p>A wildfire is 3 km from Community B and moving toward the town with the wind. Be ready to leave on short notice.</p>
-    <b>What to do now</b>
-    <ul><li>Pack essentials: medication, documents, water, phone charger.</li><li>Plan where you will go. A reception centre is open at the Community C arena.</li><li>Check on neighbours who may need help.</li><li>Listen to local radio and official channels for an evacuation order.</li></ul>`,
-        fr: `<div class="review">Pour révision. Ceci n'est pas une alerte officielle; une personne doit l'approuver avant sa diffusion.</div>
-    <h3>Alerte d'évacuation : Collectivité B</h3>
-    <p>Un feu de forêt se trouve à 3 km de la collectivité B et se dirige vers la ville avec le vent. Soyez prêts à partir sans délai.</p>
-    <b>Que faire maintenant</b>
-    <ul><li>Préparez l'essentiel : médicaments, documents, eau, chargeur de téléphone.</li><li>Prévoyez où vous irez. Un centre d'accueil est ouvert à l'aréna de la collectivité C.</li><li>Prenez des nouvelles des voisins qui pourraient avoir besoin d'aide.</li><li>Écoutez la radio locale et les canaux officiels pour un éventuel ordre d'évacuation.</li></ul>`,
+        en: `<div class="review">For review. This is not an official alert; a person must approve it before release.</div><p>No advisory draft is available for this selection yet. Briefings are written by the automatic refresh.</p>`,
+        fr: `<div class="review">Pour révision. Ceci n'est pas une alerte officielle; une personne doit l'approuver avant sa diffusion.</div><p>Aucune ébauche d'avis n'est encore disponible pour cette sélection. Les breffages sont rédigés par la mise à jour automatique.</p>`,
       };
+      let advLang = "en";
       function setLang(l) {
-        $("advBody").innerHTML = ADV[l];
+        advLang = l;
+        const alert = currentBriefing()?.publicAlert?.[l];
+        $("advBody").innerHTML = alert
+          ? `<div class="review">${l === "fr" ? "Pour révision. Ceci n'est pas une alerte officielle; une personne doit l'approuver avant sa diffusion." : "For review. This is not an official alert; a person must approve it before release."}</div><h3>${escapeHTML(alert.headline)}</h3><p>${escapeHTML(alert.body)}</p>${(alert.whatToDo || []).length ? `<b>${l === "fr" ? "Que faire maintenant" : "What to do now"}</b><ul>${alert.whatToDo.map((x) => `<li>${escapeHTML(x)}</li>`).join("")}</ul>` : ""}`
+          : ADV[l];
         $("advBody").lang = l;
         document
           .querySelectorAll(".lang button")

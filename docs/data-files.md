@@ -161,3 +161,15 @@ The scheduled workflow does these steps every 30 minutes and deploys the result 
 - A region with no risk snapshot yet shows **"No data yet"**. The dashboard has no simulated fallback scores.
 - `disaster_history.py` rebuilds from `data/history/cdd_events_clean.csv` when the raw CDD extract is not in `data/raw/cdd/`, so new regions can be added without the original spreadsheet.
 
+
+## AI briefings
+
+`data/pipeline/live/briefings.json` (built by the workflow, published with the site) is written by `data/build_briefings.py`:
+
+- **Model:** GitHub Models (`openai/gpt-4.1-mini`, falling back to `openai/gpt-4o-mini`), called with the workflow's `GITHUB_TOKEN` (`permissions: models: read`). No API key or secret. Change the models with the `BRIEFING_MODELS` environment variable.
+- **Subjects:** every region × hazard in `risk/index.json`, and every key moment of both wildfire replays.
+- **Grounding:** the model receives only numbered facts built from our files (score and factors, smoke, disaster history, nearest hospitals, possible host communities, population; for replays also the fire, reception centres and reported events) and must cite them as `[F2]`. Every number it writes must appear in the facts; otherwise it is asked to fix the answer once, then rejected.
+- **Format:** each entry has `briefing` (the `api/contracts/briefing-response.schema.json` shape; `requiresHumanReview` is always true), `publicAlert.en` and `publicAlert.fr`, the `facts` it was given, `model`, `generatedAt`, `score`, `level` and `asOf`.
+- **Free-tier limits:** at most 12 model calls per run (`BRIEFING_MAX_CALLS`). Replay briefings are written once; live ones are rewritten only when the score or level changes or after 12 hours. Earlier briefings are reused from the published site.
+- **Fallback:** a subject without a valid AI briefing gets a template briefing from the same facts (`model: "template"`), so the dashboard always shows accurate text.
+- **Dashboard:** the Briefing & advisory tab shows the briefing for the selected region and hazard, or for the current replay step (with the facts list and an EN/FR public advisory draft). The replay summary strip and the risk card's "Recommended next step" use it when an AI briefing exists.
