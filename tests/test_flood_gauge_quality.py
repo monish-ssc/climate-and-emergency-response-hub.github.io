@@ -58,7 +58,23 @@ class LevelGaugeTest(unittest.TestCase):
         # 05OE014 Pansy Drain: 6 years of history
         short = {**BASE, "discharge": {"month_means": [1, 2, 3, 4, 5, 6], "median_annual_peak": 1.74}}
         c = flood.assess_station(readings("DISCHARGE", [7.7 + 0.05 * (i % 3) for i in range(24)]), short)
-        self.assertEqual(c["status"], "very_high")
+        self.assertEqual(c["status"], "above_normal")
+        self.assertIsNone(c["percentile_for_month"])  # not used by the flood score
+        self.assertIn("short record", c["note"])
+
+    def test_trickle_ranked_high_for_the_season_is_not_flood_relevant(self):
+        # Ridge Creek, October: 0.053 m3/s, 98th percentile, typical yearly peak 4.69 m3/s
+        low = {**BASE, "discharge": {"month_means": [0.004 * i for i in range(1, 13)], "median_annual_peak": 4.69}}
+        c = flood.assess_station(readings("DISCHARGE", [0.053 + 0.001 * (i % 3) for i in range(24)]), low)
+        self.assertEqual(c["status"], "above_normal")
+        self.assertIsNone(c["percentile_for_month"])
+        self.assertEqual(c["percentile_raw"], 100)
+
+    def test_lake_outlet_near_its_yearly_peak_still_counts(self):
+        # Mossy River below Dauphin Lake: 43 m3/s against a typical yearly peak of 36
+        lake = {**BASE, "discharge": {"month_means": list(range(5, 41, 3)), "median_annual_peak": 36.0}}
+        c = flood.assess_station(readings("DISCHARGE", [43.3 + 0.1 * (i % 3) for i in range(24)]), lake)
+        self.assertEqual(c["status"], "flood")
 
 
 if __name__ == "__main__":
