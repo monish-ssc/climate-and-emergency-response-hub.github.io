@@ -32,6 +32,8 @@ BASELINE_CACHE = OUT_DIR / "baselines.json"
 CONTRACTS_DIR = ROOT_DIR / "api" / "contracts"
 RADIUS_KM = 50
 MIN_YEARS = 5  # fewer years of history than this -> no percentile / flood peak
+FLOOD_MIN_YEARS = 10  # a station needs this many years of monthly history before it can be called "flood"
+FLAT_MIN_READINGS = 6  # this many identical recent flow readings = placeholder/estimated value, not a measurement
 
 # Fallback centres for regions without lat/lon in scenarios.json (new regions should set lat/lon there).
 REGION_CENTRES = {
@@ -210,16 +212,24 @@ def assess_station(readings, base, window_hours=12):
     end, start = float(recent.mean()), (
         float(earlier.mean()) if len(earlier) else float(recent.mean())
     )
+    flat = False
     if metric == "discharge":
         change, change_unit = ((end - start) / start * 100 if start else 0.0), "%"
         trend = "rising" if change > 5 else "falling" if change < -5 else "steady"
-        ratio = value / peak if peak else None
+        # Compare the recent mean, not the last reading: one spike (05CE002 Kneehills Creek: 31.9 m3/s
+        # against a 0.75 m3/s mean) must not mark a station "flood".
+        ratio = mean_24h / peak if peak else None
+        # A perfectly flat flow series is a placeholder or estimate (common at freeze-up), not a
+        # measurement: 05CE011 Renwick Creek read exactly 2.05 m3/s for 6 h while the WSC graph showed 0.001.
+        flat = len(recent) >= FLAT_MIN_READINGS and recent.nunique() == 1
     else:  # levels use a per-station datum, so compare in metres, never as % or across stations
         change, change_unit = end - start, "m"
         trend = "rising" if change > 0.05 else "falling" if change < -0.05 else "steady"
         ratio = None
 
-    if peak is not None and value >= peak:
+    if flat:
+        pct, peak, ratio = None, None, None
+    if peak is not None and mean_24h >= peak and len(hist) >= FLOOD_MIN_YEARS:
         status = "flood"
     elif (ratio or 0) >= 0.8 or (pct or 0) >= 95:
         status = "very_high"
@@ -247,6 +257,7 @@ def assess_station(readings, base, window_hours=12):
         "median_annual_peak": None if peak is None else round(peak, 3),
         "pct_of_flood_peak": None if ratio is None else round(ratio * 100),
         "status": status,
+        "flat_readings": flat,
     }
 
 

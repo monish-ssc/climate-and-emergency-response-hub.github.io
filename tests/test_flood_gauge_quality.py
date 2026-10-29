@@ -1,4 +1,4 @@
-"""Level-only river gauges are not compared with history (live and historical datums can differ)."""
+"""River gauge status: level datums, one-reading spikes, flat placeholder values, short records."""
 
 import sys
 import unittest
@@ -18,7 +18,7 @@ def readings(column, values):
 
 BASE = {
     "level": {"month_means": [0.5, 0.6, 0.7, 0.8, 0.9, 1.0], "median_annual_peak": 1.797},
-    "discharge": {"month_means": [1, 2, 3, 4, 5, 6], "median_annual_peak": 20.0},
+    "discharge": {"month_means": list(range(1, 13)), "median_annual_peak": 20.0},
 }
 
 
@@ -37,9 +37,28 @@ class LevelGaugeTest(unittest.TestCase):
         self.assertEqual(c["trend"], "rising")
 
     def test_discharge_is_still_compared_with_history(self):
-        c = flood.assess_station(readings("DISCHARGE", [25.0] * 24), BASE)
+        c = flood.assess_station(readings("DISCHARGE", [25.0 + 0.1 * (i % 3) for i in range(24)]), BASE)
         self.assertEqual(c["status"], "flood")
         self.assertEqual(c["percentile_for_month"], 100)
+
+    def test_one_spike_is_not_a_flood(self):
+        # 05CE002 Kneehills Creek: last reading 31.9 m3/s, recent mean about 0.75
+        values = [0.7 + 0.01 * (i % 4) for i in range(23)] + [31.9]
+        c = flood.assess_station(readings("DISCHARGE", values), BASE)
+        self.assertNotEqual(c["status"], "flood")
+
+    def test_flat_flow_readings_are_not_measurements(self):
+        # 05CE011 Renwick Creek: exactly 2.05 m3/s for hours while WSC showed 0.001
+        c = flood.assess_station(readings("DISCHARGE", [2.05] * 24), {**BASE, "discharge": {
+            "month_means": list(range(12)), "median_annual_peak": 2.01}})
+        self.assertTrue(c["flat_readings"])
+        self.assertEqual(c["status"], "unknown")
+
+    def test_short_record_cannot_reach_flood(self):
+        # 05OE014 Pansy Drain: 6 years of history
+        short = {**BASE, "discharge": {"month_means": [1, 2, 3, 4, 5, 6], "median_annual_peak": 1.74}}
+        c = flood.assess_station(readings("DISCHARGE", [7.7 + 0.05 * (i % 3) for i in range(24)]), short)
+        self.assertEqual(c["status"], "very_high")
 
 
 if __name__ == "__main__":
