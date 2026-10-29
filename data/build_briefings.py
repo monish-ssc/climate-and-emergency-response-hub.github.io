@@ -353,8 +353,16 @@ def call_model(token, model, facts_text, feedback=None):
 NUM = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 
 
-def numbers(text):
-    return {m.group(0).replace(",", "").rstrip(".") for m in NUM.finditer(text or "")}
+CLOCK = re.compile(r"\b\d{1,2}(?::\d{2}|\s?h\s?\d{2})\b")  # 1:00, 13 h 00 - times, not quantities
+
+
+def numbers(text, french=False):
+    text = CLOCK.sub(" ", text or "")
+    if french:
+        # French Canadian: "1 684" and "17,3" are 1684 and 17.3
+        text = re.sub(r"(?<=\d)[\s\u00a0\u202f](?=\d{3}\b)", "", text)
+        text = re.sub(r"(?<=\d),(?=\d)", ".", text)
+    return {m.group(0).replace(",", "").rstrip(".") for m in NUM.finditer(text)}
 
 
 # Actions that only fit a high or critical risk: opening or staffing reception centres, evacuating,
@@ -389,13 +397,18 @@ def check(answer, facts, level=None):
     written = " ".join([answer["title"], answer["situation"]] +
                        [f"{a.get('action', '')} {re.sub(r'\[F[0-9, F]+\]', '', a.get('rationale', ''))}" for a in acts if isinstance(a, dict)])
     alert = answer.get("publicAlert") or {}
+    french = ""
     for lang in ("en", "fr"):
         p = alert.get(lang) or {}
         if not p.get("headline") or not p.get("body"):
             problems.append(f"publicAlert.{lang} needs headline and body")
-        written += " " + " ".join([p.get("headline", ""), p.get("body", "")] + list(p.get("whatToDo") or []))
-    written = re.sub(r"\[F[0-9, F]+\]", "", written)
-    invented = sorted(numbers(written) - allowed)
+        text = " " + " ".join([p.get("headline", ""), p.get("body", "")] + list(p.get("whatToDo") or []))
+        if lang == "fr":
+            french += text
+        else:
+            written += text
+    cites = re.compile(r"\[F[0-9, F\-]+\]")
+    invented = sorted((numbers(cites.sub("", written)) | numbers(cites.sub("", french), french=True)) - allowed)
     if invented:
         problems.append("numbers not in the facts: " + ", ".join(invented[:8]))
     if not re.search(r"\[F\d+", answer["situation"]):
@@ -537,13 +550,14 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
             print(f"  AI  {s['key']} ({s['level']})")
         else:
             failed += 1
+            results[s["key"]] = {"problems": problems}
             print(f"  --  {s['key']}: {'; '.join(problems)}")
         time.sleep(1)
 
     out = []
     for s in subjects:
         prev = old.get(s["key"])
-        if s["key"] in results:
+        if s["key"] in results and "briefing" in results[s["key"]]:
             r = results[s["key"]]
             entry = {"briefing": r["briefing"], "publicAlert": r["publicAlert"], "model": r["model"],
                      "generatedAt": r["briefing"]["generatedAt"]}
@@ -554,6 +568,8 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
         else:
             b, alert = template(s, now)
             entry = {"briefing": b, "publicAlert": alert, "model": "template", "generatedAt": iso(now)}
+            if s["key"] in results:  # the model was asked but its answer failed the checks
+                entry["aiRejected"] = results[s["key"]]["problems"]
         entry.update({"key": s["key"], "kind": s["kind"], "regionId": s["regionId"], "hazard": s["hazard"],
                       "step": s.get("step"), "fireId": s.get("fireId"), "score": s["score"], "level": s["level"],
                       "asOf": s["asOf"], "hash": s["hash"], "promptVersion": PROMPT_VERSION,
