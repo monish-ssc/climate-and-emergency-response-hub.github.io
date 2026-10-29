@@ -95,6 +95,11 @@ jobs:
       - name: Build Canada-wide live layers
         run: python data/build_live_layers.py
 
+      # Ranks every community of 1,000+ people from the live layers above; no extra downloads.
+      - name: Build the "places to watch" list
+        continue-on-error: true
+        run: python data/build_watchlist.py
+
       - name: Rebuild risk index
         run: python data/build_risk_index.py
 
