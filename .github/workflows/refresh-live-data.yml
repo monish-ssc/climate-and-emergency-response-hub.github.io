@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  # lets GITHUB_TOKEN call GitHub Models for the AI briefings (free, rate-limited; no API key)
+  models: read
 
 concurrency:
   group: refresh-live-hazard-data
@@ -102,6 +104,16 @@ jobs:
 
       - name: Rebuild risk index
         run: python data/build_risk_index.py
+
+      # AI briefings with GitHub Models. Reuses the published briefings and rewrites only what changed;
+      # if the model is unavailable, template briefings from the same facts are published instead.
+      - name: Write AI briefings
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+          BRIEFING_MAX_CALLS: "12"
+        run: python data/build_briefings.py
 
       - name: Validate refreshed outputs
         run: python data/validate_live_outputs.py
