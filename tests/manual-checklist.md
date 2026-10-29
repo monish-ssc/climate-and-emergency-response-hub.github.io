@@ -14,3 +14,4 @@
 - [ ] The layout remains readable at 375 px width.
 - [ ] Pipeline freshness and simulation/safety disclaimers are always visible.
 - [ ] The demo works with the network disabled.
+- [ ] A manual **Refresh live hazard data** workflow run produces a validated `live-hazard-data-<run-id>` artifact.

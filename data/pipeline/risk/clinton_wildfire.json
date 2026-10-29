@@ -1,6 +1,6 @@
 {
   "contractVersion": "1.0",
-  "requestId": "91166108-5b09-4b84-8222-2d1dd903b853",
+  "requestId": "6430e16b-e5e7-4ad7-8ec7-e1c772fb9d3a",
   "region": {
     "id": "clinton",
     "label": "Clinton, BC"
@@ -66,23 +66,23 @@
       "name": "CWFIS Active wildfires (NRCan)",
       "url": "https://geoserver.cwfif.nrcan.gc.ca/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=public%3Acwfif_national_activefires&outputFormat=application%2Fjson&srsName=EPSG%3A4326&count=10000&sortBy=agency_code+A%2Crecord_start+D&CQL_FILTER=now%28%29%3E%3Drecord_start+AND+now%28%29%3C%3Drecord_end",
       "observedAt": "2026-10-23T12:30:00Z",
-      "retrievedAt": "2026-10-28T20:54:51Z"
+      "retrievedAt": "2026-10-29T14:00:21Z"
     },
     {
       "name": "CWFIS Reported fires, history (NRCan)",
       "url": "https://geoserver.cwfif.nrcan.gc.ca/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=public%3Acwfif_national_reportedfires&outputFormat=application%2Fjson&srsName=EPSG%3A4326&count=10000&sortBy=record_start+D&CQL_FILTER=fire_year%3E%3D2016+AND+fire_year%3C2026+AND+fire_size%3E%3D1000+AND+BBOX%28geometry%2C-123.74260857045792%2C49.738948648648645%2C-119.43959142954208%2C52.441651351351354%2C%27EPSG%3A4326%27%29",
-      "observedAt": "2026-10-28T20:54:51Z",
-      "retrievedAt": "2026-10-28T20:54:51Z"
+      "observedAt": "2026-10-29T14:00:21Z",
+      "retrievedAt": "2026-10-29T14:00:21Z"
     },
     {
       "name": "ECCC Weather alerts",
       "url": "https://api.weather.gc.ca/collections/weather-alerts",
-      "observedAt": "2026-10-28T20:54:51Z",
-      "retrievedAt": "2026-10-28T20:54:51Z"
+      "observedAt": "2026-10-29T14:00:21Z",
+      "retrievedAt": "2026-10-29T14:00:21Z"
     }
   ],
   "dataMode": "live",
-  "generatedAt": "2026-10-28T20:54:51Z",
-  "expiresAt": "2026-10-28T21:54:51Z",
+  "generatedAt": "2026-10-29T14:00:21Z",
+  "expiresAt": "2026-10-29T15:00:21Z",
   "disclaimer": "Automated screening from agency-reported CWFIS data and ECCC alerts; fire extents are approximate circles from reported size. Not an official fire behaviour forecast."
 }

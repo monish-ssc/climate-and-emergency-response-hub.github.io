@@ -94,6 +94,12 @@ Run the scripts as needed:
 .venv/bin/python data/healthcare_data_pipeline.py
 ```
 
+### Automated live-data refresh
+
+`.github/workflows/refresh-live-data.yml` runs every 30 minutes (at minutes 7 and 37) and can also be started manually with **Run workflow**. It refreshes wildfire, flood, and hurricane/severe-storm snapshots, rebuilds the risk index, and rejects missing, stale, or contract-invalid output with `data/validate_live_outputs.py`.
+
+Successful runs upload a `live-hazard-data-<run-id>` Actions artifact retained for two days. This artifact is for inspection and the later Pages-deployment step; it does not update the published site yet. GitHub only schedules workflows from the default branch, so the schedule becomes active after this workflow is merged there.
+
 The exploration script saves raw GeoJSON and CSV files under `data/raw/geomet/` and `data/explore/`. The pipelines write risk-response JSON and map layers under `data/pipeline/` and `data/samples/`. The frontend discovers risk files through `data/pipeline/risk/index.json`, uses embedded demonstration values when a snapshot is unavailable, and labels stale data after `expiresAt`.
 
 The healthcare pipeline saves cleaned CSVs, regional summaries, and `data/healthcare/facilities.geojson` with facility locations, source information, and timestamps. The Canada overview loads that GeoJSON on demand from the **Health facilities** map control and clusters visible points in the browser. The committed inventory contains 7,525 map-ready records and was last modified at source in 2020; it does not verify current operating status or capacity. Optional hazard analysis requires `geopandas>=1.0` and valid polygons in `data/hazard_zones.geojson`; otherwise exposure is unknown (`null`). It suggests up to three alternatives within 50 km straight-line distance, without verifying safety or capacity.

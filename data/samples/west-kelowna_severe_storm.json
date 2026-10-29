@@ -1,0 +1,64 @@
+{
+  "contractVersion": "1.0",
+  "requestId": "5e71b123-0a43-45ff-a5ce-fd2ec9601ded",
+  "region": {
+    "id": "west-kelowna",
+    "label": "West Kelowna, BC"
+  },
+  "hazard": "severe_storm",
+  "assessment": {
+    "score": 0,
+    "level": "low",
+    "summary": "0 active storm(s) with fresh forecast tracks within 300 km of West Kelowna, BC. 0 hurricane-related bulletin(s) affect the regional search area. No nearby active tracks returned; this does not establish no risk. This screening does not assess other severe-storm hazards.",
+    "factors": [
+      {
+        "key": "track_proximity",
+        "label": "Closest active forecast track",
+        "value": 300,
+        "unit": "km",
+        "contribution": 0,
+        "explanation": "No fresh active track within 300 km."
+      },
+      {
+        "key": "hurricane_alerts",
+        "label": "Official hurricane-related bulletins",
+        "value": 0,
+        "unit": "alerts",
+        "contribution": 0,
+        "explanation": "Highest bulletin: warning 30, watch 20, advisory 10, other 5 points."
+      },
+      {
+        "key": "historical_storms",
+        "label": "Historical storms with nearby recorded positions",
+        "value": 0,
+        "unit": "storms",
+        "contribution": 0,
+        "explanation": "Completed seasons 2023-2025, within 300 km; context only, not a risk contribution or a long-term climatology."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "name": "ECCC Canadian Hurricane Centre tracks",
+      "url": "https://api.weather.gc.ca/collections/hurricanes-track-realtime",
+      "observedAt": "2026-10-29T14:04:06Z",
+      "retrievedAt": "2026-10-29T14:04:06Z"
+    },
+    {
+      "name": "ECCC Weather alerts",
+      "url": "https://api.weather.gc.ca/collections/weather-alerts",
+      "observedAt": "2026-10-29T14:04:06Z",
+      "retrievedAt": "2026-10-29T14:04:06Z"
+    },
+    {
+      "name": "NOAA IBTrACS v04r01 historical storm tracks",
+      "url": "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.last3years.list.v04r01.csv",
+      "observedAt": "2026-10-27T00:00:00Z",
+      "retrievedAt": "2026-10-29T12:14:56Z"
+    }
+  ],
+  "dataMode": "live",
+  "generatedAt": "2026-10-29T14:04:06Z",
+  "expiresAt": "2026-10-29T15:04:06Z",
+  "disclaimer": "Unvalidated prototype screening from provisional ECCC tracks and alerts; not an official hurricane forecast or a measure of local wind, rain or surge. Historical NOAA tracks provide context only. Follow official ECCC guidance."
+}
