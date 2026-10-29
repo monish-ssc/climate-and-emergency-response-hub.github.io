@@ -199,7 +199,7 @@ def read_history(path, now):
 
 
 def historical_storms(history, region):
-    lat, lon = flood.REGION_CENTRES[region["id"]]
+    lat, lon = flood.region_centre(region)
     distances = [
         flood.distance_km(lat, lon, a, b)
         for a, b in zip(history["LAT"], history["LON"])
@@ -223,7 +223,7 @@ def historical_storms(history, region):
 
 
 def regional_alerts(region, now):
-    lat, lon = flood.REGION_CENTRES[region["id"]]
+    lat, lon = flood.region_centre(region)
     features = fetch(
         "weather-alerts", bbox=flood.bbox_around(lat, lon, flood.RADIUS_KM)
     )
@@ -282,7 +282,7 @@ def score_region(tracks, alerts, history_count, year_range):
 
 
 def run_region(region, now, tracks, history, history_observed, history_retrieved):
-    lat, lon = flood.REGION_CENTRES[region["id"]]
+    lat, lon = flood.region_centre(region)
     nearby = []
     for feature in tracks:
         distance = track_distance_km(feature["geometry"], lat, lon)

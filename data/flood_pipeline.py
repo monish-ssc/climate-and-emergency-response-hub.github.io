@@ -33,7 +33,7 @@ CONTRACTS_DIR = ROOT_DIR / "api" / "contracts"
 RADIUS_KM = 50
 MIN_YEARS = 5  # fewer years of history than this -> no percentile / flood peak
 
-# scenarios.json has no coordinates, so region centres (lat, lon) live here.
+# Fallback centres for regions without lat/lon in scenarios.json (new regions should set lat/lon there).
 REGION_CENTRES = {
     "vancouver": (49.2827, -123.1207),
     "calgary": (51.0447, -114.0719),
@@ -41,6 +41,15 @@ REGION_CENTRES = {
     "clinton": (51.0903, -121.5911),  # wildfire replay region (Pear Lake fire)
     "west-kelowna": (49.8625, -119.5833),  # wildfire replay region (McDougall Creek fire)
 }
+
+
+
+def region_centre(region):
+    """(lat, lon) from scenarios.json, falling back to REGION_CENTRES."""
+    if region.get("lat") is not None and region.get("lon") is not None:
+        return float(region["lat"]), float(region["lon"])
+    return REGION_CENTRES.get(region["id"])
+
 
 FLOOD_ALERT_WORDS = ("rain", "flood", "storm surge")
 ALERT_POINTS = {"yellow": 5, "orange": 10, "red": 20}  # alerts with no colour count 3
@@ -381,7 +390,7 @@ def write_geojson(path, records):
 
 def run_region(region, now, since):
     rid, label = region["id"], region["label"]
-    lat, lon = REGION_CENTRES[rid]
+    lat, lon = region_centre(region)
     bbox = bbox_around(lat, lon, RADIUS_KM)
 
     # 1. fetch + clean
@@ -531,8 +540,8 @@ def main():
 
     all_stations, all_conds, all_alerts, failures = [], [], [], []
     for region in regions:
-        if region["id"] not in REGION_CENTRES:
-            print(f"\n{region['id']}: no centre in REGION_CENTRES, skipped")
+        if region_centre(region) is None:
+            print(f"\n{region['id']}: no lat/lon in scenarios.json, skipped")
             continue
         print(f"\n{region['label']} ...")
         try:

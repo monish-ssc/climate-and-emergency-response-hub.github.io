@@ -87,6 +87,11 @@ jobs:
         continue-on-error: true
         run: python data/hurricane_pipeline.py
 
+      - name: Refresh air quality (AQHI)
+        id: air_quality
+        continue-on-error: true
+        run: python data/air_quality_pipeline.py
+
       - name: Build Canada-wide live layers
         run: python data/build_live_layers.py
 
@@ -129,6 +134,7 @@ jobs:
           [ "${{ steps.wildfire.outcome }}" = "failure" ] && failed="$failed wildfire"
           [ "${{ steps.flood.outcome }}" = "failure" ] && failed="$failed flood"
           [ "${{ steps.hurricane.outcome }}" = "failure" ] && failed="$failed hurricane"
+          [ "${{ steps.air_quality.outcome }}" = "failure" ] && failed="$failed air_quality"
           echo "list=${failed# }" >> "$GITHUB_OUTPUT"
 
   deploy:
