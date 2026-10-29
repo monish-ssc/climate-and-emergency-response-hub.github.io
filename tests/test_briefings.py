@@ -41,6 +41,16 @@ class CheckTest(unittest.TestCase):
         ok = answer(action="Review the local evacuation plan and contact lists.")
         self.assertEqual(bb.check(ok, facts(), "low"), [])
 
+    def test_french_number_format_and_clock_times_are_accepted(self):
+        f = facts()
+        f.add("The fire is about 1,684 ha and 17.3 km away.")
+        a = answer(situation="At 1:00 p.m. the fire was 17.3 km away [F4].")
+        a["publicAlert"]["fr"] = {"headline": "Feu de forêt", "body": "Le feu est à 17,3 km et couvre environ 1 684 ha (13 h 00).",
+                                  "whatToDo": ["Soyez prêts."]}
+        self.assertEqual(bb.check(a, f), [])
+        a["publicAlert"]["fr"]["body"] = "Environ 2 500 personnes."
+        self.assertTrue(any("2500" in p for p in bb.check(a, f)))
+
     def test_missing_citation_is_caught(self):
         self.assertTrue(any("cite" in p for p in bb.check(answer(situation="Risk is high."), facts())))
 
