@@ -5475,6 +5475,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       function focusPlace(place, { fly = false } = {}) {
         if (!place || mode === "detail") return;
         focus = place;
+        // show the matching hazard tab (a river station opens "Rain and flooding"), with its map layers
+        const tab = place.hazard === "flood" ? "rain" : place.hazard;
+        if (tab && tab !== hazard) document.querySelector(`.hz button[data-hazard="${tab}"]`)?.click();
         if (brief.state === "idle") void loadBriefings();
         drawFocus();
         if (fly && map && place.lat != null) {
