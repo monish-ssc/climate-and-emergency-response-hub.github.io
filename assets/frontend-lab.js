@@ -5,7 +5,8 @@
   const byId = (id) => document.getElementById(id);
   const safe = (value) => escapeHTML(value);
   const paths = {
-    mark: '<path d="M18 3 31 10.5v15L18 33 5 25.5v-15Z"/><path d="m5 10.5 13 8 13-8M18 18.5V33M11.5 6.8l13 7.5v7.5"/>',
+    // Canadian flag outline from flag-icons; see assets/third-party/flag-icons-LICENSE.txt.
+    mark: '<path fill="currentColor" stroke="none" d="M201 232l-13.3 4.4 61.4 54c4.7 13.7-1.6 17.8-5.6 25l66.6-8.4-1.6 67 13.9-.3-3.1-66.6 66.7 8c-4.1-8.7-7.8-13.3-4-27.2l61.3-51-10.7-4c-8.8-6.8 3.8-32.6 5.6-48.9 0 0-35.7 12.3-38 5.8l-9.2-17.5-32.6 35.8c-3.5.9-5-.5-5.9-3.5l15-74.8-23.8 13.4q-3.2 1.3-5.2-2.2l-23-46-23.6 47.8q-2.8 2.5-5 .7L264 130.8l13.7 74.1c-1.1 3-3.7 3.8-6.7 2.2l-31.2-35.3c-4 6.5-6.8 17.1-12.2 19.5s-23.5-4.5-35.6-7c4.2 14.8 17 39.6 9 47.7"/>',
     monitor: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 18h7m-3.5-3.5v7"/>',
     briefing: '<path d="M6 3h9l4 4v14H6Z"/><path d="M14 3v5h5M9 12h7m-7 4h7"/>',
     scenario: '<path d="M8 3h8m-6 0v6L4 19a1.3 1.3 0 0 0 1 2h14a1.3 1.3 0 0 0 1-2L14 9V3M7 15h10"/>',
@@ -22,8 +23,10 @@
     globe: '<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
     expand: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
     refresh: '<path d="M20 8a8 8 0 1 0 .3 7M20 3v6h-6"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
+    moon: '<path d="M20.8 13A9 9 0 0 1 11 3.2 9 9 0 1 0 20.8 13Z"/>',
   };
-  const icon = (name) => `<svg class="lab-icon" viewBox="0 0 ${name === "mark" ? "36 36" : "24 24"}" aria-hidden="true">${paths[name] || paths.info}</svg>`;
+  const icon = (name) => `<svg class="lab-icon" viewBox="${name === "mark" ? "180 85 270 300" : "0 0 24 24"}" aria-hidden="true">${paths[name] || paths.info}</svg>`;
   const node = (markup) => {
     const template = document.createElement("template");
     template.innerHTML = markup.trim();
@@ -42,7 +45,7 @@
 
   // Preserve every original tab and control, including their event handlers.
   const rail = node(`<aside class="lab-rail" aria-label="Workspace navigation">
-    <div class="lab-mark" aria-label="ClimateGuard">${icon("mark")}</div>
+    <div class="lab-mark" aria-label="Canadian maple leaf">${icon("mark")}</div>
     <div class="lab-rail-bottom"><span>CAN</span></div>
   </aside>`);
   const nav = document.querySelector("nav.tabs");
@@ -70,9 +73,9 @@
   const clock = document.querySelector(".clock");
   const headerRight = node(`<div class="lab-header-right">
     <div class="lab-feed" id="labFeed" data-state="cached"><span class="lab-dot"></span><span id="labFeedLabel">Checking source coverage</span></div>
-    <div class="lab-palette" role="group" aria-label="Workspace colour palette">
-      <button type="button" data-palette="forest" aria-label="Forest green palette" aria-pressed="true"><span class="lab-swatch"></span>Forest</button>
-      <button type="button" data-palette="ink" aria-label="Ink and teal palette" aria-pressed="false"><span class="lab-swatch ink"></span>Ink & teal</button>
+    <div class="lab-theme" role="group" aria-label="Workspace appearance">
+      <button type="button" data-theme="light" aria-label="Light mode" title="Light mode" aria-pressed="true">${icon("sun")}<span>Light</span></button>
+      <button type="button" data-theme="dark" aria-label="Dark mode" title="Dark mode" aria-pressed="false">${icon("moon")}<span>Dark</span></button>
     </div>
   </div>`);
   document.querySelector(".top-inner").append(headerRight);
@@ -228,18 +231,42 @@
   ["labOpenBriefing", "labAssessmentBriefing"].forEach((id) => byId(id).onclick = openBriefing);
   byId("labResetMap").onclick = () => {
     if (mode === "detail") exitDetail();
-    map?.flyToBounds(CANADA_BOUNDS, { duration: reduced ? 0 : .7 });
+    clearFocus();
+    map?.closePopup();
+    byId("populationReset").click();
   };
 
-  let palette = "forest";
-  try { palette = localStorage.getItem("climateguard-lab-palette") === "ink" ? "ink" : "forest"; } catch { /* Private browsing can deny storage. */ }
-  function setPalette(value) {
-    document.documentElement.dataset.palette = value;
-    headerRight.querySelectorAll("[data-palette]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.palette === value)));
-    try { localStorage.setItem("climateguard-lab-palette", value); } catch { /* Palette still works without storage. */ }
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem("climateguard-lab-theme"); } catch { /* Storage is optional. */ }
+  let followSystem = !["light", "dark"].includes(savedTheme);
+  function setTheme(value, persist = false) {
+    document.documentElement.dataset.theme = value;
+    headerRight.querySelectorAll("[data-theme]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.theme === value)));
+    if (persist) {
+      followSystem = false;
+      try { localStorage.setItem("climateguard-lab-theme", value); } catch { /* The control still works without storage. */ }
+    }
+    // Repaint vectors using the selected appearance. Hazard colours retain their meanings.
+    if (map) {
+      if (activeBasemap === "simple") setBasemap("simple");
+      renderPopulationLayer();
+      if (mode === "canada") drawCanada(); else drawMain();
+      drawFocus();
+    }
+    Object.values(minis).forEach((mini) => {
+      if (!mini) return;
+      if (mini._simpleBase) mini.removeLayer(mini._simpleBase);
+      mini._simpleBase = BASEMAPS.simple(mini).addTo(mini);
+    });
+    const palette = mapColours();
+    document.querySelectorAll(".population-bands i").forEach((swatch, index) => {
+      swatch.style.background = palette.density[index] || palette.noData;
+    });
   }
-  headerRight.querySelectorAll("[data-palette]").forEach((button) => button.onclick = () => setPalette(button.dataset.palette));
-  setPalette(palette);
+  headerRight.querySelectorAll("[data-theme]").forEach((button) => button.onclick = () => setTheme(button.dataset.theme, true));
+  systemTheme.addEventListener("change", (event) => { if (followSystem) setTheme(event.matches ? "dark" : "light"); });
+  setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
 
   const hazardName = { wildfire: "Wildfire", rain: "Rain & flooding", hurricane: "Storm" };
   const uiHazard = { wildfire: "wildfire", flood: "rain", severe_storm: "hurricane" };
@@ -263,7 +290,7 @@
       const stale = entry?.expiresAt && Date.now() > Date.parse(entry.expiresAt);
       const level = entry?.level;
       const labels = { low: ["Low", "b-low"], moderate: ["Moderate", "b-mod"], high: ["High", "b-high"], critical: ["Critical", "b-ext"], extreme: ["Extreme", "b-ext"] };
-      const [label, bandClass] = labels[level] || ["No assessment", ""];
+      const [label, bandClass] = labels[level] || ["No assessment", "b-unavailable"];
       const selected = region.id === prov && hz === hazard;
       return `<li><button class="lab-region" type="button" data-region="${safe(region.id)}" data-hazard="${safe(hz)}" aria-pressed="${selected}" aria-label="${safe(region.name)}, ${safe(hazardName[hz])}, ${safe(label)}${stale ? ", stale snapshot" : ""}">
         <span class="lab-region-title"><b>${safe(region.name.split(",")[0])}</b><small>${safe(region.name.split(",")[1]?.trim() || "")}</small></span>
@@ -312,10 +339,25 @@
     byId("labCurrency").textContent = regionalEntries.length ? `${regionalEntries.length - staleCount}/${regionalEntries.length}` : "—";
     byId("labCurrencyUnit").textContent = "within validity";
     byId("labCurrencyNote").textContent = staleCount ? `${staleCount} expired · refresh before operational use` : regionalEntries.length ? "Based on assessment expiry timestamps" : "No regional snapshot index available";
-    const metadata = dataAdapter.population.metadata;
-    byId("labPopulation").textContent = metadata?.totalPopulation ? `${(metadata.totalPopulation / 1e6).toFixed(2)}M` : "—";
-    byId("labPopulationUnit").textContent = "Canada";
-    byId("labPopulationNote").textContent = metadata ? `July 1, ${metadata.year} estimate · not hazard exposure` : "Annual estimate · loading population context";
+    const populationState = dataAdapter.population;
+    const metadata = populationState.metadata;
+    const community = populationState.communities.find((item) => item.csduid === populationState.selectedId);
+    const selectedRegion = populationState.selectedId
+      ? REGIONS.find((region) => REGION_CSD[region.id] === populationState.selectedId) : null;
+    const population = populationState.selectedId ? community?.population : metadata?.totalPopulation;
+    const scope = populationState.selectedId ? selectedRegion?.name || community?.name || "Selected community" : "Canada";
+    const populationValue = Number.isFinite(population)
+      ? population >= 1e6 ? `${(population / 1e6).toFixed(2)}M` : Math.round(population).toLocaleString("en-CA")
+      : populationState.state === "loading" || populationState.state === "idle" ? "…" : "Unavailable";
+    byId("labPopulation").textContent = populationValue;
+    byId("labPopulationUnit").textContent = scope;
+    byId("labPopulationUnit").title = scope;
+    byId("labPopulationNote").textContent = Number.isFinite(population)
+      ? `July 1, ${community?.year || metadata?.year} estimate · not hazard exposure`
+      : metadata ? "Population estimate unavailable for this selection" : "Annual estimate · loading population context";
+    const levelElement = byId("areaLevel"), level = levelElement.textContent.toLowerCase();
+    // This element is observed above; avoid scheduling another render for an unchanged level.
+    if (levelElement.dataset.level !== level) levelElement.dataset.level = level;
 
     const live = dataAdapter.live;
     const currentSources = (live.manifest?.layers || []).filter((entry) => liveLayerStatus(entry.id)[0] === "live").length;

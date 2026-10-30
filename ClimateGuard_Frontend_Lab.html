@@ -2645,6 +2645,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
     </style>
       <!-- Isolated frontend experiment. The canonical dashboard is unchanged. -->
+    <script>
+      // Apply the saved appearance before the map and the page are first painted.
+      (() => {
+        let theme;
+        try { theme = localStorage.getItem("climateguard-lab-theme"); } catch {}
+        document.documentElement.dataset.theme = ["light", "dark"].includes(theme)
+          ? theme : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      })();
+    </script>
     <link rel="stylesheet" href="assets/frontend-lab.css" />
     <script src="assets/frontend-lab.js" defer></script>
   </head>
@@ -4219,9 +4228,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       const populationSearchKey = (value) =>
         value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
       function densityColour(value) {
-        if (!Number.isFinite(value)) return "#d4d8d5";
-        return value >= 1000 ? "#225ea8" : value >= 100 ? "#41b6c4" :
-          value >= 10 ? "#7fcdbb" : value >= 1 ? "#c7e9b4" : "#edf8b1";
+        const palette = mapColours();
+        if (!Number.isFinite(value)) return palette.noData;
+        return palette.density[value >= 1000 ? 4 : value >= 100 ? 3 : value >= 10 ? 2 : value >= 1 ? 1 : 0];
       }
       async function loadPopulationData() {
         const state = dataAdapter.population;
@@ -4274,7 +4283,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         L.geoJSON(state.geometry, {
           style: (feature) => ({
             fillColor: densityColour(feature.properties.density), fillOpacity: 0.66,
-            color: feature.properties.csduid === state.selectedId ? "#17251e" : "#678477",
+            color: feature.properties.csduid === state.selectedId ? mapColours().selected : mapColours().boundary,
             weight: feature.properties.csduid === state.selectedId ? 2.5 : 0.4,
           }),
           onEachFeature: (feature, layer) => {
@@ -4291,7 +4300,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         renderPopulationDashboard();
         populationOverlay?.eachLayer((collection) => collection.eachLayer((layer) => {
           const selected = layer.feature.properties.csduid === id;
-          layer.setStyle({ color: selected ? "#17251e" : "#678477", weight: selected ? 2.5 : 0.4 });
+          layer.setStyle({ color: selected ? mapColours().selected : mapColours().boundary, weight: selected ? 2.5 : 0.4 });
           if (selected && !fly) layer.openPopup();
         }));
         if (map && fly) map.flyTo([community.centre_lat, community.centre_lon],
@@ -4409,8 +4418,32 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       function fireCenter(d) {
         return move(FIRE_CENTER, (d - 3) * 1.6, 0, WIND_BEARING);
       }
-      function simpleBase() {
-        const r = L.canvas({ padding: 0.5 });
+      const MAP_COLOURS = {
+        light: {
+          neighbour: "#f1f4f6", neighbourBorder: "#cbd5dc", land: "#e2eaee", border: "#a4b8c5",
+          water: "#d9e8f1", river: "#98bfd4", boundary: "#7899a6", selected: "#193b4b", marker: "#ffffff",
+          noData: "#d4dde3", density: ["#dceff0", "#b2d9db", "#78b8be", "#3f8f9b", "#216479"],
+        },
+        dark: {
+          neighbour: "#192936", neighbourBorder: "#344b5b", land: "#263d4e", border: "#547284",
+          water: "#162839", river: "#507d98", boundary: "#5d8c98", selected: "#b0eeea", marker: "#e6f1f6",
+          noData: "#3b4b59", density: ["#25454b", "#286068", "#2e8189", "#45a5ad", "#81dad5"],
+        },
+      };
+      const mapColours = () => MAP_COLOURS[document.documentElement.dataset.theme === "dark" ? "dark" : "light"];
+      function initMapPanes(instance) {
+        const background = instance.createPane("basemapVectors");
+        background.style.zIndex = 210;
+        background.style.pointerEvents = "none";
+        const regional = instance.createPane("regionalDots");
+        regional.style.zIndex = 450;
+        // SVG paths receive clicks; empty space passes through to live layers and population boundaries.
+        regional.style.pointerEvents = "none";
+        instance._regionalRenderer = L.svg({ pane: "regionalDots" });
+      }
+      function simpleBase(instance = map) {
+        const r = instance._simpleRenderer ??= L.canvas({ padding: 0.5, pane: "basemapVectors" });
+        const palette = mapColours();
         const fc = (arr) => ({
           type: "FeatureCollection",
           features: arr.map((f) => ({
@@ -4424,9 +4457,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             renderer: r,
             interactive: false,
             style: {
-              color: "#D7DDD0",
+              color: palette.neighbourBorder,
               weight: 1,
-              fillColor: "#F3F4EE",
+              fillColor: palette.neighbour,
               fillOpacity: 1,
             },
           }),
@@ -4434,9 +4467,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             renderer: r,
             interactive: false,
             style: {
-              color: "#A9C29C",
+              color: palette.border,
               weight: 1.2,
-              fillColor: "#E6F0DE",
+              fillColor: palette.land,
               fillOpacity: 1,
             },
           }),
@@ -4444,21 +4477,21 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             renderer: r,
             interactive: false,
             style: {
-              color: "#B5D3DE",
+              color: palette.river,
               weight: 0.8,
-              fillColor: "#CFE4EB",
+              fillColor: palette.water,
               fillOpacity: 1,
             },
           }),
           L.geoJSON(fc(BASE_GEO.rivers), {
             renderer: r,
             interactive: false,
-            style: { color: "#A6CAD8", weight: 1.4, fill: false },
+            style: { color: palette.river, weight: 1.4, fill: false },
           }),
         ]);
       }
       const BASEMAPS = {
-        simple: () => simpleBase(),
+        simple: (instance = map) => simpleBase(instance),
         topo: () =>
           L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
             subdomains: "abc",
@@ -4507,6 +4540,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           preferCanvas: true,
           minZoom: 2,
         }).fitBounds(CANADA_BOUNDS);
+        initMapPanes(map);
         map.on("focus", () => map.scrollWheelZoom.enable());
         map.on("blur", () => map.scrollWheelZoom.disable());
         map.on("moveend", () => renderFacilities());
@@ -4562,8 +4596,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         populationOverlay = L.layerGroup().addTo(map);
         syncMapChrome();
       }
-      let baseBtns = null;
+      let baseBtns = null, activeBasemap = "simple";
       function setBasemap(k) {
+        activeBasemap = k;
         if (base) map.removeLayer(base);
         base = BASEMAPS[k]().addTo(map);
         base.bringToBack?.();
@@ -4582,7 +4617,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           t.on("tileload", () => ok++);
           t.on("tileerror", () => {
             bad++;
-            if (bad >= 4 && ok === 0) {
+            if (bad >= 4 && ok === 0 && activeBasemap === k && map.hasLayer(t)) {
               setBasemap("simple");
               toast(
                 "Online map tiles are blocked on this network, so the offline map is showing",
@@ -4591,13 +4626,15 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           });
         });
       }
-      function cmtyMarker(k, score, { label = true, small = false } = {}) {
+      function cmtyMarker(k, score, { label = true, small = false, renderer = map?._regionalRenderer } = {}) {
         const c = COMMUNITIES[k],
           col = band(score)[2],
           r = (small ? 4 : 6) + Math.sqrt(c.people) / (small ? 26 : 18);
         const m = L.circleMarker([c.lat, c.lng], {
+          pane: "regionalDots",
+          renderer,
           radius: r,
-          color: selected === k ? "#17251E" : "#fff",
+          color: selected === k ? mapColours().selected : mapColours().marker,
           weight: selected === k ? 4 : 2.5,
           fillColor: col,
           fillOpacity: 1,
@@ -4756,8 +4793,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             interactive: false,
           }).addTo(overlay);
           const m = L.circleMarker([r.lat, r.lon], {
+            pane: "regionalDots",
+            renderer: map._regionalRenderer,
             radius: sel ? 12 : 9,
-            color: sel ? "#17251E" : "#fff",
+            color: sel ? mapColours().selected : mapColours().marker,
             weight: sel ? 4 : 3,
             fillColor: col,
             fillOpacity: 1,
@@ -5323,11 +5362,12 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           keyboard: false,
           touchZoom: false,
         });
+        initMapPanes(m);
         m.fitBounds([
           [50.7, -120.82],
           [51.0, -119.98],
         ]);
-        BASEMAPS.simple().addTo(m);
+        m._simpleBase = BASEMAPS.simple(m).addTo(m);
         m.getContainer().classList.add("is-simple");
         m._ov = L.layerGroup().addTo(m);
         return m;
@@ -5367,7 +5407,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           fill: false,
         }).addTo(m._ov);
         Object.keys(COMMUNITIES).forEach((k) =>
-          cmtyMarker(k, scores[k], { label: false, small: true }).addTo(m._ov),
+          cmtyMarker(k, scores[k], { label: false, small: true, renderer: m._regionalRenderer }).addTo(m._ov),
         );
       }
 
@@ -5535,13 +5575,15 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         if (!focus || focus.lat == null) return;
         const col = (LEVEL_STYLE[focus.level] || LEVEL_STYLE.low)[1];
         (focus.communities || []).forEach((c) =>
-          L.circleMarker([c.lat, c.lon], { radius: 6, color: "#fff", weight: 2, fillColor: col, fillOpacity: 1 })
+          L.circleMarker([c.lat, c.lon], { pane: "regionalDots", renderer: map._regionalRenderer, radius: 6, color: mapColours().marker, weight: 2, fillColor: col, fillOpacity: 1 })
             .bindTooltip(`${escapeHTML(c.name)} · ${c.score}`, { className: "tip" })
             .addTo(focusLayer),
         );
         L.circleMarker([focus.lat, focus.lon], {
+          pane: "regionalDots",
+          renderer: map._regionalRenderer,
           radius: 17,
-          color: "#17251E",
+          color: mapColours().selected,
           weight: 3,
           fill: false,
           interactive: false,
@@ -6330,8 +6372,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         }
         const col = (LEVEL_STYLE[a.level] || LEVEL_STYLE.low)[1];
         L.circleMarker([region.lat, region.lon], {
+          pane: "regionalDots",
+          renderer: map._regionalRenderer,
           radius: 11,
-          color: "#17251E",
+          color: mapColours().selected,
           weight: 3,
           fillColor: col,
           fillOpacity: 1,
