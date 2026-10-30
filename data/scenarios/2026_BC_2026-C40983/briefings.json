@@ -1,0 +1,821 @@
+{
+ "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
+ "fireId": "2026_BC_2026-C40983",
+ "updatedAt": "2026-10-30T02:58:01Z",
+ "source": "data/pipeline/live/briefings.json",
+ "briefings": [
+  {
+   "key": "replay/2026_BC_2026-C40983/10",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 10,
+   "score": 51,
+   "level": "high",
+   "asOf": "2026-07-23T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "79e3ab54491c8145",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "ffe665ba-e714-59d2-9103-a2e9c57f43ac",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 1,684 ha [F2]. The approximate edge of the fire is 17.3 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 51 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare reception centres and transport",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Identify and prepare support for vulnerable people",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for group lodging for about 141 people",
+      "rationale": "This is an assumption based on about 20% of the 707 residents of Clinton leaving [F10, F16]."
+     },
+     {
+      "priority": 4,
+      "action": "Coordinate with potential host communities such as Kamloops, Williams Lake, or Whistler",
+      "rationale": "These communities have 10,000+ residents and are between 30-250 km away [F15]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://climate-and-emergency-response-hub.github.io/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/?p=1117011"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located about 17.3 km from Clinton.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Prepare your emergency kit"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe à environ 17,3 km de Clinton.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Préparer votre trousse d'urgence"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Jul 23, 2026, 1 PM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 1,684 ha; its approximate edge is 17.3 km from Clinton, BC.",
+    "Replayed wildfire risk score: 51 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 17.3 km (30.6 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 50 fires (8.5 points).",
+    "Score factor - Area of uncontained fires within 150 km: 1684 ha (6.5 points).",
+    "Smoke: AQHI+ 10 (high health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: none.",
+    "Reported on 2026-07-20: SLRD evacuation order for properties in the Pear Lake area.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/12",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 12,
+   "score": 54,
+   "level": "high",
+   "asOf": "2026-07-24T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "8f05a9f17cb67a13",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "db846e2c-d195-58d5-a231-c79b413cfe5a",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 4,299 ha [F2]. Its approximate edge is 15.9 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 54 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare to act by coordinating transport and support for vulnerable people",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare reception centres to accommodate residents",
+      "rationale": "The risk level is high [F3] and the Village of Clinton has about 707 residents [F11]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan group lodging for about 141 people",
+      "rationale": "This is an assumption based on 20% of evacuees if all 707 residents leave [F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Monitor air quality and health risks",
+      "rationale": "Smoke is reported as AQHI+ 10+ at the Kamloops Federal Building [F7]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/2026/07/25/clinton-fire-department-bcws-working-to-keep-remaining-community-structures-from-burning/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke may cause a very high health risk.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow directions from local authorities"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée peut présenter un risque très élevé pour la santé.",
+     "whatToDo": [
+      "Suivez les nouvelles locales pour les mises à jour",
+      "Suivez les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Jul 24, 2026, 1 PM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 4,299 ha; its approximate edge is 15.9 km from Clinton, BC.",
+    "Replayed wildfire risk score: 54 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 15.9 km (33.5 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 50 fires (8.5 points).",
+    "Score factor - Area of uncontained fires within 150 km: 4299 ha (7.3 points).",
+    "Smoke: AQHI+ 10+ (very high health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km).",
+    "Reported on 2026-07-24: Entire Village of Clinton evacuated.",
+    "Reported on 2026-07-24: Reception centre for evacuees set up in Kamloops (McArthur Island Sport and Events Centre).",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/28",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 28,
+   "score": 77,
+   "level": "critical",
+   "asOf": "2026-08-01T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "134143ee53144e01",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "12f06843-8bab-5bce-9b60-a399d307c6e8",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 103,462 ha [F2]. Its approximate edge is 1.5 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 77 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate now with the local emergency operations centre",
+      "rationale": "The risk score is level critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare transport and support for vulnerable people",
+      "rationale": "The fire edge is 1.5 km from Clinton [F2]."
+     },
+     {
+      "priority": 3,
+      "action": "Organize reception centres",
+      "rationale": "The fire is out of control and near Clinton [F2]."
+     },
+     {
+      "priority": 4,
+      "action": "Plan group lodging for about 141 people",
+      "rationale": "This is an assumption based on about 20% of the 707 residents of Clinton [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/2026/07/25/clinton-fire-department-bcws-working-to-keep-remaining-community-structures-from-burning/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke is causing a very high health risk in the region.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow directions from local officials"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée cause un risque très élevé pour la santé dans la région.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Suivre les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 1, 2026, 1 PM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 103,462 ha (estimated between agency reports); its approximate edge is 1.5 km from Clinton, BC.",
+    "Replayed wildfire risk score: 77 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 1.5 km (39.6 points).",
+    "Score factor - Uncontained fire edge within 5 km: 1.5 km (14.0 points).",
+    "Score factor - Area of uncontained fires within 150 km: 103462 ha (10.0 points).",
+    "Smoke: AQHI+ 10+ (very high health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km); ESS Reception Centre (Prince George), Prince George (324 km).",
+    "Reported on 2026-07-24: Entire Village of Clinton evacuated.",
+    "Reported on 2026-07-24: Reception centre for evacuees set up in Kamloops (McArthur Island Sport and Events Centre).",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/56",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 56,
+   "score": 84,
+   "level": "critical",
+   "asOf": "2026-08-15T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "d36cad03efe47aca",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "b8c2499d-adcd-5986-8e0f-28d4dc78be6e",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 159,049 ha [F2]. The approximate edge of the fire is 0.0 km from Clinton, BC [F2, F4]. The risk score is 84 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate immediately with the local emergency operations centre",
+      "rationale": "The risk level is critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare transport and reception centres for vulnerable people",
+      "rationale": "The risk level is critical [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan group lodging for about 141 people",
+      "rationale": "This is an assumption based on 20% of the 707 residents of Clinton [F11, F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Monitor air quality and health risks",
+      "rationale": "Smoke has reached AQHI+ 7 at the Kamloops Federal Building [F7]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.ctvnews.ca/vancouver/article/entire-bc-village-ordered-to-evacuate-due-to-encroaching-wildfire/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke is causing a high health risk in the region.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow directions from local officials"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée cause un risque élevé pour la santé dans la région.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Suivre les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 15, 2026, 1 PM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 159,049 ha (estimated between agency reports); its approximate edge is 0.0 km from Clinton, BC.",
+    "Replayed wildfire risk score: 84 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (40.0 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.0 km (20.0 points).",
+    "Score factor - Area of uncontained fires within 150 km: 159049 ha (10.0 points).",
+    "Smoke: AQHI+ 7 (high health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km); ESS Reception Centre (Prince George), Prince George (324 km).",
+    "Reported on 2026-07-24: Reception centre for evacuees set up in Kamloops (McArthur Island Sport and Events Centre).",
+    "Reported on 2026-08-15: Clinton evacuation order downgraded to an alert.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/73",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 73,
+   "score": 84,
+   "level": "critical",
+   "asOf": "2026-08-24T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "bfd95c6b4cd272c2",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "302e2775-83b2-59c3-9f36-1b8dc418a874",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 164,760 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 84 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate immediately with the local emergency operations centre",
+      "rationale": "The risk score is level critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare transport and reception centres for residents",
+      "rationale": "The fire edge is 0.0 km from Clinton [F2]."
+     },
+     {
+      "priority": 3,
+      "action": "Identify support for vulnerable people",
+      "rationale": "The risk score is level critical [F3]."
+     },
+     {
+      "priority": 4,
+      "action": "Plan for group lodging for about 141 people",
+      "rationale": "This is an assumption based on about 20% of the 707 residents leaving [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/2026/08/25/village-of-clinton-partially-reduces-evacuation-alert-area-in-response-to-pear-lake-wildfire/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located near Clinton.",
+     "whatToDo": [
+      "Monitor local news",
+      "Be ready to leave if told to do so"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton.",
+     "whatToDo": [
+      "Surveillez les nouvelles locales",
+      "Soyez prêt à partir si on vous le demande"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 24, 2026, 1 AM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 164,760 ha; its approximate edge is 0.0 km from Clinton, BC.",
+    "Replayed wildfire risk score: 84 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (40.0 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.0 km (20.0 points).",
+    "Score factor - Area of uncontained fires within 150 km: 164760 ha (10.0 points).",
+    "Smoke: AQHI+ 2 (low health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km); ESS Reception Centre (Prince George), Prince George (324 km).",
+    "Reported on 2026-08-15: Clinton evacuation order downgraded to an alert.",
+    "Reported on 2026-08-23: TNRD gives the all clear to nearly 1,243 properties.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/99",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 99,
+   "score": 57,
+   "level": "high",
+   "asOf": "2026-09-06T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "dc4ed27d2d2db5ac",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "78b44881-e46a-5c61-ab7d-2a3dc20557e8",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is being held and covers about 166,132 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 57 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare reception centres and transport",
+      "rationale": "The risk level is high, and the fire edge is 0.0 km from Clinton [F2, F3, F4]."
+     },
+     {
+      "priority": 2,
+      "action": "Identify and prepare support for vulnerable people",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for group lodging for about 141 people",
+      "rationale": "This is an assumption based on about 20% of the 707 residents if all leave [F11, F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Coordinate with potential host communities",
+      "rationale": "Kamloops, Williams Lake, and Whistler are possible host communities within 30-250 km [F16]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/2026/08/25/village-of-clinton-partially-reduces-evacuation-alert-area-in-response-to-pear-lake-wildfire/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is being held and is located near Clinton.",
+     "whatToDo": [
+      "Stay prepared",
+      "Monitor local updates"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est maîtrisé et se situe près de Clinton.",
+     "whatToDo": [
+      "Restez prêt",
+      "Surveillez les mises à jour locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Sep 6, 2026, 1 AM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): being held, about 166,132 ha; its approximate edge is 0.0 km from Clinton, BC.",
+    "Replayed wildfire risk score: 57 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (24.0 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.0 km (12.0 points).",
+    "Score factor - Area of uncontained fires within 150 km: 166132 ha (10.0 points).",
+    "Smoke: AQHI+ 1 (low health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km); ESS Reception Centre (Prince George), Prince George (324 km).",
+    "Reported on 2026-08-15: Clinton evacuation order downgraded to an alert.",
+    "Reported on 2026-08-23: TNRD gives the all clear to nearly 1,243 properties.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2026_BC_2026-C40983/111",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 111,
+   "score": 18,
+   "level": "low",
+   "asOf": "2026-09-12T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "bb809aef36447bd5",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "b4718f14-ea6a-5671-8992-612c583ad8f6",
+    "title": "Preparedness Briefing: Clinton, BC",
+    "situation": "The Pear Lake wildfire is under control and covers about 166,132 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 18 out of 100, which is a low level [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Stay ready and monitor the situation",
+      "rationale": "The risk score is low [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Monitor air quality reports",
+      "rationale": "The AQHI+ is 2 at the Kamloops Federal Building, 100 km away [F7]."
+     },
+     {
+      "priority": 3,
+      "action": "Maintain awareness of regional reception centres",
+      "rationale": "Centres are open in Kamloops and Prince George [F8]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://cfjctoday.com/2026/07/24/village-of-clinton-ordered-evacuated-as-pear-lake-fire-grows-eastward/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/2026/08/25/village-of-clinton-partially-reduces-evacuation-alert-area-in-response-to-pear-lake-wildfire/"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Update for Clinton",
+     "body": "The Pear Lake wildfire is under control. The risk level is currently low.",
+     "whatToDo": [
+      "Stay ready",
+      "Monitor local updates"
+     ]
+    },
+    "fr": {
+     "headline": "Mise à jour sur les feux de forêt pour Clinton",
+     "body": "L'incendie de Pear Lake est sous contrôle. Le niveau de risque est actuellement faible.",
+     "whatToDo": [
+      "Restez prêts",
+      "Suivez les mises à jour locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Sep 12, 2026, 1 AM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): under control, about 166,132 ha; its approximate edge is 0.0 km from Clinton, BC.",
+    "Replayed wildfire risk score: 18 out of 100, level low (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (10.0 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 50 fires (8.5 points).",
+    "Score factor - Uncontained fire edge within 5 km: 5 km (0.0 points).",
+    "Smoke: AQHI+ 2 (low health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: McArthur Island Sport and Event Centre, Kamloops (96 km); ESS Reception Centre (Prince George), Prince George (324 km).",
+    "Reported on 2026-08-15: Clinton evacuation order downgraded to an alert.",
+    "Reported on 2026-08-23: TNRD gives the all clear to nearly 1,243 properties.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  }
+ ]
+}
