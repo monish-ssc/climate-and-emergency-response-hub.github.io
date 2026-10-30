@@ -56,8 +56,10 @@ jobs:
         timeout-minutes: 15
         run: bash .github/scripts/start_briefing_model.sh
 
+      # About 6 minutes per answer on CPU. The time budget (3 h 10 min) stops new calls well before the
+      # job limit, so the briefings written so far are always saved and committed.
       - name: Write the replay briefings
-        run: python data/build_briefings.py --only replay --max-calls 60
+        run: python data/build_briefings.py --only replay --max-calls 60 --time-budget 11400
 
       - name: Save the accepted AI drafts
         run: python data/pin_replay_briefings.py --file data/pipeline/live/briefings.json

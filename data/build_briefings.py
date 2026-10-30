@@ -464,6 +464,29 @@ STRONG_ACTION = re.compile(
     r"|\bevacuat(e|ing|ion order)\b|\brelocat(e|ing)\b|\bprepare\b[^.]{0,30}\breception centres?\b",
     re.I)
 
+# Small open models cite as [2], [Fact 2], (F2) or [F2; F5]. Write them all as [F2] before the checks.
+# Bare numbers count as citations only in square brackets, so "(10)" in a sentence stays a number.
+_CITE_TOKEN = r"(?:(?:facts?|f)\s*\.?\s*)?\d{1,2}"
+_CITE_LIST = rf"{_CITE_TOKEN}(?:\s*(?:,|;|and|&)\s*{_CITE_TOKEN})*"
+CITE_SQUARE = re.compile(rf"[\[【]\s*({_CITE_LIST})\s*[\]】]", re.I)
+CITE_ROUND = re.compile(rf"\(\s*((?:facts?|f)\s*\.?\s*\d{{1,2}}(?:\s*(?:,|;|and|&)\s*{_CITE_TOKEN})*)\s*\)", re.I)
+
+
+def _as_cite(m):
+    return "[" + ", ".join(f"F{d}" for d in re.findall(r"\d{1,2}", m.group(1))) + "]"
+
+
+def normalize_citations(answer):
+    fix = lambda t: CITE_ROUND.sub(_as_cite, CITE_SQUARE.sub(_as_cite, t)) if isinstance(t, str) else t  # noqa: E731
+    if isinstance(answer, dict):
+        answer["situation"] = fix(answer.get("situation"))
+        for a in answer.get("actions") or []:
+            if isinstance(a, dict):
+                for k in ("action", "rationale"):
+                    if k in a:
+                        a[k] = fix(a[k])
+    return answer
+
 
 def check(answer, facts, level=None):
     """Problems with an answer, or [] if it is usable."""
@@ -505,6 +528,12 @@ def check(answer, facts, level=None):
         problems.append("numbers not in the facts: " + ", ".join(invented[:8]))
     if not re.search(r"\[F\d+", answer["situation"]):
         problems.append("the situation must cite facts like [F2]")
+    cited_text = " ".join([answer["situation"]] + [f"{a.get('action', '')} {a.get('rationale', '')}"
+                                                   for a in acts if isinstance(a, dict)])
+    cited = {int(i) for g in cites.findall(cited_text) for i in re.findall(r"F(\d+)", g)}
+    missing = sorted(i for i in cited if not 1 <= i <= len(facts.items))
+    if missing:
+        problems.append("cites facts that do not exist: " + ", ".join(f"F{i}" for i in missing))
     return problems
 
 
@@ -748,7 +777,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
                 answer = call_model(token, models[0], s["facts"].text(),
                                     None if attempt == 0 else "Your previous answer had these problems: "
                                     + "; ".join(problems) + ". Fix them and reply with the full JSON again.")
-                problems = check(answer, s["facts"], s["level"])
+                problems = check(normalize_citations(answer), s["facts"], s["level"])
             except urllib.error.HTTPError as e:
                 detail = e.read().decode("utf-8", "replace")[:200]
                 print(f"  {s['key']}: {models[0]} HTTP {e.code} {detail}")
@@ -782,6 +811,8 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
             failed += 1
             results[s["key"]] = {"problems": problems}
             print(f"  --  {s['key']}: {'; '.join(problems)}")
+            if isinstance(answer, dict) and isinstance(answer.get("situation"), str):
+                print(f"      situation it wrote: {answer['situation'][:200]!r}")  # to see what the model got wrong
         time.sleep(1)
 
     out = []

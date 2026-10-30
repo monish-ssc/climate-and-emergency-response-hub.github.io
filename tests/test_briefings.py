@@ -147,6 +147,17 @@ class CheckTest(unittest.TestCase):
         a["publicAlert"]["fr"]["body"] = "Environ 2 500 personnes."
         self.assertTrue(any("2500" in p for p in bb.check(a, f)))
 
+    def test_small_model_citation_styles_are_normalized(self):
+        a = bb.normalize_citations(answer(situation="Risk score is 51 out of 100 [2]. About 707 people live there (F3)."))
+        self.assertEqual(a["situation"], "Risk score is 51 out of 100 [F2]. About 707 people live there [F3].")
+        self.assertEqual(bb.check(a, facts()), [])
+        kept = bb.normalize_citations(answer(situation="Fires (10) burned in [2023] [F2]."))
+        self.assertEqual(kept["situation"], "Fires (10) burned in [2023] [F2].")
+
+    def test_citing_a_fact_that_does_not_exist_is_caught(self):
+        bad = answer(situation="Clinton's wildfire risk score is 51 out of 100 [F9].")
+        self.assertTrue(any("do not exist: F9" in p for p in bb.check(bad, facts())))
+
     def test_missing_citation_is_caught(self):
         self.assertTrue(any("cite" in p for p in bb.check(answer(situation="Risk is high."), facts())))
 
