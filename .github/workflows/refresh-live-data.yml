@@ -104,7 +104,7 @@ jobs:
         run: python data/build_risk_index.py
 
       # AI briefings with Gemma 4 on OpenRouter (key in the OPENROUTER_API_KEY secret). Reuses the published
-      # briefings and rewrites only what changed, one model call per refresh; saved replay briefings
+      # briefings and rewrites only what changed, up to three model calls per refresh; saved replay briefings
       # (data/scenarios/<fireId>/briefings.json) need no call. Without the key, or if an answer fails the
       # checks, template briefings from the same facts are published instead.
       - name: Write AI briefings
@@ -113,7 +113,7 @@ jobs:
         env:
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
           BRIEFING_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          BRIEFING_MAX_CALLS: "1"
+          BRIEFING_MAX_CALLS: "3"
           BRIEFING_TIME_BUDGET: "300"
         run: python data/build_briefings.py
 
