@@ -34,6 +34,8 @@ RADIUS_KM = 50
 MIN_YEARS = 5  # fewer years of history than this -> no percentile / flood peak
 FLOOD_MIN_YEARS = 10  # a station needs this many years of monthly history before it can be called "flood"
 LOW_FLOW_RATIO = 0.25  # flow below this share of the typical yearly peak is not flood-relevant, whatever its rank
+CRITICAL_PEAK_RATIO = 1.5  # without an alert or a rising river, "critical" needs a flow this far above the typical peak
+CAPPED_SCORE = 74  # top of "high": where a score stops when it has no sign of escalation
 FLAT_MIN_READINGS = 6  # this many identical recent flow readings = placeholder/estimated value, not a measurement
 
 # Fallback centres for regions without lat/lon in scenarios.json (new regions should set lat/lon there).
@@ -362,6 +364,25 @@ def score_region(conds, alerts):
         ),
     ]
     score = round(sum(f["contribution"] for f in factors))
+    # A station at its typical yearly peak (a ~2-year flow) with a high rank for the month already reaches
+    # ~75. "Critical" also needs a sign of escalation: an official alert, a flow well above the typical peak,
+    # or a station at or above its peak that is still rising. Otherwise the score stops at the top of "high".
+    escalating = bool(alerts) or (prox is not None and prox >= CRITICAL_PEAK_RATIO) or any(
+        c.get("trend") == "rising" and ((c.get("pct_of_flood_peak") or 0) >= 100 or c.get("status") == "flood")
+        for c in conds
+    )
+    if score >= 75 and not escalating:
+        factors.append(factor(
+            "critical_needs_escalation",
+            "Critical needs an alert, a much larger flow or a rising river",
+            score,
+            "points before cap",
+            0,
+            f"Capped at {CAPPED_SCORE} (high): no rain, flood or storm-surge alert, flow below "
+            f"{CRITICAL_PEAK_RATIO:g}x the typical yearly peak, and no station at its peak still rising. "
+            f"Uncapped score: {score}.",
+        ))
+        score = CAPPED_SCORE
     level = (
         "low"
         if score < 25
