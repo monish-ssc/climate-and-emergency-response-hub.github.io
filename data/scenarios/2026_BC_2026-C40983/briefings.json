@@ -1,5 +1,5 @@
 {
- "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
+ "note": "Saved AI briefings for this replay (pin_replay_briefings.py), edited and reviewed by the team (editedByTeam). Used as they are by build_briefings.py.",
  "fireId": "2026_BC_2026-C40983",
  "updatedAt": "2026-10-30T03:02:15Z",
  "source": "data/pipeline/live/briefings.json",
@@ -23,8 +23,8 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "451e6ce3-b8fb-5ad1-b848-0cbcafd293e0",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is out of control and covers about 44 ha [F2]. Its approximate edge is 19.2 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 37 out of 100, which is level moderate [F3].",
+    "title": "Moderate wildfire risk (Jul 20): evacuation order for properties in the Pear Lake area",
+    "situation": "The Pear Lake wildfire is out of control at about 44 ha (estimated between agency reports); its approximate edge is 19.2 km from Clinton, BC [F2]. The SLRD has issued an evacuation order for properties in the Pear Lake area [F9]. The replayed wildfire risk score is 37 out of 100, level moderate [F3].",
     "actions": [
      {
       "priority": 1,
@@ -79,19 +79,19 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is out of control and is located approximately 19.2 km from Clinton.",
+     "headline": "Evacuation order for the Pear Lake area",
+     "body": "An evacuation order is in place for properties in the Pear Lake area. The Pear Lake wildfire is out of control about 19.2 km from Clinton.",
      "whatToDo": [
-      "Stay informed via official channels",
-      "Be prepared to follow directions from local authorities"
+      "If your property is in the Pear Lake area, follow the evacuation order.",
+      "Everyone else: stay informed through official channels and keep an emergency kit ready."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe à environ 19.2 km de Clinton.",
+     "headline": "Ordre d'évacuation pour le secteur de Pear Lake",
+     "body": "Un ordre d'évacuation est en vigueur pour les propriétés du secteur de Pear Lake. L'incendie de forêt de Pear Lake est hors de contrôle à environ 19,2 km de Clinton.",
      "whatToDo": [
-      "Restez informé via les canaux officiels",
-      "Soyez prêt à suivre les directives des autorités locales"
+      "Si votre propriété se trouve dans le secteur de Pear Lake, suivez l'ordre d'évacuation.",
+      "Tous les autres : restez informés par les canaux officiels et gardez une trousse d'urgence prête."
      ]
     }
    },
@@ -113,7 +113,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/10",
@@ -134,7 +135,7 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "ffe665ba-e714-59d2-9103-a2e9c57f43ac",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "title": "High wildfire risk (Jul 23): prepare for a possible evacuation of Clinton",
     "situation": "The Pear Lake wildfire is out of control and covers about 1,684 ha [F2]. The approximate edge of the fire is 17.3 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 51 out of 100, which is level high [F3].",
     "actions": [
      {
@@ -229,7 +230,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/12",
@@ -250,28 +252,33 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "db846e2c-d195-58d5-a231-c79b413cfe5a",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is out of control and covers about 4,299 ha [F2]. Its approximate edge is 15.9 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 54 out of 100, which is level high [F3].",
+    "title": "High wildfire risk (Jul 24): Clinton evacuated, reception centre open in Kamloops",
+    "situation": "The Pear Lake wildfire is out of control at about 4,299 ha; its approximate edge is 15.9 km from Clinton, BC [F2]. The entire Village of Clinton was evacuated on Jul 24 [F9], and a reception centre for evacuees is open at the McArthur Island Sport and Event Centre in Kamloops, 96 km away [F8, F10]. The replayed wildfire risk score is 54 out of 100, level high [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Prepare to act by coordinating transport and support for vulnerable people",
-      "rationale": "The risk level is high [F3]."
+      "action": "Support evacuees at the McArthur Island Sport and Event Centre in Kamloops: registration, lodging and transport.",
+      "rationale": "Clinton was evacuated and this reception centre is open [F9, F10]."
      },
      {
       "priority": 2,
-      "action": "Prepare reception centres to accommodate residents",
-      "rationale": "The risk level is high [F3] and the Village of Clinton has about 707 residents [F11]."
+      "action": "Plan group lodging for about 141 evacuees and confirm the Kamloops centre can take them.",
+      "rationale": "Planning assumption: about 20% of the 707 residents need group lodging [F17]."
      },
      {
       "priority": 3,
-      "action": "Plan group lodging for about 141 people",
-      "rationale": "This is an assumption based on 20% of evacuees if all 707 residents leave [F17]."
+      "action": "Arrange transport and support for vulnerable residents and those without a vehicle.",
+      "rationale": "The whole village was evacuated [F9]."
      },
      {
       "priority": 4,
-      "action": "Monitor air quality and health risks",
-      "rationale": "Smoke is reported as AQHI+ 10+ at the Kamloops Federal Building [F7]."
+      "action": "Confirm patient-transfer plans with Ashcroft Hospital and Community Health Care Centre.",
+      "rationale": "It is the nearest hospital in the inventory [F15]."
+     },
+     {
+      "priority": 5,
+      "action": "Advise evacuees in Kamloops about the very high smoke risk.",
+      "rationale": "Smoke at the Kamloops Federal Building is AQHI+ 10+, a very high health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -311,19 +318,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke may cause a very high health risk.",
+     "headline": "Clinton evacuated: reception centre open in Kamloops",
+     "body": "The entire Village of Clinton has been evacuated because of the Pear Lake wildfire. A reception centre for evacuees is open at the McArthur Island Sport and Event Centre in Kamloops. Smoke in Kamloops is a very high health risk. Follow directions from local authorities.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow directions from local authorities"
+      "Register at the McArthur Island Sport and Event Centre in Kamloops if you need lodging or help.",
+      "Do not return until officials say it is safe.",
+      "Limit time outdoors in the smoke and keep your medications and documents with you."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée peut présenter un risque très élevé pour la santé.",
+     "headline": "Clinton évacué : centre d'accueil ouvert à Kamloops",
+     "body": "Tout le village de Clinton a été évacué en raison de l'incendie de forêt de Pear Lake. Un centre d'accueil pour les personnes évacuées est ouvert au McArthur Island Sport and Event Centre, à Kamloops. La fumée à Kamloops présente un risque très élevé pour la santé. Suivez les directives des autorités locales.",
      "whatToDo": [
-      "Suivez les nouvelles locales pour les mises à jour",
-      "Suivez les directives des autorités locales"
+      "Inscrivez-vous au McArthur Island Sport and Event Centre, à Kamloops, si vous avez besoin d'hébergement ou d'aide.",
+      "Ne revenez pas avant que les autorités le permettent.",
+      "Limitez le temps passé dehors dans la fumée et gardez vos médicaments et vos documents avec vous."
      ]
     }
    },
@@ -346,7 +355,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/28",
@@ -367,28 +377,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "12f06843-8bab-5bce-9b60-a399d307c6e8",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is out of control and covers about 103,462 ha [F2]. Its approximate edge is 1.5 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 77 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk (Aug 1): fire edge 1.5 km from evacuated Clinton",
+    "situation": "The Pear Lake wildfire is out of control at about 103,462 ha (estimated between agency reports); its approximate edge is 1.5 km from Clinton, BC [F2]. Clinton was evacuated on Jul 24 [F9], and reception centres are open in Kamloops and Prince George [F8]. The replayed wildfire risk score is 77 out of 100, level critical [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Coordinate now with the local emergency operations centre",
-      "rationale": "The risk score is level critical [F3]."
+      "action": "Coordinate the response with the local emergency operations centre.",
+      "rationale": "The score is critical [F3]."
      },
      {
       "priority": 2,
-      "action": "Prepare transport and support for vulnerable people",
-      "rationale": "The fire edge is 1.5 km from Clinton [F2]."
+      "action": "Keep the McArthur Island Sport and Event Centre (Kamloops) and the ESS Reception Centre (Prince George) staffed for evacuees.",
+      "rationale": "Both are open [F8]."
      },
      {
       "priority": 3,
-      "action": "Organize reception centres",
-      "rationale": "The fire is out of control and near Clinton [F2]."
+      "action": "Support evacuees who need transport, lodging or medical care.",
+      "rationale": "Clinton was evacuated [F9]."
      },
      {
       "priority": 4,
-      "action": "Plan group lodging for about 141 people",
-      "rationale": "This is an assumption based on about 20% of the 707 residents of Clinton [F17]."
+      "action": "Plan group lodging for about 141 evacuees.",
+      "rationale": "Planning assumption: about 20% of the 707 residents need group lodging [F17]."
      }
     ],
     "confidence": "high",
@@ -428,19 +438,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke is causing a very high health risk in the region.",
+     "headline": "Clinton remains evacuated: fire close to the village",
+     "body": "Clinton has been evacuated, and the Pear Lake wildfire is out of control close to the village. Reception centres are open in Kamloops and Prince George. Smoke is a very high health risk in the region.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow directions from local officials"
+      "Register at a reception centre if you need lodging or help.",
+      "Do not return until officials say it is safe.",
+      "Follow directions from local officials."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée cause un risque très élevé pour la santé dans la région.",
+     "headline": "Clinton toujours évacué : feu près du village",
+     "body": "Clinton a été évacué, et l'incendie de forêt de Pear Lake est hors de contrôle près du village. Des centres d'accueil sont ouverts à Kamloops et à Prince George. La fumée présente un risque très élevé pour la santé dans la région.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Suivre les directives des autorités locales"
+      "Inscrivez-vous à un centre d'accueil si vous avez besoin d'hébergement ou d'aide.",
+      "Ne revenez pas avant que les autorités le permettent.",
+      "Suivez les directives des autorités locales."
      ]
     }
    },
@@ -463,7 +475,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/56",
@@ -484,28 +497,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "b8c2499d-adcd-5986-8e0f-28d4dc78be6e",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is out of control and covers about 159,049 ha [F2]. The approximate edge of the fire is 0.0 km from Clinton, BC [F2, F4]. The risk score is 84 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk (Aug 15): Clinton evacuation order downgraded to an alert",
+    "situation": "The Pear Lake wildfire is out of control at about 159,049 ha (estimated between agency reports); its approximate edge reaches Clinton, BC [F2]. On Aug 15, the Clinton evacuation order was downgraded to an alert [F10]; reception centres are open in Kamloops and Prince George [F8]. The replayed wildfire risk score is 84 out of 100, level critical [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Coordinate immediately with the local emergency operations centre",
-      "rationale": "The risk level is critical [F3]."
+      "action": "Coordinate the response with the local emergency operations centre.",
+      "rationale": "The score is critical [F3]."
      },
      {
       "priority": 2,
-      "action": "Prepare transport and reception centres for vulnerable people",
-      "rationale": "The risk level is critical [F3]."
+      "action": "Plan the return of residents with local officials, and keep them ready to leave again.",
+      "rationale": "The order was downgraded to an alert, and the fire's edge reaches Clinton [F2, F10]."
      },
      {
       "priority": 3,
-      "action": "Plan group lodging for about 141 people",
-      "rationale": "This is an assumption based on 20% of the 707 residents of Clinton [F11, F17]."
+      "action": "Keep the reception centres in Kamloops and Prince George open for residents who cannot return yet.",
+      "rationale": "Both are open [F8]."
      },
      {
       "priority": 4,
-      "action": "Monitor air quality and health risks",
-      "rationale": "Smoke has reached AQHI+ 7 at the Kamloops Federal Building [F7]."
+      "action": "Advise residents about smoke when they return.",
+      "rationale": "Smoke at the Kamloops Federal Building is AQHI+ 7, a high health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -545,19 +558,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is out of control and is located near Clinton. Smoke is causing a high health risk in the region.",
+     "headline": "Clinton evacuation order downgraded to an alert",
+     "body": "The evacuation order for Clinton has been downgraded to an alert. The Pear Lake wildfire is still out of control near the village, so be ready to leave again on short notice.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow directions from local officials"
+      "Return only when officials say it is safe.",
+      "Be ready to leave again if the alert becomes an order.",
+      "Follow directions from local officials."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton. La fumée cause un risque élevé pour la santé dans la région.",
+     "headline": "L'ordre d'évacuation de Clinton est ramené à une alerte",
+     "body": "L'ordre d'évacuation de Clinton a été ramené à une alerte. L'incendie de forêt de Pear Lake est toujours hors de contrôle près du village; soyez prêts à repartir rapidement.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Suivre les directives des autorités locales"
+      "Ne revenez que lorsque les autorités le permettent.",
+      "Soyez prêts à repartir si l'alerte redevient un ordre.",
+      "Suivez les directives des autorités locales."
      ]
     }
    },
@@ -580,7 +595,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/73",
@@ -601,28 +617,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "302e2775-83b2-59c3-9f36-1b8dc418a874",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is out of control and covers about 164,760 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 84 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk score (Aug 24): all-clear given to nearly 1,243 properties",
+    "situation": "The Pear Lake wildfire is out of control at about 164,760 ha; its approximate edge reaches Clinton, BC [F2]. On Aug 23, the TNRD gave the all-clear to nearly 1,243 properties [F10], after the Clinton evacuation order was downgraded to an alert on Aug 15 [F9]. The replayed wildfire risk score is still 84 out of 100, level critical, because the fire's edge reaches the village [F2, F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Coordinate immediately with the local emergency operations centre",
-      "rationale": "The risk score is level critical [F3]."
+      "action": "Coordinate the return with the local emergency operations centre.",
+      "rationale": "The score is critical [F3]."
      },
      {
       "priority": 2,
-      "action": "Prepare transport and reception centres for residents",
-      "rationale": "The fire edge is 0.0 km from Clinton [F2]."
+      "action": "Support residents returning home: utilities, health services and recovery information.",
+      "rationale": "The all-clear was given to nearly 1,243 properties [F10]."
      },
      {
       "priority": 3,
-      "action": "Identify support for vulnerable people",
-      "rationale": "The risk score is level critical [F3]."
+      "action": "Keep the reception centres in Kamloops and Prince George open for anyone who cannot return yet.",
+      "rationale": "Both are open [F8]."
      },
      {
       "priority": 4,
-      "action": "Plan for group lodging for about 141 people",
-      "rationale": "This is an assumption based on about 20% of the 707 residents leaving [F17]."
+      "action": "Check on vulnerable residents after they return.",
+      "rationale": "The fire's edge still reaches Clinton [F2]."
      }
     ],
     "confidence": "high",
@@ -662,19 +678,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is out of control and is located near Clinton.",
+     "headline": "All-clear given to many properties near Clinton",
+     "body": "Officials have given the all-clear to nearly 1,243 properties. The Pear Lake wildfire is still out of control near Clinton, so stay alert.",
      "whatToDo": [
-      "Monitor local news",
-      "Be ready to leave if told to do so"
+      "Return only when officials say it is safe for your property.",
+      "Check official updates before you travel.",
+      "Be ready to leave again if told to do so."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe près de Clinton.",
+     "headline": "Fin de l'évacuation pour de nombreuses propriétés près de Clinton",
+     "body": "Les autorités ont levé l'évacuation pour près de 1 243 propriétés. L'incendie de forêt de Pear Lake est toujours hors de contrôle près de Clinton; restez vigilants.",
      "whatToDo": [
-      "Surveillez les nouvelles locales",
-      "Soyez prêt à partir si on vous le demande"
+      "Ne revenez que lorsque les autorités le permettent pour votre propriété.",
+      "Consultez les mises à jour officielles avant de vous déplacer.",
+      "Soyez prêts à repartir si on vous le demande."
      ]
     }
    },
@@ -697,7 +715,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/99",
@@ -718,28 +737,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "78b44881-e46a-5c61-ab7d-2a3dc20557e8",
-    "title": "Preparedness Briefing: Pear Lake Wildfire",
-    "situation": "The Pear Lake wildfire is being held and covers about 166,132 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 57 out of 100, which is level high [F3].",
+    "title": "High wildfire risk score (Sep 6): fire being held, all-clear in effect",
+    "situation": "The Pear Lake wildfire is being held at about 166,132 ha; its approximate edge reaches Clinton, BC [F2]. The TNRD gave the all-clear to nearly 1,243 properties on Aug 23 [F10]. The replayed wildfire risk score is 57 out of 100, level high, because the held fire's edge reaches the village [F2, F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Prepare reception centres and transport",
-      "rationale": "The risk level is high, and the fire edge is 0.0 km from Clinton [F2, F3, F4]."
+      "action": "Support recovery for returning residents and keep watching the held fire.",
+      "rationale": "The fire is being held and the all-clear was given [F2, F10]."
      },
      {
       "priority": 2,
-      "action": "Identify and prepare support for vulnerable people",
-      "rationale": "The risk level is high [F3]."
+      "action": "Check on vulnerable residents after their return.",
+      "rationale": "The all-clear was given [F10]."
      },
      {
       "priority": 3,
-      "action": "Plan for group lodging for about 141 people",
-      "rationale": "This is an assumption based on about 20% of the 707 residents if all leave [F11, F17]."
+      "action": "Keep the reception centres in Kamloops and Prince George informed about anyone still displaced.",
+      "rationale": "Both are still listed as open [F8]."
      },
      {
       "priority": 4,
-      "action": "Coordinate with potential host communities",
-      "rationale": "Kamloops, Williams Lake, and Whistler are possible host communities within 30-250 km [F16]."
+      "action": "Keep monitoring air quality.",
+      "rationale": "Smoke at the Kamloops Federal Building is AQHI+ 1, a low health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -779,19 +798,19 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near Clinton",
-     "body": "The Pear Lake wildfire is being held and is located near Clinton.",
+     "headline": "Pear Lake wildfire held; all-clear in effect",
+     "body": "The Pear Lake wildfire is being held. Officials have given the all-clear to nearly 1,243 properties. Follow official updates.",
      "whatToDo": [
-      "Stay prepared",
-      "Monitor local updates"
+      "Follow official updates about the fire.",
+      "Report any new smoke or fire to local authorities."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de Clinton",
-     "body": "L'incendie de forêt de Pear Lake est maîtrisé et se situe près de Clinton.",
+     "headline": "Incendie de Pear Lake maîtrisé; fin de l'évacuation en vigueur",
+     "body": "L'incendie de forêt de Pear Lake est maintenu. Les autorités ont levé l'évacuation pour près de 1 243 propriétés. Suivez les mises à jour officielles.",
      "whatToDo": [
-      "Restez prêt",
-      "Surveillez les mises à jour locales"
+      "Suivez les mises à jour officielles sur l'incendie.",
+      "Signalez toute nouvelle fumée ou tout nouveau feu aux autorités locales."
      ]
     }
    },
@@ -814,7 +833,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2026_BC_2026-C40983/111",
@@ -835,7 +855,7 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "b4718f14-ea6a-5671-8992-612c583ad8f6",
-    "title": "Preparedness Briefing: Clinton, BC",
+    "title": "Low wildfire risk (Sep 12): Pear Lake wildfire under control",
     "situation": "The Pear Lake wildfire is under control and covers about 166,132 ha [F2]. Its approximate edge is 0.0 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 18 out of 100, which is a low level [F3].",
     "actions": [
      {
@@ -926,7 +946,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   }
  ]
 }
