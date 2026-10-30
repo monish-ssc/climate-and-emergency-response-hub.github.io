@@ -9,6 +9,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data"))
 import build_briefings as bb  # noqa: E402
 
+bb.PAUSE = 0  # no pause between simulated requests
+
 
 def facts():
     f = bb.Facts()
@@ -71,6 +73,28 @@ class ModelReplyTest(unittest.TestCase):
             bb.urllib.request.urlopen = saved
         self.assertIsNone(sent[0].get_header("Authorization"))
         self.assertTrue(sent[0].full_url.startswith(bb.ENDPOINT))
+
+
+class RateLimitTest(unittest.TestCase):
+    def test_rate_limited_model_is_retried_after_waiting(self):
+        import io
+        tries, waits = [], []
+
+        def busy_once(*a, **k):
+            tries.append(a[1])
+            if len(tries) == 1:
+                raise bb.urllib.error.HTTPError(bb.ENDPOINT, 429, "Too Many Requests", {"Retry-After": "7"},
+                                                io.BytesIO(b'{"error":"rate-limited upstream"}'))
+            return answer()
+
+        saved = (bb.call_model, bb.time.sleep)
+        bb.call_model, bb.time.sleep = busy_once, waits.append
+        try:
+            self.assertEqual(bb.ask("key", "google/gemma-4-31b-it:free", "[F1] fact")["title"], answer()["title"])
+        finally:
+            bb.call_model, bb.time.sleep = saved
+        self.assertEqual(tries, ["google/gemma-4-31b-it:free"] * 2)  # same model, second try
+        self.assertEqual(waits, [7.0])  # waited as long as the service asked
 
 
 class LocalModelBuildTest(unittest.TestCase):

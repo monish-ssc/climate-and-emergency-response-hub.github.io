@@ -56,7 +56,9 @@ OUT = DATA_DIR / "pipeline" / "live" / "briefings.json"
 ENDPOINT = os.environ.get("BRIEFING_ENDPOINT", "https://openrouter.ai/api/v1/chat/completions")
 API_KEY = os.environ.get("BRIEFING_API_KEY", "")  # repository secret; empty for a local Ollama
 MODELS = [m for m in os.environ.get(
-    "BRIEFING_MODELS", "google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free").split(",") if m]
+    "BRIEFING_MODELS",
+    "google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3.5-super-vl:free").split(",") if m]
+PAUSE = float(os.environ.get("BRIEFING_PAUSE", 3))  # seconds between requests (free tier: 20 a minute)
 MODEL_LABEL = os.environ.get("BRIEFING_MODEL_LABEL", "")  # empty: named after the model that answered
 PROVIDER = os.environ.get("BRIEFING_PROVIDER", "free open-weight model via OpenRouter")
 TIMEOUT = int(os.environ.get("BRIEFING_TIMEOUT", 180))  # seconds for one answer
@@ -452,6 +454,26 @@ def call_model(token, model, facts_text, feedback=None):
     return parse_json(out["choices"][0]["message"]["content"])
 
 
+RATE_LIMIT_WAITS = (15, 30, 45)  # seconds to wait before each retry of a rate-limited (HTTP 429) model
+
+
+def ask(token, model, facts_text, feedback=None):
+    """call_model, waiting and retrying while a free model is briefly rate-limited (HTTP 429)."""
+    for wait in RATE_LIMIT_WAITS + (None,):
+        try:
+            return call_model(token, model, facts_text, feedback)
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or wait is None:
+                raise
+            asked = (e.headers or {}).get("Retry-After")
+            try:
+                delay = min(60.0, max(5.0, float(asked))) if asked else wait
+            except ValueError:
+                delay = wait
+            print(f"  {model} is rate-limited (HTTP 429), retrying in {delay:.0f} s")
+            time.sleep(delay)
+
+
 NUM = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 
 
@@ -788,13 +810,14 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
                 break  # no time for the retry; the answer stays rejected
             try:
                 calls += 1
-                answer = call_model(token, models[0], s["facts"].text(),
+                answer = ask(token, models[0], s["facts"].text(),
                                     None if attempt == 0 else "Your previous answer had these problems: "
                                     + "; ".join(problems) + ". Fix them and reply with the full JSON again.")
                 problems = check(normalize_citations(answer), s["facts"], s["level"])
             except urllib.error.HTTPError as e:
                 detail = e.read().decode("utf-8", "replace")[:200]
                 print(f"  {s['key']}: {models[0]} HTTP {e.code} {detail}")
+                problems = [f"HTTP {e.code} from {models[0]}: {detail[:150]}"]
                 if e.code == 400 and JSON_MODE["on"] and "response_format" in detail:
                     JSON_MODE["on"] = False  # this model has no JSON mode; ask for JSON in the prompt only
                     problems = ["retrying without JSON mode"]
@@ -802,8 +825,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
                 if e.code in (401, 402, 403):
                     models = []  # no key, key limit reached or not allowed: stop calling
                 elif e.code in (404, 422, 429):
-                    models.pop(0)  # unknown model or its daily limit: try the next model
-                problems = [f"HTTP {e.code}"]
+                    models.pop(0)  # unknown model, or still rate-limited after waiting: try the next model
                 break
             except urllib.error.URLError as e:
                 print(f"  model server not reachable at {ENDPOINT}: {e.reason}")
@@ -814,7 +836,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
                 problems = [str(e)[:120]]
             if not problems or calls >= max_calls:
                 break
-            time.sleep(1)
+            time.sleep(PAUSE)
         if answer and not problems:
             results[s["key"]] = {"briefing": contract(answer, s, models[0] if models else "unknown", now),
                                  "publicAlert": answer["publicAlert"], "model": models[0] if models else "unknown",
@@ -827,7 +849,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
             print(f"  --  {s['key']}: {'; '.join(problems)}")
             if isinstance(answer, dict) and isinstance(answer.get("situation"), str):
                 print(f"      situation it wrote: {answer['situation'][:200]!r}")  # to see what the model got wrong
-        time.sleep(1)
+        time.sleep(PAUSE)
 
     out = []
     for s in subjects:
