@@ -22,7 +22,7 @@ Public data (NRCan, ECCC, Statistics Canada, ...)            every 30 minutes, G
    ├─ pipelines (data/*_pipeline.py) ──> risk score per region and hazard (0-100, with factors)
    ├─ build_live_layers.py ────────────> Canada-wide map layers
    ├─ build_watchlist.py ──────────────> places to watch (every community of 1,000+ people)
-   └─ build_briefings.py ──> numbered facts ──> AI draft (Qwen2.5 7B, Ollama) ──> checks ──> briefing
+   └─ build_briefings.py ──> numbered facts ──> AI draft (Gemma 4, OpenRouter) ──> checks ──> briefing
                                                          └─ fails or unavailable ──> template from the same facts
    │
    └─> published with the site on GitHub Pages; ClimateGuard_Mockup.html reads the JSON files
@@ -46,7 +46,7 @@ A draft that fails is retried once with the problems listed. If it still fails, 
 
 | What | Used for | Cost and access |
 |---|---|---|
-| **Qwen2.5 7B** (Alibaba Qwen, open-source model, Apache 2.0) run by **Ollama** (open source) | Drafting briefings and public advisories from our numbered facts | Free: runs on the GitHub Actions runner itself; no API key and no outside AI service, nothing leaves the runner. Replaces GitHub Models (OpenAI GPT-4.1-mini), which GitHub retired on July 30, 2026. |
+| **Google Gemma 4 31B** (open-weight model; fallback Gemma 4 26B) via **OpenRouter** | Drafting briefings and public advisories from our numbered facts | Called from GitHub Actions; the key is a repository secret and is never in the code or the page. Only public data is sent. Replaces GitHub Models (OpenAI GPT-4.1-mini), which GitHub retired on July 30, 2026. |
 | NRCan Canadian Wildland Fire Information System (CWFIS) | Active and past wildfires | Free, public |
 | ECCC MSC GeoMet (api.weather.gc.ca) and Water Survey of Canada | River levels and flows, weather alerts, AQHI air quality, hurricane tracks | Free, public |
 | BC Ministry of Environment air quality data | Smoke readings (PM2.5) for the replays | Free, public |
@@ -59,7 +59,7 @@ A draft that fails is retried once with the problems listed. If it still fails, 
 | Leaflet, d3-geo, topojson-client | Map and boundaries in the browser (open source, bundled in the page) | Open source |
 | GitHub Pages and GitHub Actions | Hosting and the 30-minute refresh | Free for public repositories |
 
-No paid services, no personal data and no internal government data are used.
+No personal data and no internal government data are used.
 
 ## Run locally
 
