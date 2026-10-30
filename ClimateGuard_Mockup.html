@@ -5673,10 +5673,15 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           });
         return resource.historyPromise;
       }
+      // ODHF lists some surgical centres, cancer centres and clinics as "Hospitals"; keep general hospitals
+      // (same rule as build_briefings.py)
+      const NOT_GENERAL = /surg(ery|ical)|clinic|cancer|eye institute|diagnostic|outpatient|cosmetic/i;
+      const isGeneralHospital = (name = "") =>
+        (/hospital/i.test(name) && !/cosmetic|satellite clinic/i.test(name)) || !NOT_GENERAL.test(name);
       function nearestHospitals(lat, lon, n = 3) {
         const seen = new Set();
         return (dataAdapter.facilities.features || [])
-          .filter((f) => f.properties?.type === "Hospitals" && f.geometry?.coordinates)
+          .filter((f) => f.properties?.type === "Hospitals" && f.geometry?.coordinates && isGeneralHospital(f.properties.name))
           .map((f) => ({
             name: properCase(f.properties.name),
             town: properCase(f.properties.municipality || ""),
