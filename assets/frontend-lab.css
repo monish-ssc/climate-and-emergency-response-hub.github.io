@@ -1,4 +1,4 @@
-/* Isolated operations-workspace experiment; used only by Frontend_Lab.html. */
+/* Main operations-workspace presentation for ClimateGuard_Frontend_Lab.html. */
 :root {
   color-scheme: light;
   --paper: #f0f3f5;
@@ -228,7 +228,8 @@ main { margin-left: 86px; max-width: none; padding: 27px 28px 16px; }
 .lab-note .lab-icon { width: 15px; height: 15px; margin-top: 1px; }
 .lab-note b { color: var(--ink); }
 .lab-bottom { margin-top: 19px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--ink-2); font-size: 10px; }
-.lab-bottom a { color: var(--spruce); text-underline-offset: 3px; }
+.lab-bottom .lab-source-link { border: 0; background: transparent; padding: 0; font: inherit; text-decoration: underline; cursor: pointer; }
+.lab-bottom a, .lab-bottom .lab-source-link { color: var(--spruce); text-underline-offset: 3px; }
 .lab-shortcut { display: inline-flex; align-items: center; gap: 5px; }
 .lab-shortcut kbd { padding: 1px 5px; font: inherit; border: 1px solid var(--line); background: var(--white); border-radius: 3px; }
 .lab-mode { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; padding: 5px 8px; border-radius: 5px; border: 1px solid #d9e4d9; background: var(--lichen-2); color: var(--spruce); white-space: nowrap; }

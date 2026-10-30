@@ -1,4 +1,4 @@
-/* Presentation experiment over the existing dashboard's data adapters and map. */
+/* Main operations workspace over the dashboard data adapters and map. */
 (() => {
   "use strict";
 
@@ -179,7 +179,7 @@
   byId("mapSub").hidden = true;
 
   situation.append(node(`<div class="lab-note">${icon("info")}<div><b>Planning context.</b> Snapshot age and source availability are shown explicitly. Population is an annual estimate; facility locations do not confirm operating status or capacity.</div></div>`));
-  main.append(node(`<div class="lab-bottom"><span>ClimateGuard <span aria-hidden="true">/</span> Government preparedness & response <span aria-hidden="true">·</span> Design preview</span><span class="lab-shortcut"><kbd>/</kbd> Find a region <span aria-hidden="true">·</span> <a href="ClimateGuard_Mockup.html">Original dashboard ${"↗"}</a></span></div>`));
+  main.append(node(`<div class="lab-bottom"><span>ClimateGuard <span aria-hidden="true">/</span> Government preparedness & response</span><span class="lab-shortcut"><kbd>/</kbd> Find a region <span aria-hidden="true">·</span> <button type="button" class="lab-source-link" id="labFooterSources">Layers & sources ${"↗"}</button></span></div>`));
 
   const workspaceCopy = {
     briefing: ["Decision support", "Preparedness briefing", "Review the situation, supporting evidence and recommended actions before sharing."],
@@ -226,7 +226,7 @@
   syncNavigation();
 
   const openLayers = () => byId("labLayers").showModal();
-  ["labLayersButton", "labEvidenceLayers", "labCoverageLink"].forEach((id) => byId(id).onclick = openLayers);
+  ["labLayersButton", "labEvidenceLayers", "labCoverageLink", "labFooterSources"].forEach((id) => byId(id).onclick = openLayers);
   const openBriefing = () => { showTab("briefing"); syncNavigation(); };
   ["labOpenBriefing", "labAssessmentBriefing"].forEach((id) => byId(id).onclick = openBriefing);
   byId("labResetMap").onclick = () => {

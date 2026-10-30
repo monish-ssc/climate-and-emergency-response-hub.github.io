@@ -2,7 +2,7 @@
 
 ClimateGuard AI is a two-day hackathon prototype for a **Climate & Emergency Response Intelligence Hub**. It helps emergency teams explore climate-related hazards, understand a simple risk score, and produce a preparedness briefing.
 
-`ClimateGuard_Mockup.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Live data, risk scores and AI briefings are built from public Canadian data by a GitHub Actions workflow every 30 minutes and published with the site. Two wildfire replays (McDougall Creek 2023, Pear Lake 2026) show the same scoring and briefings on real past events. The What-if and Plan check tabs use a labelled sample scenario. The prototype is not suitable for real emergency decisions.
+`ClimateGuard_Frontend_Lab.html` is the canonical frontend and the root `index.html` opens it on GitHub Pages. Live data, risk scores and AI briefings are built from public Canadian data by a GitHub Actions workflow every 30 minutes and published with the site. Two wildfire replays (McDougall Creek 2023, Pear Lake 2026) show the same scoring and briefings on real past events. The What-if and Plan check tabs use a labelled sample scenario. The prototype is not suitable for real emergency decisions.
 
 Developers continuing the project should start with the [developer guide](docs/developer-guide.md). Data files are described in [docs/data-files.md](docs/data-files.md).
 
@@ -25,7 +25,7 @@ Public data (NRCan, ECCC, Statistics Canada, ...)            every 30 minutes, G
    └─ build_briefings.py ──> numbered facts ──> AI draft (Gemma 4, OpenRouter) ──> checks ──> briefing
                                                          └─ fails or unavailable ──> template from the same facts
    │
-   └─> published with the site on GitHub Pages; ClimateGuard_Mockup.html reads the JSON files
+   └─> published with the site on GitHub Pages; ClimateGuard_Frontend_Lab.html reads the JSON files
 ```
 
 **Risk scores are rules, not AI.** Each hazard has a transparent 0-100 score built from named factors, and the dashboard shows every factor's points. Wildfire: distance to the nearest fire's edge (40), uncontained fire within 5 km (20), uncontained fires within 150 km (10), burned area (10), fire-weather alerts (10) and past large fires (10). Flood, from river stations within 50 km (creeks with a basin under 1,000 km2 only within 15 km): highest flow as a share of its typical yearly peak (45), highest reading compared with the station's own history for the month, from the 75th percentile (35), above-normal stations still rising (10) and rain, flood or storm-surge alerts (10); a flood score reaches critical only with an official alert, a flow of at least 1.5x the typical yearly peak or a river at its peak that is still rising. Levels: under 25 low, 25-49 moderate, 50-74 high, 75 and over critical.
@@ -76,14 +76,14 @@ Then visit `http://localhost:8000/`.
 ```text
 .
 ├── index.html                              # GitHub Pages entry point
-├── ClimateGuard_Mockup.html                # Canonical frontend
+├── ClimateGuard_Frontend_Lab.html                # Canonical frontend
 ├── api/                                    # Frontend/backend HTTP contract
 │   ├── contracts/                          # Versioned JSON Schemas
 │   └── examples/                           # Example request/response bodies
 ├── backend/
 │   ├── src/                                # Providers, services, and routes
 │   └── tests/                              # Backend unit/contract tests
-├── assets/                                 # Optional non-embedded media only
+├── assets/                                 # Frontend styles, behaviour and attribution
 ├── data/                                   # Offline demo fixtures
 ├── docs/                                   # Architecture and demo notes
 └── tests/                                  # Frontend manual MVP checks
@@ -120,7 +120,7 @@ For a hackathon, the normalization and risk layers can be small serverless funct
 
 ## Frontend rule
 
-Treat `ClimateGuard_Mockup.html` as the presentation layer and source of truth for the UI. `index.html` launches it for GitHub Pages. Data adapters should continue to conform to the contracts in `api/`.
+Treat `ClimateGuard_Frontend_Lab.html` as the presentation layer and source of truth for the UI. `index.html` launches it for GitHub Pages. Data adapters should continue to conform to the contracts in `api/`.
 
 ## Definition of done
 
