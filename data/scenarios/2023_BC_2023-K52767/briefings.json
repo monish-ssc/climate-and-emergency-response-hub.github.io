@@ -1,5 +1,5 @@
 {
- "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
+ "note": "Saved AI briefings for this replay (pin_replay_briefings.py), edited and reviewed by the team (editedByTeam). Used as they are by build_briefings.py.",
  "fireId": "2023_BC_2023-K52767",
  "updatedAt": "2026-10-30T03:02:15Z",
  "source": "data/pipeline/live/briefings.json",
@@ -23,7 +23,7 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "2ef98a45-2c83-5716-999e-0471b4883eb4",
-    "title": "Preparedness Briefing: West Kelowna Wildfire Risk",
+    "title": "Moderate wildfire risk (Aug 16): new McDougall Creek fire 6.1 km from West Kelowna",
     "situation": "The McDougall Creek wildfire is out of control and is about 1 ha in size [F2]. Its approximate edge is 6.1 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 28 out of 100, which is level moderate [F3].",
     "actions": [
      {
@@ -118,7 +118,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/4",
@@ -139,8 +140,8 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "d8da1bf1-669c-5bf9-959a-5453f086ea7a",
-    "title": "Preparedness Briefing: McDougall Creek Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 110 ha [F2]. Its approximate edge is 5.6 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 43 out of 100, which is level moderate [F3].",
+    "title": "Moderate wildfire risk (Aug 17): evacuation alerts for 4,800 properties",
+    "situation": "The McDougall Creek wildfire is out of control at about 110 ha; its approximate edge is 5.6 km from West Kelowna, BC [F2]. Evacuation alerts are in place for 4,800 properties in West Kelowna and on Westbank First Nation land [F10], and reception centres are open at Royal LePage Place in West Kelowna and Kal Tire Place in Vernon [F8]. The replayed wildfire risk score is 43 out of 100, level moderate [F3].",
     "actions": [
      {
       "priority": 1,
@@ -200,19 +201,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control. Smoke is causing a very high health risk in the area.",
+     "headline": "Evacuation alerts for 4,800 properties near West Kelowna",
+     "body": "Evacuation alerts are in place for 4,800 properties in West Kelowna and on Westbank First Nation land because of the McDougall Creek wildfire. Be ready to leave on short notice. Smoke is a very high health risk.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow air quality health precautions"
+      "If your property is under an alert, be ready to leave on short notice.",
+      "Know your reception centre: Royal LePage Place in West Kelowna or Kal Tire Place in Vernon.",
+      "Limit time outdoors in the smoke."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle. La fumée cause un risque très élevé pour la santé dans la région.",
+     "headline": "Alertes d'évacuation pour 4 800 propriétés près de West Kelowna",
+     "body": "Des alertes d'évacuation visent 4 800 propriétés à West Kelowna et sur les terres de la Première Nation de Westbank en raison de l'incendie de forêt de McDougall Creek. Soyez prêts à partir rapidement. La fumée présente un risque très élevé pour la santé.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Respecter les précautions de santé liées à la qualité de l'air"
+      "Si votre propriété est visée par une alerte, soyez prêts à partir rapidement.",
+      "Repérez votre centre d'accueil : Royal LePage Place, à West Kelowna, ou Kal Tire Place, à Vernon.",
+      "Limitez le temps passé dehors dans la fumée."
      ]
     }
    },
@@ -235,7 +238,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/6",
@@ -256,8 +260,8 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "915a296d-d3fe-59d9-bd28-2aceb538ac48",
-    "title": "Preparedness Briefing: West Kelowna Wildfire Risk",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 492 ha [F2]. The approximate edge of the fire is 4.9 km from West Kelowna, BC [F2, F4]. A replayed risk score is 49 out of 100, which is level moderate [F3]. Smoke is reported as AQHI+ 8 at Kelowna KLO Road, 8 km away [F7].",
+    "title": "Moderate wildfire risk (Aug 17): first evacuation orders reported",
+    "situation": "The McDougall Creek wildfire is out of control at about 492 ha (estimated between agency reports); its approximate edge is 4.9 km from West Kelowna, BC [F2]. The first evacuation orders were reported on Aug 17 [F10], after evacuation alerts for 4,800 properties [F9]; reception centres are open in West Kelowna and Vernon [F8]. The replayed wildfire risk score is 49 out of 100, level moderate [F3].",
     "actions": [
      {
       "priority": 1,
@@ -317,19 +321,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control. Smoke is causing a high health risk in the area.",
+     "headline": "First evacuation orders near West Kelowna",
+     "body": "The first evacuation orders have been issued because of the McDougall Creek wildfire, and evacuation alerts cover 4,800 properties. Reception centres are open at Royal LePage Place in West Kelowna and Kal Tire Place in Vernon. Smoke is a high health risk.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow directions from local officials"
+      "If you are under an evacuation order, leave now and register at a reception centre.",
+      "If you are under an alert, be ready to leave on short notice.",
+      "Follow directions from local officials."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle. La fumée cause un risque élevé pour la santé dans la région.",
+     "headline": "Premiers ordres d'évacuation près de West Kelowna",
+     "body": "Les premiers ordres d'évacuation ont été émis en raison de l'incendie de forêt de McDougall Creek, et des alertes d'évacuation visent 4 800 propriétés. Des centres d'accueil sont ouverts au Royal LePage Place, à West Kelowna, et au Kal Tire Place, à Vernon. La fumée présente un risque élevé pour la santé.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Suivre les directives des autorités locales"
+      "Si vous êtes visé par un ordre d'évacuation, partez maintenant et inscrivez-vous à un centre d'accueil.",
+      "Si vous êtes visé par une alerte, soyez prêts à partir rapidement.",
+      "Suivez les directives des autorités locales."
      ]
     }
    },
@@ -352,7 +358,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/7",
@@ -373,28 +380,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "ae971ba8-e5e2-5449-8182-1edc59425f2e",
-    "title": "Preparedness Briefing: West Kelowna Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 683 ha [F2]. Its approximate edge is 4.7 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 51 out of 100, which is level high [F3].",
+    "title": "High wildfire risk (Aug 17, 7 PM): evacuation orders in place, reception centres open",
+    "situation": "The McDougall Creek wildfire is out of control at about 683 ha (estimated between agency reports); its approximate edge is 4.7 km from West Kelowna, BC [F2]. The first evacuation orders were in place by a 7 p.m. news conference [F10], after evacuation alerts for 4,800 properties in West Kelowna and on Westbank First Nation land [F9]. Reception centres are open at Royal LePage Place in West Kelowna and Kal Tire Place in Vernon [F8]. The replayed wildfire risk score is 51 out of 100, level high [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Prepare reception centres and transport",
-      "rationale": "The risk level is high, and reception centres are open at Royal LePage Place and Kal Tire Place [F3, F8]."
+      "action": "Support evacuees at Royal LePage Place (West Kelowna) and Kal Tire Place (Vernon): registration, lodging and transport.",
+      "rationale": "Evacuation orders are in place and both centres are open [F8, F10]."
      },
      {
       "priority": 2,
-      "action": "Identify and support vulnerable people",
-      "rationale": "The risk level is high [F3]."
+      "action": "Prepare for more evacuation orders: transport and support for vulnerable residents in the alert area.",
+      "rationale": "Alerts cover 4,800 properties [F9]."
      },
      {
       "priority": 3,
-      "action": "Coordinate with healthcare facilities",
-      "rationale": "Kelowna General Hospital is 6.5 km away [F15]."
+      "action": "Confirm patient-transfer and care-home plans with Kelowna General Hospital.",
+      "rationale": "It is the nearest hospital in the inventory [F15]."
      },
      {
       "priority": 4,
-      "action": "Plan for group lodging",
-      "rationale": "It is an assumption that group lodging is needed for about 20% of evacuees, or about 8,055 people if all 40,274 residents leave [F17]."
+      "action": "Advise residents and evacuees about the very high smoke risk.",
+      "rationale": "Smoke at Kelowna KLO Road is AQHI+ 10+, a very high health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -434,19 +441,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "A wildfire is out of control near West Kelowna. Smoke is causing a very high health risk in the area.",
+     "headline": "Evacuation orders in West Kelowna: reception centres open",
+     "body": "Evacuation orders are in place in West Kelowna because of the McDougall Creek wildfire, and alerts cover 4,800 properties in West Kelowna and on Westbank First Nation land. Reception centres are open at Royal LePage Place in West Kelowna and Kal Tire Place in Vernon. Smoke is a very high health risk.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Prepare to leave if requested"
+      "If you are under an evacuation order, leave now and register at a reception centre.",
+      "If you are under an alert, be ready to leave on short notice.",
+      "Limit time outdoors in the smoke."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "Un incendie de forêt est hors de contrôle près de West Kelowna. La fumée cause un risque très élevé pour la santé dans le secteur.",
+     "headline": "Ordres d'évacuation à West Kelowna : centres d'accueil ouverts",
+     "body": "Des ordres d'évacuation sont en vigueur à West Kelowna en raison de l'incendie de forêt de McDougall Creek, et des alertes visent 4 800 propriétés à West Kelowna et sur les terres de la Première Nation de Westbank. Des centres d'accueil sont ouverts au Royal LePage Place, à West Kelowna, et au Kal Tire Place, à Vernon. La fumée présente un risque très élevé pour la santé.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Se préparer à partir si demandé"
+      "Si vous êtes visé par un ordre d'évacuation, partez maintenant et inscrivez-vous à un centre d'accueil.",
+      "Si vous êtes visé par une alerte, soyez prêts à partir rapidement.",
+      "Limitez le temps passé dehors dans la fumée."
      ]
     }
    },
@@ -469,7 +478,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/8",
@@ -490,28 +500,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "a8bb017d-f235-545d-945e-a72374276a1e",
-    "title": "Preparedness Briefing: McDougall Creek Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 874 ha [F2]. Its approximate edge is 4.5 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 53 out of 100, which is level high [F3].",
+    "title": "High wildfire risk (Aug 18): fire crests the ridge toward Traders Cove and West Kelowna Estates",
+    "situation": "The McDougall Creek wildfire is out of control at about 874 ha (estimated between agency reports); its approximate edge is 4.5 km from West Kelowna, BC [F2]. The fire crested the ridge toward Traders Cove and West Kelowna Estates [F10], and evacuation orders have been in place since Aug 17 [F9]. Reception centres are open in West Kelowna, Vernon and Kelowna [F8]. The replayed wildfire risk score is 53 out of 100, level high [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Prepare reception centres",
-      "rationale": "The risk level is high and reception centres such as Royal LePage Place, Kal Tire Place, and The Salvation Army are open [F3, F8]."
+      "action": "Support evacuees at the open reception centres: Royal LePage Place, Kal Tire Place and The Salvation Army in Kelowna.",
+      "rationale": "Evacuation orders are in place and these centres are open [F8, F9]."
      },
      {
       "priority": 2,
-      "action": "Organize transport and support for vulnerable people",
-      "rationale": "The risk level is high and the fire has crested the ridge toward Traders Cove and West Kelowna Estates [F3, F10]."
+      "action": "Prepare for wider evacuation orders near Traders Cove and West Kelowna Estates: transport and help for vulnerable residents.",
+      "rationale": "The fire crested the ridge toward these areas [F10]."
      },
      {
       "priority": 3,
-      "action": "Plan for group lodging capacity",
-      "rationale": "Based on an assumption, group lodging should be planned for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave [F11, F17]."
+      "action": "Confirm patient-transfer and care-home plans with Kelowna General Hospital.",
+      "rationale": "It is the nearest hospital in the inventory [F15]."
      },
      {
       "priority": 4,
-      "action": "Coordinate with healthcare facilities",
-      "rationale": "The risk level is high and hospitals are located in Kelowna, Summerland, and Penticton [F3, F15]."
+      "action": "Plan group lodging for about 8,055 evacuees with host communities such as Vernon and Penticton.",
+      "rationale": "Planning assumption: about 20% of the 40,274 residents [F17]; possible host communities [F16]."
      }
     ],
     "confidence": "high",
@@ -551,19 +561,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control and is located approximately 4.5 km from West Kelowna.",
+     "headline": "Fire crests the ridge: evacuation orders in West Kelowna",
+     "body": "The McDougall Creek wildfire has crested the ridge toward Traders Cove and West Kelowna Estates. Evacuation orders are in place. Reception centres are open in West Kelowna, Vernon and Kelowna.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Be ready to leave if requested"
+      "If you are under an evacuation order, leave now.",
+      "Register at a reception centre if you need lodging or help.",
+      "Follow directions from local officials."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se situe à environ 4,5 km de West Kelowna.",
+     "headline": "Le feu franchit la crête : ordres d'évacuation à West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek a franchi la crête en direction de Traders Cove et de West Kelowna Estates. Des ordres d'évacuation sont en vigueur. Des centres d'accueil sont ouverts à West Kelowna, à Vernon et à Kelowna.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Être prêt à partir si demandé"
+      "Si vous êtes visé par un ordre d'évacuation, partez maintenant.",
+      "Inscrivez-vous à un centre d'accueil si vous avez besoin d'hébergement ou d'aide.",
+      "Suivez les directives des autorités locales."
      ]
     }
    },
@@ -586,7 +598,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/10",
@@ -607,8 +620,8 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "c6304ba1-1128-5d8b-87e8-25c61717d735",
-    "title": "Preparedness Briefing: West Kelowna Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 8,070 ha [F2]. Its approximate edge is 1.1 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 76 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk (Aug 18): homes lost overnight, fire edge 1.1 km away",
+    "situation": "The McDougall Creek wildfire is out of control at about 8,070 ha; its approximate edge is 1.1 km from West Kelowna, BC [F2]. Homes were lost overnight, and the fire was estimated at 10,500 ha [F10]. Reception centres are open in West Kelowna, Kelowna and Vernon [F8]. The replayed wildfire risk score is 76 out of 100, level critical [F3].",
     "actions": [
      {
       "priority": 1,
@@ -668,19 +681,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control and is approximately 1.1 km from West Kelowna. Smoke is causing a high health risk in the area.",
+     "headline": "Homes lost: wildfire 1.1 km from West Kelowna",
+     "body": "Homes were lost overnight in the McDougall Creek wildfire, which is out of control about 1.1 km from West Kelowna. Reception centres are open at Royal LePage Place, Prospera Place, The Salvation Army in Kelowna and Kal Tire Place in Vernon. Smoke is a high health risk.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Be aware of open reception centres at Royal LePage Place, The Salvation Army, Prospera Place, and Kal Tire Place"
+      "Follow directions from local officials.",
+      "Register at a reception centre if you need lodging or help.",
+      "Limit time outdoors in the smoke."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se trouve à environ 1,1 km de West Kelowna. La fumée cause un risque élevé pour la santé dans la région.",
+     "headline": "Maisons perdues : incendie à 1,1 km de West Kelowna",
+     "body": "Des maisons ont été perdues pendant la nuit dans l'incendie de forêt de McDougall Creek, hors de contrôle à environ 1,1 km de West Kelowna. Des centres d'accueil sont ouverts au Royal LePage Place, au Prospera Place, à l'Armée du Salut de Kelowna et au Kal Tire Place, à Vernon. La fumée présente un risque élevé pour la santé.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Prendre note des centres d'accueil ouverts à Royal LePage Place, The Salvation Army, Prospera Place et Kal Tire Place"
+      "Suivez les directives des autorités locales.",
+      "Inscrivez-vous à un centre d'accueil si vous avez besoin d'hébergement ou d'aide.",
+      "Limitez le temps passé dehors dans la fumée."
      ]
     }
    },
@@ -703,7 +718,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/14",
@@ -724,28 +740,33 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "d1c70dec-e780-5a3c-9f1a-a23346ba7e17",
-    "title": "Preparedness Briefing: McDougall Creek Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and estimated at about 10,835 ha [F2]. The approximate edge of the fire is 0.3 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 80 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk (Aug 19): at least 35,000 people under evacuation orders",
+    "situation": "The McDougall Creek wildfire is out of control at about 10,835 ha (estimated between agency reports); its approximate edge is 0.3 km from West Kelowna, BC [F2]. At least 35,000 people are under evacuation orders [F10], and homes were lost overnight on Aug 18 [F9]. Reception centres are open in West Kelowna, Kelowna and Vernon [F8]. The replayed wildfire risk score is 80 out of 100, level critical [F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Coordinate immediately with the local emergency operations centre",
-      "rationale": "The risk level is critical [F3]."
+      "action": "Coordinate the response with the local emergency operations centre.",
+      "rationale": "The score is critical [F3]."
      },
      {
       "priority": 2,
-      "action": "Prepare reception centres, transport, and support for vulnerable people",
-      "rationale": "The risk level is critical [F3]."
+      "action": "Scale up reception at Royal LePage Place, Prospera Place, The Salvation Army and Kal Tire Place, and line up host communities such as Vernon and Penticton.",
+      "rationale": "At least 35,000 people are under evacuation orders [F8, F10, F16]."
      },
      {
       "priority": 3,
-      "action": "Plan for group lodging for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave",
-      "rationale": "This is a planning assumption [F17]."
+      "action": "Plan group lodging for about 8,055 people, and more if the orders grow.",
+      "rationale": "Planning assumption: about 20% of the 40,274 residents [F17]."
      },
      {
       "priority": 4,
-      "action": "Monitor air quality and health risks",
-      "rationale": "Smoke is AQHI+ 10+ at Kelowna KLO Road, 8 km away [F7]."
+      "action": "Confirm patient-transfer and care-home relocation plans with Kelowna General Hospital.",
+      "rationale": "It is the nearest hospital in the inventory [F15]."
+     },
+     {
+      "priority": 5,
+      "action": "Advise evacuees about the very high smoke risk.",
+      "rationale": "Smoke at Kelowna KLO Road is AQHI+ 10+, a very high health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -785,19 +806,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control and near West Kelowna. Smoke is causing a very high health risk in the area.",
+     "headline": "At least 35,000 people under evacuation orders",
+     "body": "At least 35,000 people are under evacuation orders because of the McDougall Creek wildfire. Reception centres are open in West Kelowna, Kelowna and Vernon. Smoke is a very high health risk.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Follow directions from local officials"
+      "If you are under an evacuation order, leave now and register at a reception centre.",
+      "Do not return until officials say it is safe.",
+      "Limit time outdoors in the smoke."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se trouve près de West Kelowna. La fumée cause un risque très élevé pour la santé dans le secteur.",
+     "headline": "Au moins 35 000 personnes visées par des ordres d'évacuation",
+     "body": "Au moins 35 000 personnes sont visées par des ordres d'évacuation en raison de l'incendie de forêt de McDougall Creek. Des centres d'accueil sont ouverts à West Kelowna, à Kelowna et à Vernon. La fumée présente un risque très élevé pour la santé.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Suivre les directives des autorités locales"
+      "Si vous êtes visé par un ordre d'évacuation, partez maintenant et inscrivez-vous à un centre d'accueil.",
+      "Ne revenez pas avant que les autorités le permettent.",
+      "Limitez le temps passé dehors dans la fumée."
      ]
     }
    },
@@ -820,7 +843,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/142",
@@ -841,28 +865,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "e53a6925-01e6-5a70-901e-7bf7baa96be6",
-    "title": "Preparedness Briefing: McDougall Creek Wildfire",
-    "situation": "The McDougall Creek wildfire is out of control and covers about 13,970 ha [F2]. The approximate edge of the fire is 0.0 km from West Kelowna, BC [F2, F4]. The replayed risk score is 82 out of 100, which is level critical [F3].",
+    "title": "Critical wildfire risk score (Sep 20): BC Wildfire Service declares the fire held",
+    "situation": "On Sep 20, the BC Wildfire Service declared the McDougall Creek wildfire held [F10]. The agency reports used for this replay still list it as out of control at about 13,970 ha, with its edge reaching West Kelowna, BC [F2], so the replayed score is 82 out of 100, level critical [F3]. Reception centres remain open in West Kelowna, Kelowna and Vernon [F8].",
     "actions": [
      {
       "priority": 1,
-      "action": "Coordinate immediately with the local emergency operations centre",
-      "rationale": "The risk level is critical [F3]."
+      "action": "Coordinate recovery and the return of residents with the local emergency operations centre.",
+      "rationale": "The fire was declared held [F10]."
      },
      {
       "priority": 2,
-      "action": "Prepare transport and reception services for vulnerable people",
-      "rationale": "The fire edge is 0.0 km from West Kelowna [F2, F4]."
+      "action": "Support residents returning home: utilities, health services and recovery information.",
+      "rationale": "The fire was declared held [F10]."
      },
      {
       "priority": 3,
-      "action": "Plan for group lodging for about 8,055 people",
-      "rationale": "This is an assumption based on 20% of the 40,274 residents if all leave [F17]."
+      "action": "Keep the open reception centres, including the ESS Reception Centre on Louie Drive, available for anyone who cannot return yet.",
+      "rationale": "These centres are open [F8]."
      },
      {
       "priority": 4,
-      "action": "Verify capacity at nearby healthcare facilities",
-      "rationale": "Kelowna General Hospital is 6.5 km away [F15]."
+      "action": "Check on vulnerable residents after they return.",
+      "rationale": "Many residents were evacuated [F9]."
      }
     ],
     "confidence": "high",
@@ -902,19 +926,21 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is out of control and near West Kelowna. Reception centres are open at Royal LePage Place, ESS Reception Centre (Louie Drive), Prospera Place, The Salvation Army, and Kal Tire Place.",
+     "headline": "McDougall Creek wildfire declared held",
+     "body": "The BC Wildfire Service has declared the McDougall Creek wildfire held. Reception centres remain open in West Kelowna, Kelowna and Vernon.",
      "whatToDo": [
-      "Monitor local news for updates",
-      "Prepare your emergency kit"
+      "Return only when officials say it is safe for your area.",
+      "Check official updates before you travel.",
+      "Register at a reception centre if you still need lodging or help."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se situe près de West Kelowna. Des centres d'accueil sont ouverts à Royal LePage Place, au centre d'accueil ESS (Louie Drive), à Prospera Place, à l'Armée du Salut et à Kal Tire Place.",
+     "headline": "L'incendie de McDougall Creek est déclaré maintenu",
+     "body": "Le BC Wildfire Service a déclaré l'incendie de forêt de McDougall Creek maintenu. Des centres d'accueil restent ouverts à West Kelowna, à Kelowna et à Vernon.",
      "whatToDo": [
-      "Suivre les nouvelles locales pour les mises à jour",
-      "Préparer votre trousse d'urgence"
+      "Ne revenez que lorsque les autorités le permettent pour votre secteur.",
+      "Consultez les mises à jour officielles avant de vous déplacer.",
+      "Inscrivez-vous à un centre d'accueil si vous avez encore besoin d'hébergement ou d'aide."
      ]
     }
    },
@@ -937,7 +963,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/144",
@@ -958,28 +985,28 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "d3ed7f0f-7f58-54d8-ab36-35879518f306",
-    "title": "Preparedness Briefing: West Kelowna Wildfire",
-    "situation": "The McDougall Creek wildfire is being held and covers about 13,970 ha [F2, F10]. The approximate edge of the fire is 0.0 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 56 out of 100, which is level high [F3].",
+    "title": "High wildfire risk score (Sep 21): McDougall Creek wildfire being held",
+    "situation": "The McDougall Creek wildfire is being held at about 13,970 ha; its edge reaches West Kelowna, BC [F2]. The BC Wildfire Service declared it held on Sep 20 [F10]. The replayed wildfire risk score is 56 out of 100, level high, because the held fire's edge reaches the city [F2, F3].",
     "actions": [
      {
       "priority": 1,
-      "action": "Prepare reception centres and transport",
-      "rationale": "The risk level is high [F3]."
+      "action": "Support recovery for returning residents and keep watching the held fire.",
+      "rationale": "The fire is being held [F2, F10]."
      },
      {
       "priority": 2,
-      "action": "Identify and support vulnerable people",
-      "rationale": "The risk level is high [F3]."
+      "action": "Check on vulnerable residents after their return.",
+      "rationale": "Many residents were evacuated [F9]."
      },
      {
       "priority": 3,
-      "action": "Review capacity of open reception centres",
-      "rationale": "Multiple centres are open, including Royal LePage Place and the ESS Reception Centre (Louie Drive) [F8]."
+      "action": "Keep the open reception centres, including the ESS Reception Centre on Louie Drive, available for anyone still displaced.",
+      "rationale": "These centres are open [F8]."
      },
      {
       "priority": 4,
-      "action": "Plan for group lodging for about 20% of evacuees",
-      "rationale": "This is an assumption for about 8,055 people if all 40,274 residents leave [F17]."
+      "action": "Keep monitoring air quality.",
+      "rationale": "Smoke at Kelowna KLO Road is AQHI+ 1, a low health risk [F7]."
      }
     ],
     "confidence": "high",
@@ -1019,19 +1046,19 @@
    },
    "publicAlert": {
     "en": {
-     "headline": "Wildfire Activity Near West Kelowna",
-     "body": "The McDougall Creek wildfire is being held. The fire edge is near West Kelowna.",
+     "headline": "McDougall Creek wildfire being held",
+     "body": "The McDougall Creek wildfire is being held. Return only when officials say it is safe for your area, and follow official updates.",
      "whatToDo": [
-      "Monitor local updates",
-      "Be aware of open reception centres in West Kelowna, Kelowna, and Vernon"
+      "Follow official updates about the fire.",
+      "Report any new smoke or fire to local authorities."
      ]
     },
     "fr": {
-     "headline": "Activité d'incendie de forêt près de West Kelowna",
-     "body": "L'incendie de forêt de McDougall Creek est maîtrisé. Le bord de l'incendie est près de West Kelowna.",
+     "headline": "L'incendie de McDougall Creek est maintenu",
+     "body": "L'incendie de forêt de McDougall Creek est maintenu. Ne revenez que lorsque les autorités le permettent pour votre secteur, et suivez les mises à jour officielles.",
      "whatToDo": [
-      "Suivre les mises à jour locales",
-      "Prendre connaissance des centres d'accueil ouverts à West Kelowna, Kelowna et Vernon"
+      "Suivez les mises à jour officielles sur l'incendie.",
+      "Signalez toute nouvelle fumée ou tout nouveau feu aux autorités locales."
      ]
     }
    },
@@ -1054,7 +1081,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   },
   {
    "key": "replay/2023_BC_2023-K52767/198",
@@ -1075,7 +1103,7 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "8f2303b0-f731-5641-9881-a22d4d3ceb9a",
-    "title": "Preparedness Briefing: West Kelowna Wildfire Replay",
+    "title": "Low wildfire risk (Oct 4): McDougall Creek wildfire under control",
     "situation": "This is a historical replay of an event on Oct 4, 2023, in West Kelowna, BC [F1]. The McDougall Creek wildfire is under control, covering about 13,970 ha, with its approximate edge 0.0 km from West Kelowna [F2]. The replayed wildfire risk score is 19 out of 100, which is level low [F3].",
     "actions": [
      {
@@ -1166,7 +1194,8 @@
     "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
     "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
    ],
-   "reviewed": false
+   "reviewed": true,
+   "editedByTeam": true
   }
  ]
 }
