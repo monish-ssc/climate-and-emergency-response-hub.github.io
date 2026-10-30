@@ -5399,7 +5399,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         return brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`) || null;
       }
       const isAI = (b) => b && b.model && b.model !== "template";
-      // "Gemma 4 31B (Google), free open-weight model via OpenRouter" (older entries only have the model id)
+      // "Gemma 4 31B (Google), open-weight model via OpenRouter" (older entries only have the model id)
       const modelName = (b) => b.modelLabel || b.model.split("/").pop();
       const aiSource = (b) => (b.provider ? `${modelName(b)}, ${b.provider}` : modelName(b));
       // "[F2, F5]" -> small links to the numbered facts

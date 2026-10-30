@@ -103,9 +103,9 @@ jobs:
       - name: Rebuild risk index
         run: python data/build_risk_index.py
 
-      # AI briefings with a free model on OpenRouter (key in the OPENROUTER_API_KEY secret, limited to free
-      # models). Reuses the published briefings and rewrites only what changed. One call per refresh keeps
-      # within the free tier (about 50 requests a day); saved replay briefings
+      # AI briefings with Gemma 4 on OpenRouter (key in the OPENROUTER_API_KEY secret, $1 credit limit).
+      # Reuses the published briefings and rewrites only what changed. One call per refresh (about a tenth
+      # of a cent) keeps the cost to a few cents a day; saved replay briefings
       # (data/scenarios/<fireId>/briefings.json) need no call. Without the key, or if an answer fails the
       # checks, template briefings from the same facts are published instead.
       - name: Write AI briefings

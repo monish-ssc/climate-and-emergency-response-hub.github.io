@@ -11,12 +11,12 @@ Subjects
   replay  every key moment of the wildfire replays (score changes and reported events): the fire, the
           replayed score, smoke, reception centres open at that time, what had really happened so far
 
-Model: a free open-weight model on OpenRouter (Google Gemma 4 31B, falling back to Gemma 4 26B), called
-with the OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The key is limited to free models and
-never appears in the repo or the page. (GitHub Models, used before, was retired on July 30, 2026.)
+Model: Google Gemma 4 31B (open-weight), falling back to Gemma 4 26B, on OpenRouter, called with the
+OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The paid models are used because the free ones
+were rate-limited upstream; one briefing costs about a tenth of a cent and the key has a $1 credit limit.
+The key never appears in the repo or the page. (GitHub Models, used before, was retired on July 30, 2026.)
 BRIEFING_ENDPOINT and BRIEFING_MODELS point it at any other OpenAI-compatible service, such as a local
-Ollama (http://localhost:11434/v1/chat/completions, no key). The free tier allows about 50 requests a
-day, so:
+Ollama (http://localhost:11434/v1/chat/completions, no key). To keep the cost to cents:
   - replay briefings never change once written, and saved ones (data/scenarios/<fireId>/briefings.json)
     are used as they are; live ones are rewritten only when the score or level changes or after
     MAX_AGE_HOURS
@@ -57,10 +57,10 @@ ENDPOINT = os.environ.get("BRIEFING_ENDPOINT", "https://openrouter.ai/api/v1/cha
 API_KEY = os.environ.get("BRIEFING_API_KEY", "")  # repository secret; empty for a local Ollama
 MODELS = [m for m in os.environ.get(
     "BRIEFING_MODELS",
-    "google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3.5-super-vl:free").split(",") if m]
-PAUSE = float(os.environ.get("BRIEFING_PAUSE", 3))  # seconds between requests (free tier: 20 a minute)
+    "google/gemma-4-31b-it,google/gemma-4-26b-a4b-it").split(",") if m]
+PAUSE = float(os.environ.get("BRIEFING_PAUSE", 3))  # seconds between requests, to be gentle on the service
 MODEL_LABEL = os.environ.get("BRIEFING_MODEL_LABEL", "")  # empty: named after the model that answered
-PROVIDER = os.environ.get("BRIEFING_PROVIDER", "free open-weight model via OpenRouter")
+PROVIDER = os.environ.get("BRIEFING_PROVIDER", "open-weight model via OpenRouter")
 TIMEOUT = int(os.environ.get("BRIEFING_TIMEOUT", 180))  # seconds for one answer
 
 
@@ -421,6 +421,8 @@ JSON_MODE = {"on": True}  # turned off if a model rejects response_format
 
 def parse_json(text):
     """The model's JSON, tolerating code fences or text around it."""
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("empty reply (no text from the model)")
     text = text.strip()
     if not text.startswith("{"):
         a, b = text.find("{"), text.rfind("}")
