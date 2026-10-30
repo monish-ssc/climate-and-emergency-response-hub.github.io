@@ -18,7 +18,7 @@ The dashboard combines provisional public-data snapshots with simulated fallback
 ```text
 .
 ├── index.html
-├── ClimateGuard_Mockup.html
+├── ClimateGuard_Frontend_Lab.html
 ├── api/
 │   ├── contracts/
 │   └── examples/
@@ -38,11 +38,11 @@ The dashboard combines provisional public-data snapshots with simulated fallback
 
 ### Frontend
 
-`ClimateGuard_Mockup.html` is the main frontend. It contains its own HTML, CSS, JavaScript, maps, a static JSON adapter, and mock fallback scenarios. Keep it as the single source of truth for the user interface.
+`ClimateGuard_Frontend_Lab.html` is the main frontend. It contains the maps, data adapters and scenarios, with the operations layout and light/dark modes in `assets/frontend-lab.css` and `assets/frontend-lab.js`. The lab filenames are retained for link compatibility. `ClimateGuard_Mockup.html` preserves the previous layout.
 
 `index.html` is a small GitHub Pages entry point. It sends the browser to the main dashboard.
 
-Avoid creating a second frontend or splitting the supplied HTML into separate files during the hackathon. Keep future data adapters inside the existing script and preserve the demonstration fallback.
+Make frontend changes in the operations workspace and its presentation assets. Keep data adapters in the main HTML and retain clearly labelled sample scenarios. All data paths remain relative to the repository root.
 
 ### API contracts
 
@@ -126,9 +126,9 @@ The first run cannot restore a previous snapshot, because the site has no live l
 
 #### Live data in the dashboard
 
-The dashboard checks `data/pipeline/live/manifest.json` and `data/pipeline/risk/index.json` every 5 minutes. It does not check while the browser tab is hidden. It loads only the layers that changed, and it does not reload the page. **Check for updates** below the map does the check immediately.
+The dashboard checks `data/pipeline/live/manifest.json` and `data/pipeline/risk/index.json` every 5 minutes. It does not check while the browser tab is hidden. It loads only the layers that changed, and it does not reload the page. **Check for updates** in **Layers & sources** checks map layers, regional risk, community screening and briefings immediately. The same data refreshes automatically every five minutes while the tab is visible; the last successfully loaded watchlist and briefings remain available after a failed refresh.
 
-The **Live layers across Canada** panel below the map has one control for each layer. Each row shows the status (Live, Stale, Source error, Load error), the feature count, `observedAt`, `generatedAt` and the source. A hazard tab turns on a default set of layers. You can then turn layers on or off.
+The **Live layers across Canada** panel in **Layers & sources** has one control for each layer. Each row shows the status (Live, Stale, Source error, Load error), the feature count, `observedAt`, `generatedAt` and the source. A hazard tab turns on a default set of layers. You can then turn layers on or off.
 
 To see live layers on a local server, run `.venv/bin/python data/build_live_layers.py` first. The `data/pipeline/live/` folder is git-ignored.
 
@@ -176,7 +176,7 @@ Then open:
 http://localhost:8000/
 ```
 
-Open `http://localhost:8000/`; `index.html` launches `ClimateGuard_Mockup.html`. Do not open the HTML through `file://`, because browser `fetch()` cannot reliably load the data files that way.
+Open `http://localhost:8000/`; `index.html` launches `ClimateGuard_Frontend_Lab.html`. Do not open the HTML through `file://`, because browser `fetch()` cannot reliably load the data files that way.
 
 ## Future API connection
 

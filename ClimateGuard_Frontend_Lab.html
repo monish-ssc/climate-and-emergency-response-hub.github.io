@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ClimateGuard · Operations workspace preview</title>
+    <title>ClimateGuard · Operations workspace</title>
     <!--
   Climate & Emergency Response Hub, frontend prototype
   ---------------------------------------------------------------
@@ -2644,7 +2644,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         }
       }
     </style>
-      <!-- Isolated frontend experiment. The canonical dashboard is unchanged. -->
+    <!-- Main operations frontend. Presentation assets retain their original lab filenames. -->
     <script>
       // Apply the saved appearance before the map and the page are first painted.
       (() => {
@@ -4126,7 +4126,10 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       // Poll for new snapshots without a page reload; pause while the tab is hidden.
       function startLiveRefresh() {
         const check = () =>
-          Promise.allSettled([refreshLiveData(), refreshRiskData()]);
+          Promise.allSettled([
+            refreshLiveData(), refreshRiskData(),
+            loadWatchlist({ quiet: true }), loadBriefings({ quiet: true }),
+          ]);
         setInterval(() => {
           if (!document.hidden) void check();
         }, LIVE_REFRESH_MS);
@@ -5416,16 +5419,21 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
    build_briefings.py with an open-source model in the refresh workflow).
    Every briefing is grounded in numbered facts and needs human review.
    ================================================================= */
-      const brief = { state: "idle", doc: null, byKey: new Map() };
-      async function loadBriefings() {
-        if (brief.state === "loading") return;
-        brief.state = "loading";
+      const brief = { state: "idle", doc: null, byKey: new Map(), loading: false };
+      async function loadBriefings({ quiet = false } = {}) {
+        if (brief.loading) return;
+        brief.loading = true;
+        if (!quiet || !brief.doc) brief.state = "loading";
         try {
-          brief.doc = await fetchJSON("data/pipeline/live/briefings.json");
-          brief.byKey = new Map(brief.doc.briefings.map((b) => [b.key, b]));
+          const doc = await fetchJSON("data/pipeline/live/briefings.json");
+          if (!Array.isArray(doc.briefings)) throw new Error("Briefing list is unavailable");
+          brief.doc = doc;
+          brief.byKey = new Map(doc.briefings.map((b) => [b.key, b]));
           brief.state = "ready";
         } catch {
-          brief.state = "error";
+          brief.state = brief.doc ? "ready" : "error";
+        } finally {
+          brief.loading = false;
         }
         renderArea();
         if (mode === "detail") renderSituation();
@@ -5641,17 +5649,25 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       $("pcClose").onclick = () => clearFocus();
       $("pcClear").onclick = () => clearFocus();
 
-      const watch = { state: "idle", doc: null };
-      async function loadWatchlist() {
-        if (watch.state === "loading") return;
-        watch.state = "loading";
+      const watch = { state: "idle", doc: null, loading: false };
+      async function loadWatchlist({ quiet = false } = {}) {
+        if (watch.loading) return;
+        watch.loading = true;
+        if (!quiet || !watch.doc) watch.state = "loading";
         try {
-          watch.doc = await fetchJSON("data/pipeline/live/watchlist.json");
+          const doc = await fetchJSON("data/pipeline/live/watchlist.json");
+          if (!Array.isArray(doc.hotspots)) throw new Error("Community watchlist is unavailable");
+          watch.doc = doc;
           watch.state = "ready";
         } catch {
-          watch.state = "error";
+          watch.state = watch.doc ? "ready" : "error";
+        } finally {
+          watch.loading = false;
         }
         renderWatchlist();
+        renderPlaceCard();
+        renderBriefingTab();
+        drawFocus();
       }
       function renderWatchlist() {
         const panel = $("watchPanel");
