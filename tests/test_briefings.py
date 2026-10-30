@@ -28,6 +28,16 @@ def answer(situation="Clinton's wildfire risk score is 51 out of 100, which is h
             "confidence": "medium", "publicAlert": {"en": alert, "fr": alert}}
 
 
+class HospitalTest(unittest.TestCase):
+    def test_only_general_hospitals_count_as_nearest(self):
+        for name in ("St. Boniface General Hospital", "Abbotsford Regional Hospital and Cancer Centre",
+                     "Health Sciences Centre"):
+            self.assertTrue(bb.is_general_hospital(name), name)
+        for name in ("Western Surgery Centre", "Tom Baker Cancer Centre", "Cosmetic Surgery Hospital",
+                     "Prince County Hospital Satellite Clinic", "Kensington Eye Institute"):
+            self.assertFalse(bb.is_general_hospital(name), name)
+
+
 class ModelReplyTest(unittest.TestCase):
     def test_reply_that_is_not_json_names_the_status(self):
         class Reply:

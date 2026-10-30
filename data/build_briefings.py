@@ -159,6 +159,19 @@ class Facts:
 
 # ---------- shared reference data ----------
 
+# ODHF lists some stand-alone surgical centres, cancer centres and clinics as "Hospitals". For evacuation
+# planning the nearest hospital should be a general one: keep names that say "hospital" (but not cosmetic
+# hospitals or satellite clinics) and drop the others that look like a specialised clinic.
+NOT_GENERAL = re.compile(r"surg(ery|ical)|clinic|cancer|eye institute|diagnostic|outpatient|cosmetic", re.I)
+
+
+def is_general_hospital(name):
+    name = name or ""
+    if re.search(r"hospital", name, re.I) and not re.search(r"cosmetic|satellite clinic", name, re.I):
+        return True
+    return not NOT_GENERAL.search(name)
+
+
 class Reference:
     def __init__(self):
         self.regions = {r["id"]: r for r in load(DATA_DIR / "scenarios.json")["regions"]}
@@ -169,7 +182,7 @@ class Reference:
         self.history = load(DATA_DIR / "history" / "disaster_history.json", {"regions": {}})
         fac = load(DATA_DIR / "healthcare" / "facilities.geojson", {"features": []})
         self.hospitals = [f for f in fac["features"] if (f.get("properties") or {}).get("type") == "Hospitals"
-                          and f.get("geometry")]
+                          and f.get("geometry") and is_general_hospital(f["properties"].get("name"))]
 
     def population(self, region):
         return self.pop_by_csd.get(region.get("csduid"))
@@ -652,7 +665,7 @@ def template_actions(subject):
             acts.append((f"Support residents evacuated after the {day(evac[1]['date'])} report: registration, lodging and transport.",
                          f"An evacuation was reported [{evac[0]}]."))
         if host:
-            acts.append((f"Confirm {host} as a possible host community for evacuees.", f"Largest nearby option{cite('hosts')}."))
+            acts.append((f"Confirm {host} as a possible host community for evacuees.", f"Closest town of 10,000+ people{cite('hosts')}."))
         if hosp:
             acts.append((f"Contact {hosp[0]} and local care homes about relocation plans.",
                          f"Vulnerable residents need the most lead time{cite('hospitals')}."))
