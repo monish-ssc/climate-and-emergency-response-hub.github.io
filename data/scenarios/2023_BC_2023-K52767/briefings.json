@@ -1,7 +1,7 @@
 {
  "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
  "fireId": "2023_BC_2023-K52767",
- "updatedAt": "2026-10-30T02:58:01Z",
+ "updatedAt": "2026-10-30T03:02:15Z",
  "source": "data/pipeline/live/briefings.json",
  "briefings": [
   {

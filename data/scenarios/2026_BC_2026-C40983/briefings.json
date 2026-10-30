@@ -1,9 +1,120 @@
 {
  "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
  "fireId": "2026_BC_2026-C40983",
- "updatedAt": "2026-10-30T02:58:01Z",
+ "updatedAt": "2026-10-30T03:02:15Z",
  "source": "data/pipeline/live/briefings.json",
  "briefings": [
+  {
+   "key": "replay/2026_BC_2026-C40983/4",
+   "kind": "replay",
+   "fireId": "2026_BC_2026-C40983",
+   "regionId": "clinton",
+   "hazard": "wildfire",
+   "step": 4,
+   "score": 37,
+   "level": "moderate",
+   "asOf": "2026-07-20T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T03:02:01Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "a4fa89bc2537085a",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "451e6ce3-b8fb-5ad1-b848-0cbcafd293e0",
+    "title": "Preparedness Briefing: Pear Lake Wildfire",
+    "situation": "The Pear Lake wildfire is out of control and covers about 44 ha [F2]. Its approximate edge is 19.2 km from Clinton, BC [F2, F4]. The replayed wildfire risk score is 37 out of 100, which is level moderate [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Review emergency response plans and available resources [F3].",
+      "rationale": "The risk level is moderate [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Review potential host communities for evacuees, such as Kamloops, Williams Lake, or Whistler [F15].",
+      "rationale": "These communities have 10,000+ residents and are located 30-250 km away [F15]."
+     },
+     {
+      "priority": 3,
+      "action": "Review lodging plans for approximately 141 people based on the assumption that 20% of the 707 residents may require group lodging [F10, F16].",
+      "rationale": "This is an adjustable planning assumption for potential evacuees [F16]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://climate-and-emergency-response-hub.github.io/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://cfjctoday.com/?p=1117011"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T03:02:01Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near Clinton",
+     "body": "The Pear Lake wildfire is out of control and is located approximately 19.2 km from Clinton.",
+     "whatToDo": [
+      "Stay informed via official channels",
+      "Be prepared to follow directions from local authorities"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de Clinton",
+     "body": "L'incendie de forêt de Pear Lake est hors de contrôle et se situe à environ 19.2 km de Clinton.",
+     "whatToDo": [
+      "Restez informé via les canaux officiels",
+      "Soyez prêt à suivre les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Jul 20, 2026, 1 PM PDT. Place: Clinton, BC.",
+    "Pear Lake wildfire (2026-C40983): out of control, about 44 ha (estimated between agency reports); its approximate edge is 19.2 km from Clinton, BC.",
+    "Replayed wildfire risk score: 37 out of 100, level moderate (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 19.2 km (20.5 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 50 fires (8.5 points).",
+    "Score factor - Uncontained fires within 150 km: 1 fires (5.0 points).",
+    "Smoke: AQHI+ 3 (low health risk) at Kamloops Federal Building, 100 km away.",
+    "Reception centres open at this time: none.",
+    "Reported on 2026-07-20: SLRD evacuation order for properties in the Pear Lake area.",
+    "Clinton has about 707 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 2009, Kelowna, Kamloops and Cariboo BC: 20,000 people evacuated.",
+    "Similar past event: 2021, Lytton, British Columbia: 1,200 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Ashcroft Hospital And Community Health Care Centre, Ashcroft (45.1 km); Lillooet District Hospital And Health Centre, Lillooet (50.8 km); 100 Mile District General Hospital, 100 Mile House (64.3 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Kamloops (108,793 residents, 94 km); Williams Lake (11,462 residents, 122 km); Whistler (15,090 residents, 149 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 141 people if all 707 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
   {
    "key": "replay/2026_BC_2026-C40983/10",
    "kind": "replay",
