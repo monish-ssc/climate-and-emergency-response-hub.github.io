@@ -5399,7 +5399,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         return brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`) || null;
       }
       const isAI = (b) => b && b.model && b.model !== "template";
-      // "Qwen2.5 7B, open-source, run by Ollama in GitHub Actions" (older entries only have the model id)
+      // "Gemma 4 31B (Google), free open-weight model via OpenRouter" (older entries only have the model id)
       const modelName = (b) => b.modelLabel || b.model.split("/").pop();
       const aiSource = (b) => (b.provider ? `${modelName(b)}, ${b.provider}` : modelName(b));
       // "[F2, F5]" -> small links to the numbered facts
@@ -6557,8 +6557,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         if (alert) {
           $("advBadge").textContent = isAI(cur)
             ? l === "fr"
-              ? `Rédigé par l'IA (${modelName(cur)}, modèle à code source ouvert)${cur.pinned && cur.reviewed ? " · révisé par l'équipe" : ""}`
-              : `Written by AI (${modelName(cur)}, open-source model)${cur.pinned && cur.reviewed ? " · reviewed by the team" : ""}`
+              ? `Rédigé par l'IA (${modelName(cur)})${cur.pinned && cur.reviewed ? " · révisé par l'équipe" : ""}`
+              : `Written by AI (${modelName(cur)})${cur.pinned && cur.reviewed ? " · reviewed by the team" : ""}`
             : l === "fr"
               ? "Modèle de texte (pas l'IA), à partir des mêmes faits"
               : "Template text (not AI), from the same facts";

@@ -107,7 +107,7 @@ class LocalModelBuildTest(unittest.TestCase):
         self.assertTrue(all("Historical replay" in f for f in asked))
         ai = [b for b in doc["briefings"] if b["model"] != "template"]
         self.assertTrue(ai and all(b["kind"] == "replay" for b in ai))
-        self.assertEqual(ai[0]["modelLabel"], bb.MODEL_LABEL)
+        self.assertEqual(ai[0]["modelLabel"], bb.model_label(bb.MODELS[0]))
         self.assertEqual(ai[0]["provider"], bb.PROVIDER)
 
     def test_time_budget_stops_new_calls(self):

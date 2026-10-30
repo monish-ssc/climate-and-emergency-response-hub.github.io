@@ -1,11 +1,12 @@
 name: Generate replay briefings
 
-# One-off: writes AI briefings for every key moment of the wildfire replays with the open-source model
-# (Ollama on this runner) and commits them to data/scenarios/<fireId>/briefings.json on the branch it ran on.
-# The refresh workflow then uses those saved briefings as they are, so the replays never need a live AI call.
+# One-off: writes AI briefings for every key moment of the wildfire replays with a free model on OpenRouter
+# and commits them to data/scenarios/<fireId>/briefings.json on the branch it ran on. The refresh workflow
+# then uses those saved briefings as they are, so the replays never need a live AI call.
 # Review the saved text and set "reviewed": true on the drafts a person has checked.
 #
 # Runs when this file changes on the branch below, or by hand (Actions > Generate replay briefings > Run).
+# Moments already saved are skipped, so a second run only retries the missing ones.
 # It never deploys the site and never pushes to main.
 on:
   push:
@@ -25,13 +26,10 @@ jobs:
     name: Write and save the replay briefings
     if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
-    # about 18 moments, each one or two answers of a few minutes on CPU
-    timeout-minutes: 240
+    timeout-minutes: 30
     env:
       PYTHONUNBUFFERED: "1"
-      BRIEFING_BASE_MODEL: qwen2.5:7b
-      BRIEFING_MODELS: qwen2.5:7b-8k
-      BRIEFING_MODEL_LABEL: Qwen2.5 7B
+      BRIEFING_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
     steps:
       - name: Check out the branch
@@ -46,20 +44,9 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --requirement requirements.txt
 
-      - name: Restore the briefing model
-        uses: actions/cache@v5
-        with:
-          path: ~/.ollama/models
-          key: ollama-${{ runner.os }}-${{ env.BRIEFING_BASE_MODEL }}-v1
-
-      - name: Start the briefing model
-        timeout-minutes: 15
-        run: bash .github/scripts/start_briefing_model.sh
-
-      # About 6 minutes per answer on CPU. The time budget (3 h 10 min) stops new calls well before the
-      # job limit, so the briefings written so far are always saved and committed.
+      # 18 moments, a second try for a rejected answer: about 20-36 requests of the ~50 free per day.
       - name: Write the replay briefings
-        run: python data/build_briefings.py --only replay --max-calls 60 --time-budget 11400
+        run: python data/build_briefings.py --only replay --max-calls 36 --time-budget 1200
 
       - name: Save the accepted AI drafts
         run: python data/pin_replay_briefings.py --file data/pipeline/live/briefings.json
@@ -77,7 +64,8 @@ jobs:
           d = json.loads(p.read_text(encoding="utf-8"))
           rep = [b for b in d["briefings"] if b["kind"] == "replay"]
           ai = [b for b in rep if b["model"] != "template"]
-          print(f"::notice::Replay briefings: {len(ai)} AI, {len(rep) - len(ai)} template, {d['counts']['calls']} model calls")
+          print(f"::notice::Replay briefings: {len(ai)} AI ({sum(bool(b.get('pinned')) for b in rep)} already saved), "
+                f"{len(rep) - len(ai)} template, {d['counts']['calls']} model calls")
           for b in rep:
               if b.get("aiRejected"):
                   print(f"::warning::{b['key']} rejected: {'; '.join(b['aiRejected'])[:300]}")
@@ -89,9 +77,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/scenarios/*/briefings.json
           if git diff --cached --quiet; then
-            echo "::notice::No AI draft was accepted, nothing to save"
+            echo "::notice::No new AI draft was accepted, nothing to save"
             exit 0
           fi
-          git commit -m "Save replay AI briefings (Qwen2.5 7B via Ollama, generated in Actions)"
+          git commit -m "Save replay AI briefings (free model via OpenRouter, generated in Actions)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"

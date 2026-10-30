@@ -11,10 +11,12 @@ Subjects
   replay  every key moment of the wildfire replays (score changes and reported events): the fire, the
           replayed score, smoke, reception centres open at that time, what had really happened so far
 
-Model: an open-source model (Qwen2.5 7B) run by Ollama on the workflow's own runner, through Ollama's
-OpenAI-compatible API at localhost, so no API key or outside service is needed. (GitHub Models, used
-before, was retired on July 30, 2026.) BRIEFING_ENDPOINT, BRIEFING_API_KEY and BRIEFING_MODELS point it at
-another OpenAI-compatible service. The model runs on CPU and is slow, so:
+Model: a free open-weight model on OpenRouter (Google Gemma 4 31B, falling back to Gemma 4 26B), called
+with the OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The key is limited to free models and
+never appears in the repo or the page. (GitHub Models, used before, was retired on July 30, 2026.)
+BRIEFING_ENDPOINT and BRIEFING_MODELS point it at any other OpenAI-compatible service, such as a local
+Ollama (http://localhost:11434/v1/chat/completions, no key). The free tier allows about 50 requests a
+day, so:
   - replay briefings never change once written, and saved ones (data/scenarios/<fireId>/briefings.json)
     are used as they are; live ones are rewritten only when the score or level changes or after
     MAX_AGE_HOURS
@@ -30,7 +32,7 @@ Guardrails
     (model "template"), so the dashboard always has something accurate to show
 
 Run from the repo root:
-  python data/build_briefings.py --base-url https://<site>     (in the workflow; Ollama running)
+  python data/build_briefings.py --base-url https://<site>     (in the workflow; BRIEFING_API_KEY set)
   python data/build_briefings.py --only replay --max-calls 60  (the one-off replay job)
   python data/build_briefings.py --offline                       (templates only, no model calls)
 """
@@ -51,12 +53,24 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent
 ROOT = DATA_DIR.parent
 OUT = DATA_DIR / "pipeline" / "live" / "briefings.json"
-ENDPOINT = os.environ.get("BRIEFING_ENDPOINT", "http://localhost:11434/v1/chat/completions")
-API_KEY = os.environ.get("BRIEFING_API_KEY", "")  # not needed for a local Ollama
-MODELS = [m for m in os.environ.get("BRIEFING_MODELS", "qwen2.5:7b").split(",") if m]
-MODEL_LABEL = os.environ.get("BRIEFING_MODEL_LABEL", "Qwen2.5 7B")
-PROVIDER = os.environ.get("BRIEFING_PROVIDER", "open-source, run by Ollama in GitHub Actions")
-TIMEOUT = int(os.environ.get("BRIEFING_TIMEOUT", 900))  # seconds for one answer: CPU models are slow
+ENDPOINT = os.environ.get("BRIEFING_ENDPOINT", "https://openrouter.ai/api/v1/chat/completions")
+API_KEY = os.environ.get("BRIEFING_API_KEY", "")  # repository secret; empty for a local Ollama
+MODELS = [m for m in os.environ.get(
+    "BRIEFING_MODELS", "google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free").split(",") if m]
+MODEL_LABEL = os.environ.get("BRIEFING_MODEL_LABEL", "")  # empty: named after the model that answered
+PROVIDER = os.environ.get("BRIEFING_PROVIDER", "free open-weight model via OpenRouter")
+TIMEOUT = int(os.environ.get("BRIEFING_TIMEOUT", 180))  # seconds for one answer
+
+
+def model_label(model):
+    """'google/gemma-4-31b-it:free' -> 'Gemma 4 31B (Google)', unless BRIEFING_MODEL_LABEL is set."""
+    if MODEL_LABEL:
+        return MODEL_LABEL
+    maker, _, name = model.rpartition("/")
+    name = name.split(":")[0]
+    m = re.match(r"gemma-(\d+)-(\d+)b", name)
+    pretty = f"Gemma {m.group(1)} {m.group(2)}B" if m else name
+    return f"{pretty} ({maker.capitalize()})" if maker else pretty
 PROMPT_VERSION = "2026-10-29.1"
 MAX_AGE_HOURS = 12
 HAZARD_NAME = {"wildfire": "wildfire", "flood": "flood", "severe_storm": "hurricane and severe storm"}
@@ -423,7 +437,7 @@ def call_model(token, model, facts_text, feedback=None):
     if JSON_MODE["on"]:
         payload["response_format"] = {"type": "json_object"}
     body = json.dumps(payload).encode()
-    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+    headers = {"Content-Type": "application/json", "Accept": "application/json", "X-Title": "ClimateGuard"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     req = urllib.request.Request(ENDPOINT, data=body, method="POST", headers=headers)
@@ -785,8 +799,8 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
                     JSON_MODE["on"] = False  # this model has no JSON mode; ask for JSON in the prompt only
                     problems = ["retrying without JSON mode"]
                     continue
-                if e.code in (401, 403):
-                    models = []  # not allowed to use this service: stop calling
+                if e.code in (401, 402, 403):
+                    models = []  # no key, key limit reached or not allowed: stop calling
                 elif e.code in (404, 422, 429):
                     models.pop(0)  # unknown model or its daily limit: try the next model
                 problems = [f"HTTP {e.code}"]
@@ -804,7 +818,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
         if answer and not problems:
             results[s["key"]] = {"briefing": contract(answer, s, models[0] if models else "unknown", now),
                                  "publicAlert": answer["publicAlert"], "model": models[0] if models else "unknown",
-                                 "modelLabel": MODEL_LABEL, "provider": PROVIDER}
+                                 "modelLabel": model_label(models[0]) if models else "unknown", "provider": PROVIDER}
             written += 1
             print(f"  AI  {s['key']} ({s['level']})")
         else:
