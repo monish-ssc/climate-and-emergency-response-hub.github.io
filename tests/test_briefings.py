@@ -160,6 +160,10 @@ class CheckTest(unittest.TestCase):
         self.assertEqual(bb.check(low, facts(), "high"), [])
         ok = answer(action="Review the local evacuation plan and contact lists.")
         self.assertEqual(bb.check(ok, facts(), "low"), [])
+        follow = answer(action="Monitor the status of the evacuation order for nearby properties.")
+        self.assertEqual(bb.check(follow, facts(), "moderate"), [])
+        order = answer(action="Issue an evacuation order for nearby properties.")
+        self.assertTrue(any("risk level is moderate" in p for p in bb.check(order, facts(), "moderate")))
 
     def test_french_number_format_and_clock_times_are_accepted(self):
         f = facts()

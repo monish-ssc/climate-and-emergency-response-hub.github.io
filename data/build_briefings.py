@@ -500,6 +500,9 @@ STRONG_ACTION = re.compile(
     r"\b(open|opening|activate|activating|staff|staffing|set up)\b[^.]{0,40}\b(reception|evacuation|shelter|emergency operations)"
     r"|\bevacuat(e|ing|ion order)\b|\brelocat(e|ing)\b|\bprepare\b[^.]{0,30}\breception centres?\b",
     re.I)
+# ...but following an order or a situation that already exists is fine at any level
+# ("Monitor the status of the SLRD evacuation order")
+FOLLOW_ACTION = re.compile(r"\s*(monitor|track|check|follow|watch|review|stay informed|keep informed)\b", re.I)
 
 # Small open models cite as [2], [Fact 2], (F2) or [F2; F5]. Write them all as [F2] before the checks.
 # Bare numbers count as citations only in square brackets, so "(10)" in a sentence stays a number.
@@ -540,7 +543,8 @@ def check(answer, facts, level=None):
             isinstance(a, dict) and a.get("action") and a.get("rationale") for a in acts):
         problems.append("actions must be 1-7 objects with action and rationale")
     if level in ("low", "moderate") and isinstance(acts, list):
-        strong = [a.get("action", "") for a in acts if isinstance(a, dict) and STRONG_ACTION.search(a.get("action", ""))]
+        strong = [a.get("action", "") for a in acts if isinstance(a, dict) and STRONG_ACTION.search(a.get("action", ""))
+                  and not FOLLOW_ACTION.match(a.get("action", ""))]
         if strong:
             problems.append(f"the risk level is {level}, so do not recommend opening reception centres, "
                             f"evacuating or relocating people (found: {strong[0][:60]}); recommend readiness and "
