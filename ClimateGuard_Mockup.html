@@ -5417,7 +5417,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         );
       }
       // saved replay drafts: "reviewed by the team" once a person set reviewed: true in the repo
-      const reviewNote = (b) => (b.pinned && b.reviewed ? "reviewed by the team" : "needs human review");
+      const reviewNote = (b) =>
+        b.pinned && b.reviewed ? (b.edited ? "edited and reviewed by the team" : "reviewed by the team") : "needs human review";
       function briefingBadge(b) {
         return isAI(b)
           ? `AI draft · ${escapeHTML(aiSource(b))} · ${b.pinned ? "saved for the replay" : `written ${escapeHTML(formatSnapshotTime(b.generatedAt))}`}${b.stale ? " · update pending" : ""} · confidence ${escapeHTML(b.briefing.confidence)} · ${reviewNote(b)}`
@@ -6560,8 +6561,8 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         if (alert) {
           $("advBadge").textContent = isAI(cur)
             ? l === "fr"
-              ? `Rédigé par l'IA (${modelName(cur)})${cur.pinned && cur.reviewed ? " · révisé par l'équipe" : ""}`
-              : `Written by AI (${modelName(cur)})${cur.pinned && cur.reviewed ? " · reviewed by the team" : ""}`
+              ? `Rédigé par l'IA (${modelName(cur)})${cur.pinned && cur.reviewed ? (cur.edited ? " · modifié et révisé par l'équipe" : " · révisé par l'équipe") : ""}`
+              : `Written by AI (${modelName(cur)})${cur.pinned && cur.reviewed ? (cur.edited ? " · edited and reviewed by the team" : " · reviewed by the team") : ""}`
             : l === "fr"
               ? "Modèle de texte (pas l'IA), à partir des mêmes faits"
               : "Template text (not AI), from the same facts";

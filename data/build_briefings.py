@@ -863,7 +863,7 @@ def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_b
             p = pinned[s["key"]]
             entry = {k: p[k] for k in ("briefing", "publicAlert", "model", "generatedAt")}
             entry.update({k: p[k] for k in ("modelLabel", "provider") if p.get(k)})
-            entry.update(pinned=True, reviewed=bool(p.get("reviewed")))
+            entry.update(pinned=True, reviewed=bool(p.get("reviewed")), edited=bool(p.get("editedByTeam")))
         elif s["key"] in results and "briefing" in results[s["key"]]:
             r = results[s["key"]]
             entry = {"briefing": r["briefing"], "publicAlert": r["publicAlert"], "model": r["model"],
