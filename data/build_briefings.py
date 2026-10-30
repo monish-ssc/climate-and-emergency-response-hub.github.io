@@ -2,7 +2,7 @@
 build_briefings.py - AI preparedness briefings, grounded in the hub's own data.
 
 Runs in the refresh workflow after the pipelines. For each subject it gathers numbered facts from the
-files the pipelines wrote, asks a model on GitHub Models to write a briefing that uses only those facts,
+files the pipelines wrote, asks an open-source model to write a briefing that uses only those facts,
 checks the answer, and saves everything to data/pipeline/live/briefings.json for the dashboard.
 
 Subjects
@@ -11,11 +11,16 @@ Subjects
   replay  every key moment of the wildfire replays (score changes and reported events): the fire, the
           replayed score, smoke, reception centres open at that time, what had really happened so far
 
-Model: GitHub Models (https://models.github.ai), called with the workflow's GITHUB_TOKEN
-(permissions: models: read), so no API key or secret is needed. Free use is rate-limited, so:
-  - replay briefings never change once written; live ones are rewritten only when the score or level
-    changes or after MAX_AGE_HOURS
-  - at most --max-calls model calls per run, most urgent subjects first
+Model: Google Gemma 4 31B (open-weight), falling back to Gemma 4 26B, on OpenRouter, called with the
+OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The key never appears in the repo or the page.
+(GitHub Models, used before, was retired on July 30, 2026.) BRIEFING_ENDPOINT and BRIEFING_MODELS point
+it at any other OpenAI-compatible service, such as a local Ollama
+(http://localhost:11434/v1/chat/completions, no key). To keep model calls few:
+  - replay briefings never change once written, and saved ones (data/scenarios/<fireId>/briefings.json)
+    are used as they are; live ones are rewritten only when the score or level changes or after
+    MAX_AGE_HOURS
+  - at most --max-calls model calls per run, most urgent subjects first, and no new call after
+    BRIEFING_TIME_BUDGET seconds, so the workflow always finishes
   - previous briefings are reused from the published site (--base-url) or the local file
 
 Guardrails
@@ -26,7 +31,8 @@ Guardrails
     (model "template"), so the dashboard always has something accurate to show
 
 Run from the repo root:
-  python data/build_briefings.py --base-url https://<site>     (in the workflow; GITHUB_TOKEN set)
+  python data/build_briefings.py --base-url https://<site>     (in the workflow; BRIEFING_API_KEY set)
+  python data/build_briefings.py --only replay --max-calls 60  (the one-off replay job)
   python data/build_briefings.py --offline                       (templates only, no model calls)
 """
 
@@ -46,8 +52,26 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent
 ROOT = DATA_DIR.parent
 OUT = DATA_DIR / "pipeline" / "live" / "briefings.json"
-ENDPOINT = "https://models.github.ai/inference/chat/completions"
-MODELS = [m for m in os.environ.get("BRIEFING_MODELS", "openai/gpt-4.1-mini,openai/gpt-4o-mini").split(",") if m]
+ENDPOINT = os.environ.get("BRIEFING_ENDPOINT", "https://openrouter.ai/api/v1/chat/completions")
+API_KEY = os.environ.get("BRIEFING_API_KEY", "")  # repository secret; empty for a local Ollama
+MODELS = [m for m in os.environ.get(
+    "BRIEFING_MODELS",
+    "google/gemma-4-31b-it,google/gemma-4-26b-a4b-it").split(",") if m]
+PAUSE = float(os.environ.get("BRIEFING_PAUSE", 3))  # seconds between requests, to be gentle on the service
+MODEL_LABEL = os.environ.get("BRIEFING_MODEL_LABEL", "")  # empty: named after the model that answered
+PROVIDER = os.environ.get("BRIEFING_PROVIDER", "open-weight model via OpenRouter")
+TIMEOUT = int(os.environ.get("BRIEFING_TIMEOUT", 180))  # seconds for one answer
+
+
+def model_label(model):
+    """'google/gemma-4-31b-it:free' -> 'Gemma 4 31B (Google)', unless BRIEFING_MODEL_LABEL is set."""
+    if MODEL_LABEL:
+        return MODEL_LABEL
+    maker, _, name = model.rpartition("/")
+    name = name.split(":")[0]
+    m = re.match(r"gemma-(\d+)-(\d+)b", name)
+    pretty = f"Gemma {m.group(1)} {m.group(2)}B" if m else name
+    return f"{pretty} ({maker.capitalize()})" if maker else pretty
 PROMPT_VERSION = "2026-10-29.1"
 MAX_AGE_HOURS = 12
 HAZARD_NAME = {"wildfire": "wildfire", "flood": "flood", "severe_storm": "hurricane and severe storm"}
@@ -396,6 +420,8 @@ JSON_MODE = {"on": True}  # turned off if a model rejects response_format
 
 def parse_json(text):
     """The model's JSON, tolerating code fences or text around it."""
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("empty reply (no text from the model)")
     text = text.strip()
     if not text.startswith("{"):
         a, b = text.find("{"), text.rfind("}")
@@ -414,9 +440,11 @@ def call_model(token, model, facts_text, feedback=None):
     if JSON_MODE["on"]:
         payload["response_format"] = {"type": "json_object"}
     body = json.dumps(payload).encode()
-    req = urllib.request.Request(ENDPOINT, data=body, method="POST", headers={
-        "Content-Type": "application/json", "Accept": "application/json", "Authorization": f"Bearer {token}"})
-    with urllib.request.urlopen(req, timeout=90) as r:
+    headers = {"Content-Type": "application/json", "Accept": "application/json", "X-Title": "ClimateGuard"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(ENDPOINT, data=body, method="POST", headers=headers)
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
         raw, status, ctype = r.read().decode("utf-8", "replace"), r.status, r.headers.get("Content-Type")
     try:
         out = json.loads(raw)
@@ -425,6 +453,26 @@ def call_model(token, model, facts_text, feedback=None):
         print(f"  model reply was not JSON: HTTP {status}, {ctype}, {len(raw)} bytes: {raw[:300]!r}")
         raise ValueError(f"reply was not JSON (HTTP {status}, {len(raw)} bytes)") from None
     return parse_json(out["choices"][0]["message"]["content"])
+
+
+RATE_LIMIT_WAITS = (15, 30, 45)  # seconds to wait before each retry of a rate-limited (HTTP 429) model
+
+
+def ask(token, model, facts_text, feedback=None):
+    """call_model, waiting and retrying while a free model is briefly rate-limited (HTTP 429)."""
+    for wait in RATE_LIMIT_WAITS + (None,):
+        try:
+            return call_model(token, model, facts_text, feedback)
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or wait is None:
+                raise
+            asked = (e.headers or {}).get("Retry-After")
+            try:
+                delay = min(60.0, max(5.0, float(asked))) if asked else wait
+            except ValueError:
+                delay = wait
+            print(f"  {model} is rate-limited (HTTP 429), retrying in {delay:.0f} s")
+            time.sleep(delay)
 
 
 NUM = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
@@ -452,6 +500,32 @@ STRONG_ACTION = re.compile(
     r"\b(open|opening|activate|activating|staff|staffing|set up)\b[^.]{0,40}\b(reception|evacuation|shelter|emergency operations)"
     r"|\bevacuat(e|ing|ion order)\b|\brelocat(e|ing)\b|\bprepare\b[^.]{0,30}\breception centres?\b",
     re.I)
+# ...but following an order or a situation that already exists is fine at any level
+# ("Monitor the status of the SLRD evacuation order")
+FOLLOW_ACTION = re.compile(r"\s*(monitor|track|check|follow|watch|review|stay informed|keep informed)\b", re.I)
+
+# Small open models cite as [2], [Fact 2], (F2) or [F2; F5]. Write them all as [F2] before the checks.
+# Bare numbers count as citations only in square brackets, so "(10)" in a sentence stays a number.
+_CITE_TOKEN = r"(?:(?:facts?|f)\s*\.?\s*)?\d{1,2}"
+_CITE_LIST = rf"{_CITE_TOKEN}(?:\s*(?:,|;|and|&)\s*{_CITE_TOKEN})*"
+CITE_SQUARE = re.compile(rf"[\[【]\s*({_CITE_LIST})\s*[\]】]", re.I)
+CITE_ROUND = re.compile(rf"\(\s*((?:facts?|f)\s*\.?\s*\d{{1,2}}(?:\s*(?:,|;|and|&)\s*{_CITE_TOKEN})*)\s*\)", re.I)
+
+
+def _as_cite(m):
+    return "[" + ", ".join(f"F{d}" for d in re.findall(r"\d{1,2}", m.group(1))) + "]"
+
+
+def normalize_citations(answer):
+    fix = lambda t: CITE_ROUND.sub(_as_cite, CITE_SQUARE.sub(_as_cite, t)) if isinstance(t, str) else t  # noqa: E731
+    if isinstance(answer, dict):
+        answer["situation"] = fix(answer.get("situation"))
+        for a in answer.get("actions") or []:
+            if isinstance(a, dict):
+                for k in ("action", "rationale"):
+                    if k in a:
+                        a[k] = fix(a[k])
+    return answer
 
 
 def check(answer, facts, level=None):
@@ -469,7 +543,8 @@ def check(answer, facts, level=None):
             isinstance(a, dict) and a.get("action") and a.get("rationale") for a in acts):
         problems.append("actions must be 1-7 objects with action and rationale")
     if level in ("low", "moderate") and isinstance(acts, list):
-        strong = [a.get("action", "") for a in acts if isinstance(a, dict) and STRONG_ACTION.search(a.get("action", ""))]
+        strong = [a.get("action", "") for a in acts if isinstance(a, dict) and STRONG_ACTION.search(a.get("action", ""))
+                  and not FOLLOW_ACTION.match(a.get("action", ""))]
         if strong:
             problems.append(f"the risk level is {level}, so do not recommend opening reception centres, "
                             f"evacuating or relocating people (found: {strong[0][:60]}); recommend readiness and "
@@ -494,6 +569,12 @@ def check(answer, facts, level=None):
         problems.append("numbers not in the facts: " + ", ".join(invented[:8]))
     if not re.search(r"\[F\d+", answer["situation"]):
         problems.append("the situation must cite facts like [F2]")
+    cited_text = " ".join([answer["situation"]] + [f"{a.get('action', '')} {a.get('rationale', '')}"
+                                                   for a in acts if isinstance(a, dict)])
+    cited = {int(i) for g in cites.findall(cited_text) for i in re.findall(r"F(\d+)", g)}
+    missing = sorted(i for i in cited if not 1 <= i <= len(facts.items))
+    if missing:
+        problems.append("cites facts that do not exist: " + ", ".join(f"F{i}" for i in missing))
     return problems
 
 
@@ -586,6 +667,67 @@ def template_actions(subject):
     return acts[:5]
 
 
+HAZARD_FR = {"wildfire": "feux de forêt", "flood": "inondation", "severe_storm": "ouragan et tempête violente"}
+LEVEL_FR = {"low": "faible", "moderate": "modéré", "high": "élevé", "critical": "critique"}
+MONTH_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre",
+            "novembre", "décembre"]
+
+
+def day_fr(iso_date):
+    d = datetime.strptime(iso_date, "%Y-%m-%d")
+    return f"{'1er' if d.day == 1 else d.day} {MONTH_FR[d.month - 1]}"
+
+
+def template_alert(subject):
+    """Plain-language public advisory (EN/FR) from the same facts: level, reported evacuation or easing,
+    and an open reception centre. No numbers beyond dates, no claim of an official order."""
+    level, hz, c = subject["level"], subject["hazard"], subject.get("ctx") or {}
+    events = c.get("events") or []
+    centres = (c.get("centres") or (None, []))[1] or []
+    evac = next((ev for _, ev in reversed(events) if re.search(r"evacuat", ev["event"], re.I)
+                 and not re.search(r"downgrad|all clear|rescind|lifted", ev["event"], re.I)), None)
+    easing = next((ev for _, ev in reversed(events)
+                   if re.search(r"downgrad|all clear|rescind|lifted|return", ev["event"], re.I)), None)
+    en = [f"The automated {HAZARD_NAME[hz]} risk level for this area is {level}."]
+    fr = [f"Le niveau de risque automatisé ({HAZARD_FR[hz]}) pour ce secteur est {LEVEL_FR[level]}."]
+    if easing:
+        en.append(f"On {day(easing['date'])}, officials reported that orders are easing.")
+        fr.append(f"Le {day_fr(easing['date'])}, les autorités ont signalé un assouplissement des ordres.")
+    elif evac:
+        en.append(f"An evacuation was reported on {day(evac['date'])}.")
+        fr.append(f"Une évacuation a été signalée le {day_fr(evac['date'])}.")
+    if centres:
+        en.append(f"A reception centre for evacuees is open at {centres[0]['name']}, {centres[0]['city']}.")
+        fr.append(f"Un centre d'accueil pour les personnes évacuées est ouvert : {centres[0]['name']}, "
+                  f"{centres[0]['city']}.")
+    en.append("Follow official alerts and orders from your local authority.")
+    fr.append("Suivez les alertes et les ordres officiels de votre autorité locale.")
+    if easing:
+        todo_en = ["Return only when officials say it is safe.", "Check official updates before you travel."]
+        todo_fr = ["Ne revenez que lorsque les autorités le permettent.",
+                   "Consultez les mises à jour officielles avant de vous déplacer."]
+    elif level in ("high", "critical"):
+        todo_en = ["If you are told to leave, leave right away.",
+                   "Register at a reception centre if you need lodging or help.",
+                   "Keep medications, documents and an emergency kit ready."]
+        todo_fr = ["Si on vous demande de partir, partez immédiatement.",
+                   "Inscrivez-vous à un centre d'accueil si vous avez besoin d'hébergement ou d'aide.",
+                   "Gardez vos médicaments, vos documents et une trousse d'urgence à portée de main."]
+        if not centres:
+            todo_en.pop(1)
+            todo_fr.pop(1)
+    elif level == "moderate":
+        todo_en = ["Check official alerts.", "Prepare an emergency kit and a plan to leave."]
+        todo_fr = ["Consultez les alertes officielles.", "Préparez une trousse d'urgence et un plan pour partir."]
+    else:
+        todo_en = ["Check official alerts.", "Keep an emergency kit ready."]
+        todo_fr = ["Consultez les alertes officielles.", "Gardez une trousse d'urgence prête."]
+    return {
+        "en": {"headline": f"{HAZARD_NAME[hz].capitalize()} risk: {level}", "body": " ".join(en), "whatToDo": todo_en},
+        "fr": {"headline": f"Risque de {HAZARD_FR[hz]} : {LEVEL_FR[level]}", "body": " ".join(fr), "whatToDo": todo_fr},
+    }
+
+
 def template(subject, now):
     facts, level = subject["facts"], subject["level"]
     region_line = facts.items[0]
@@ -599,14 +741,7 @@ def template(subject, now):
     }
     out = contract(answer, subject, "template", now)
     out["confidence"] = "medium"
-    return out, {
-        "en": {"headline": f"{HAZARD_NAME[subject['hazard']].capitalize()} risk: {level}",
-               "body": "Automated screening shows this risk level. Follow official alerts from your local authority.",
-               "whatToDo": ["Check official alerts.", "Keep an emergency kit ready."]},
-        "fr": {"headline": f"Risque ({HAZARD_NAME[subject['hazard']]}) : {level}",
-               "body": "Le dépistage automatisé indique ce niveau de risque. Suivez les alertes officielles de votre autorité locale.",
-               "whatToDo": ["Consultez les alertes officielles.", "Gardez une trousse d'urgence prête."]},
-    }
+    return out, template_alert(subject)
 
 
 # ---------- main ----------
@@ -620,6 +755,19 @@ def previous(base_url):
         except Exception as e:  # noqa: BLE001 - first run, or the site is unreachable
             print(f"No published briefings reused ({e})")
     return {b["key"]: b for b in (prev or {}).get("briefings", [])}
+
+
+def load_pinned():
+    """Replay briefings saved in the repo (data/scenarios/<fireId>/briefings.json, written by
+    pin_replay_briefings.py and reviewed by the team). They are used as they are: never redrafted,
+    never replaced by a template."""
+    pinned = {}
+    for rp in load(DATA_DIR / "scenarios" / "index.json", {"replays": []})["replays"]:
+        doc = load(DATA_DIR / "scenarios" / rp["fireId"] / "briefings.json")
+        for b in (doc or {}).get("briefings", []):
+            if b.get("key") and b.get("briefing") and b.get("model") not in (None, "template"):
+                pinned[b["key"]] = b
+    return pinned
 
 
 def needs_refresh(subject, old, now):
@@ -636,21 +784,21 @@ def needs_refresh(subject, old, now):
     return age > timedelta(hours=MAX_AGE_HOURS)
 
 
-def build(base_url=None, max_calls=8, offline=False, now=None):
+def build(base_url=None, max_calls=8, offline=False, now=None, only=None, time_budget=None):
     now = now or datetime.now(timezone.utc)
+    deadline = time.monotonic() + time_budget if time_budget else None
     ref = Reference()
     subjects = replay_subjects(ref) + live_subjects(ref) + watch_subjects(ref)
     for s in subjects:
         s["hash"] = hashlib.sha256((PROMPT_VERSION + s["facts"].text()).encode()).hexdigest()[:16]
     old = previous(base_url)
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token and not offline:
-        print("GITHUB_TOKEN not set: writing template briefings only")
-        offline = True
+    pinned = load_pinned()
+    token = API_KEY
 
     # most urgent first: replays (written once), then live by level. Subjects whose last AI answer
     # failed the checks go to the back, so they cannot use up every run's calls while the rest wait.
-    todo = [s for s in subjects if needs_refresh(s, old.get(s["key"]), now)]
+    todo = [s for s in subjects if s["key"] not in pinned and needs_refresh(s, old.get(s["key"]), now)
+            and (not only or s["kind"] in only)]
     todo.sort(key=lambda s: (s["kind"] != "replay", bool((old.get(s["key"]) or {}).get("aiRejected")),
                              LEVEL_ORDER.get(s["level"], 9), s["key"]))
     calls, written, failed, models = 0, 0, 0, list(MODELS)
@@ -658,53 +806,73 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
     for s in todo:
         if offline or calls >= max_calls or not models:
             break
+        if deadline and time.monotonic() > deadline:
+            print("  time budget used: no more model calls this run")
+            break
         answer, problems = None, ["not called"]
         for attempt in range(2):
+            if attempt and deadline and time.monotonic() > deadline:
+                break  # no time for the retry; the answer stays rejected
             try:
                 calls += 1
-                answer = call_model(token, models[0], s["facts"].text(),
+                answer = ask(token, models[0], s["facts"].text(),
                                     None if attempt == 0 else "Your previous answer had these problems: "
                                     + "; ".join(problems) + ". Fix them and reply with the full JSON again.")
-                problems = check(answer, s["facts"], s["level"])
+                problems = check(normalize_citations(answer), s["facts"], s["level"])
             except urllib.error.HTTPError as e:
                 detail = e.read().decode("utf-8", "replace")[:200]
                 print(f"  {s['key']}: {models[0]} HTTP {e.code} {detail}")
+                problems = [f"HTTP {e.code} from {models[0]}: {detail[:150]}"]
                 if e.code == 400 and JSON_MODE["on"] and "response_format" in detail:
                     JSON_MODE["on"] = False  # this model has no JSON mode; ask for JSON in the prompt only
                     problems = ["retrying without JSON mode"]
                     continue
-                if e.code in (401, 403):
-                    models = []  # token cannot use GitHub Models: stop calling
+                if e.code in (401, 402, 403):
+                    models = []  # no key, key limit reached or not allowed: stop calling
                 elif e.code in (404, 422, 429):
-                    models.pop(0)  # unknown model or its daily limit: try the next model
-                problems = [f"HTTP {e.code}"]
+                    models.pop(0)  # unknown model, or still rate-limited after waiting: try the next model
+                break
+            except urllib.error.URLError as e:
+                print(f"  model server not reachable at {ENDPOINT}: {e.reason}")
+                models = []  # nothing is listening (e.g. Ollama did not start): templates for the rest
+                problems = ["model server not reachable"]
                 break
             except Exception as e:  # noqa: BLE001
                 problems = [str(e)[:120]]
             if not problems or calls >= max_calls:
                 break
-            time.sleep(1)
+            time.sleep(PAUSE)
         if answer and not problems:
             results[s["key"]] = {"briefing": contract(answer, s, models[0] if models else "unknown", now),
-                                 "publicAlert": answer["publicAlert"], "model": models[0] if models else "unknown"}
+                                 "publicAlert": answer["publicAlert"], "model": models[0] if models else "unknown",
+                                 "modelLabel": model_label(models[0]) if models else "unknown", "provider": PROVIDER}
             written += 1
             print(f"  AI  {s['key']} ({s['level']})")
         else:
             failed += 1
             results[s["key"]] = {"problems": problems}
             print(f"  --  {s['key']}: {'; '.join(problems)}")
-        time.sleep(1)
+            if isinstance(answer, dict) and isinstance(answer.get("situation"), str):
+                print(f"      situation it wrote: {answer['situation'][:200]!r}")  # to see what the model got wrong
+        time.sleep(PAUSE)
 
     out = []
     for s in subjects:
         prev = old.get(s["key"])
-        if s["key"] in results and "briefing" in results[s["key"]]:
+        if s["key"] in pinned:
+            p = pinned[s["key"]]
+            entry = {k: p[k] for k in ("briefing", "publicAlert", "model", "generatedAt")}
+            entry.update({k: p[k] for k in ("modelLabel", "provider") if p.get(k)})
+            entry.update(pinned=True, reviewed=bool(p.get("reviewed")))
+        elif s["key"] in results and "briefing" in results[s["key"]]:
             r = results[s["key"]]
             entry = {"briefing": r["briefing"], "publicAlert": r["publicAlert"], "model": r["model"],
+                     "modelLabel": r["modelLabel"], "provider": r["provider"],
                      "generatedAt": r["briefing"]["generatedAt"]}
         elif prev and prev.get("model") != "template" and prev.get("promptVersion") == PROMPT_VERSION and (
                 s["kind"] in ("live", "watch") or prev.get("hash") == s["hash"]):
             entry = {k: prev[k] for k in ("briefing", "publicAlert", "model", "generatedAt")}
+            entry.update({k: prev[k] for k in ("modelLabel", "provider") if prev.get(k)})
             entry["stale"] = needs_refresh(s, prev, now)
         else:
             b, alert = template(s, now)
@@ -715,11 +883,14 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
                       "step": s.get("step"), "fireId": s.get("fireId"), "watchId": s.get("watchId"), "score": s["score"], "level": s["level"],
                       "asOf": s["asOf"], "hash": s["hash"], "promptVersion": PROMPT_VERSION,
                       "facts": s["facts"].items})
+        if s["key"] in pinned and pinned[s["key"]].get("facts"):
+            entry["facts"] = pinned[s["key"]]["facts"]
         out.append(entry)
 
-    doc = {"generatedAt": iso(now), "endpoint": "GitHub Models", "models": MODELS, "promptVersion": PROMPT_VERSION,
+    doc = {"generatedAt": iso(now), "endpoint": PROVIDER, "models": MODELS, "promptVersion": PROMPT_VERSION,
            "counts": {"subjects": len(subjects), "ai": sum(e["model"] != "template" for e in out),
-                      "template": sum(e["model"] == "template" for e in out), "calls": calls,
+                      "template": sum(e["model"] == "template" for e in out),
+                      "pinned": sum(bool(e.get("pinned")) for e in out), "calls": calls,
                       "written": written, "failed": failed},
            "briefings": out}
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -728,12 +899,16 @@ def build(base_url=None, max_calls=8, offline=False, now=None):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Write grounded AI briefings with GitHub Models.")
+    ap = argparse.ArgumentParser(description="Write grounded AI briefings with an open-source model.")
     ap.add_argument("--base-url", default=os.environ.get("PAGES_BASE_URL"), help="published site, to reuse briefings")
     ap.add_argument("--max-calls", type=int, default=int(os.environ.get("BRIEFING_MAX_CALLS", 8)))
+    ap.add_argument("--time-budget", type=int, default=int(os.environ.get("BRIEFING_TIME_BUDGET", 0)) or None,
+                    help="seconds; no new model call after this (0 = no limit)")
+    ap.add_argument("--only", choices=["replay", "live", "watch"], action="append",
+                    help="ask the model only about these subjects (all others are still written)")
     ap.add_argument("--offline", action="store_true", help="no model calls; template briefings only")
     a = ap.parse_args()
-    doc = build(a.base_url, a.max_calls, a.offline)
+    doc = build(a.base_url, a.max_calls, a.offline, only=a.only, time_budget=a.time_budget)
     print(f"Briefings: {doc['counts']}")
     print(f"Saved {OUT.relative_to(DATA_DIR)}")
 

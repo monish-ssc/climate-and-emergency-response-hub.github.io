@@ -1349,6 +1349,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
         0% { stroke-opacity: 1; }
         100% { stroke-opacity: 0.25; }
       }
+      .advisory .adv-badge {
+        margin: 12px 18px 0;
+      }
       .ai-badge.template {
         background: #f6ecd2;
       }
@@ -3196,6 +3199,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <button data-lang="fr" aria-pressed="false">FR</button>
               </div>
             </div>
+            <div class="ai-badge adv-badge" id="advBadge" hidden></div>
             <div class="adv-body" id="advBody"></div>
             <div class="adv-foot">
               <button class="btn ghost" data-toast="Draft opened for editing">
@@ -5360,7 +5364,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
 
       /* =================================================================
    AI BRIEFINGS (data/pipeline/live/briefings.json, written by
-   build_briefings.py with GitHub Models in the refresh workflow).
+   build_briefings.py with an open-source model in the refresh workflow).
    Every briefing is grounded in numbered facts and needs human review.
    ================================================================= */
       const brief = { state: "idle", doc: null, byKey: new Map() };
@@ -5395,6 +5399,9 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
         return brief.byKey.get(`live/${prov}/${HAZARD_DATA_KEY[hazard]}`) || null;
       }
       const isAI = (b) => b && b.model && b.model !== "template";
+      // "Gemma 4 31B (Google), open-weight model via OpenRouter" (older entries only have the model id)
+      const modelName = (b) => b.modelLabel || b.model.split("/").pop();
+      const aiSource = (b) => (b.provider ? `${modelName(b)}, ${b.provider}` : modelName(b));
       // "[F2, F5]" -> small links to the numbered facts
       const ISO_TIME = /\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?Z\b/g;
       const readableTimes = (text) => String(text || "").replace(ISO_TIME, (t) => formatSnapshotTime(t));
@@ -5409,9 +5416,11 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
             .join(""),
         );
       }
+      // saved replay drafts: "reviewed by the team" once a person set reviewed: true in the repo
+      const reviewNote = (b) => (b.pinned && b.reviewed ? "reviewed by the team" : "needs human review");
       function briefingBadge(b) {
         return isAI(b)
-          ? `AI draft · GitHub Models (${escapeHTML(b.model.split("/").pop())}) · written ${escapeHTML(formatSnapshotTime(b.generatedAt))}${b.stale ? " · update pending" : ""} · confidence ${escapeHTML(b.briefing.confidence)} · needs human review`
+          ? `AI draft · ${escapeHTML(aiSource(b))} · ${b.pinned ? "saved for the replay" : `written ${escapeHTML(formatSnapshotTime(b.generatedAt))}`}${b.stale ? " · update pending" : ""} · confidence ${escapeHTML(b.briefing.confidence)} · ${reviewNote(b)}`
           : "Template briefing (AI draft not written yet) · built from the same facts";
       }
       function renderBriefingTab() {
@@ -5569,7 +5578,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           ? "AI briefing: situation and preparedness actions"
           : "Briefing: situation and preparedness actions";
         $("pcBadge").textContent = ai
-          ? `AI draft · GitHub Models (${b.model.split("/").pop()}) · grounded in our data · needs human review`
+          ? `AI draft · ${aiSource(b)} · grounded in our data · needs human review`
           : "Template from the same facts (AI draft pending) · needs human review";
         $("pcBadge").className = "ai-badge" + (ai ? "" : " template");
         $("pcSituation").innerHTML = clean(d.situation);
@@ -6185,7 +6194,7 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
           : "Briefing: situation and preparedness actions";
         $("rbWhen").textContent = `as of ${replayTime(b.asOf, { timeZoneName: "short" })}`;
         $("rbBadge").textContent = ai
-          ? `AI draft · GitHub Models (${b.model.split("/").pop()}) · grounded in our data · needs human review`
+          ? `AI draft · ${aiSource(b)} · grounded in our data · ${reviewNote(b)}`
           : "Template from the same facts (AI draft pending) · needs human review";
         $("rbBadge").className = "ai-badge" + (ai ? "" : " template");
         $("rbTitle").textContent = d.title;
@@ -6545,7 +6554,19 @@ const BASE_GEO={"grl":[{"t":"MultiPolygon","c":[[[[-45,60.1],[-45.38,60.2],[-45.
       let advLang = "en";
       function setLang(l) {
         advLang = l;
-        const alert = currentBriefing()?.publicAlert?.[l];
+        const cur = currentBriefing(),
+          alert = cur?.publicAlert?.[l];
+        $("advBadge").hidden = !alert;
+        if (alert) {
+          $("advBadge").textContent = isAI(cur)
+            ? l === "fr"
+              ? `Rédigé par l'IA (${modelName(cur)})${cur.pinned && cur.reviewed ? " · révisé par l'équipe" : ""}`
+              : `Written by AI (${modelName(cur)})${cur.pinned && cur.reviewed ? " · reviewed by the team" : ""}`
+            : l === "fr"
+              ? "Modèle de texte (pas l'IA), à partir des mêmes faits"
+              : "Template text (not AI), from the same facts";
+          $("advBadge").className = "ai-badge adv-badge" + (isAI(cur) ? "" : " template");
+        }
         $("advBody").innerHTML = alert
           ? `<div class="review">${l === "fr" ? "Pour révision. Ceci n'est pas une alerte officielle; une personne doit l'approuver avant sa diffusion." : "For review. This is not an official alert; a person must approve it before release."}</div><h3>${escapeHTML(alert.headline)}</h3><p>${escapeHTML(alert.body)}</p>${(alert.whatToDo || []).length ? `<b>${l === "fr" ? "Que faire maintenant" : "What to do now"}</b><ul>${alert.whatToDo.map((x) => `<li>${escapeHTML(x)}</li>`).join("")}</ul>` : ""}`
           : ADV[l];

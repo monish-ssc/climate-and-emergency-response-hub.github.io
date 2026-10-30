@@ -1,0 +1,1172 @@
+{
+ "note": "Saved AI briefings for this replay (pin_replay_briefings.py). Used as they are by build_briefings.py. Edit the text if needed and set reviewed: true once a person has checked it.",
+ "fireId": "2023_BC_2023-K52767",
+ "updatedAt": "2026-10-30T03:02:15Z",
+ "source": "data/pipeline/live/briefings.json",
+ "briefings": [
+  {
+   "key": "replay/2023_BC_2023-K52767/0",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 0,
+   "score": 28,
+   "level": "moderate",
+   "asOf": "2023-08-16T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "5ce94ed794b8437e",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "2ef98a45-2c83-5716-999e-0471b4883eb4",
+    "title": "Preparedness Briefing: West Kelowna Wildfire Risk",
+    "situation": "The McDougall Creek wildfire is out of control and is about 1 ha in size [F2]. Its approximate edge is 6.1 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 28 out of 100, which is level moderate [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Review emergency response plans and available resources",
+      "rationale": "The risk level is moderate [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Monitor air quality reports for the region",
+      "rationale": "Smoke is reported as AQHI+ 4, representing a moderate health risk, 8 km away at Kelowna KLO Road [F7]."
+     },
+     {
+      "priority": 3,
+      "action": "Review potential host communities for residents",
+      "rationale": "Penticton, Vernon, and Coldstream are identified as possible host communities with 10,000+ residents located 30-250 km away [F15]."
+     },
+     {
+      "priority": 4,
+      "action": "Review group lodging assumptions for evacuees",
+      "rationale": "There is an assumption to plan group lodging for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave [F16]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://climate-and-emergency-response-hub.github.io/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control. Smoke is causing a moderate health risk in the area.",
+     "whatToDo": [
+      "Stay informed on local conditions",
+      "Monitor air quality"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle. La fumée cause un risque modéré pour la santé dans la région.",
+     "whatToDo": [
+      "Restez informé des conditions locales",
+      "Surveillez la qualité de l'air"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 16, 2023, 1 AM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 1 ha; its approximate edge is 6.1 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 28 out of 100, level moderate (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 6.1 km (13.9 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Uncontained fires within 150 km: 1 fires (5.0 points).",
+    "Smoke: AQHI+ 4 (moderate health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: none.",
+    "Reported on 2023-08-15: Fire first spotted, less than a hectare.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/4",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 4,
+   "score": 43,
+   "level": "moderate",
+   "asOf": "2023-08-17T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "6990d9f8faae8b3f",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "d8da1bf1-669c-5bf9-959a-5453f086ea7a",
+    "title": "Preparedness Briefing: McDougall Creek Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 110 ha [F2]. Its approximate edge is 5.6 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 43 out of 100, which is level moderate [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Review emergency plans and available resources [F3].",
+      "rationale": "The risk level is moderate [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Review air quality protocols for residents [F7].",
+      "rationale": "Smoke is reported at AQHI+ 10+, which is a very high health risk [F7]."
+     },
+     {
+      "priority": 3,
+      "action": "Review the status of reception centres at Royal LePage Place and Kal Tire Place [F8].",
+      "rationale": "These centres are listed as open [F8]."
+     },
+     {
+      "priority": 4,
+      "action": "Review planning assumptions for group lodging for about 20% of residents [F17].",
+      "rationale": "This is an assumption for about 8,055 people if all 40,274 residents leave [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control. Smoke is causing a very high health risk in the area.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow air quality health precautions"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle. La fumée cause un risque très élevé pour la santé dans la région.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Respecter les précautions de santé liées à la qualité de l'air"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 17, 2023, 1 AM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 110 ha; its approximate edge is 5.6 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 43 out of 100, level moderate (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 5.6 km (25.3 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Uncontained fires within 150 km: 1 fires (5.0 points).",
+    "Smoke: AQHI+ 10+ (very high health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km).",
+    "Reported on 2023-08-15: Fire first spotted, less than a hectare.",
+    "Reported on 2023-08-16: Evacuation alerts for 4,800 properties in West Kelowna and on Westbank First Nation land.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/6",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 6,
+   "score": 49,
+   "level": "moderate",
+   "asOf": "2023-08-17T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "e953634e0bf058ed",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "915a296d-d3fe-59d9-bd28-2aceb538ac48",
+    "title": "Preparedness Briefing: West Kelowna Wildfire Risk",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 492 ha [F2]. The approximate edge of the fire is 4.9 km from West Kelowna, BC [F2, F4]. A replayed risk score is 49 out of 100, which is level moderate [F3]. Smoke is reported as AQHI+ 8 at Kelowna KLO Road, 8 km away [F7].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Review emergency plans and available resources",
+      "rationale": "The current risk level is moderate [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Monitor air quality and health risks",
+      "rationale": "Smoke is at AQHI+ 8, which is a high health risk [F7]."
+     },
+     {
+      "priority": 3,
+      "action": "Verify the status of reception centres at Royal LePage Place and Kal Tire Place",
+      "rationale": "These centres are listed as open [F8]."
+     },
+     {
+      "priority": 4,
+      "action": "Review lodging assumptions for group housing",
+      "rationale": "There is an assumption to plan group lodging for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control. Smoke is causing a high health risk in the area.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow directions from local officials"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle. La fumée cause un risque élevé pour la santé dans la région.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Suivre les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 17, 2023, 1 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 492 ha (estimated between agency reports); its approximate edge is 4.9 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 49 out of 100, level moderate (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 4.9 km (29.8 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Area of uncontained fires within 150 km: 492 ha (5.4 points).",
+    "Smoke: AQHI+ 8 (high health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km).",
+    "Reported on 2023-08-16: Evacuation alerts for 4,800 properties in West Kelowna and on Westbank First Nation land.",
+    "Reported on 2023-08-17: First evacuation orders (already in place by a 7 p.m. news conference).",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/7",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 7,
+   "score": 51,
+   "level": "high",
+   "asOf": "2023-08-18T02:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "e431c1b9d4ae06f4",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "ae971ba8-e5e2-5449-8182-1edc59425f2e",
+    "title": "Preparedness Briefing: West Kelowna Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 683 ha [F2]. Its approximate edge is 4.7 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 51 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare reception centres and transport",
+      "rationale": "The risk level is high, and reception centres are open at Royal LePage Place and Kal Tire Place [F3, F8]."
+     },
+     {
+      "priority": 2,
+      "action": "Identify and support vulnerable people",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Coordinate with healthcare facilities",
+      "rationale": "Kelowna General Hospital is 6.5 km away [F15]."
+     },
+     {
+      "priority": 4,
+      "action": "Plan for group lodging",
+      "rationale": "It is an assumption that group lodging is needed for about 20% of evacuees, or about 8,055 people if all 40,274 residents leave [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "A wildfire is out of control near West Kelowna. Smoke is causing a very high health risk in the area.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Prepare to leave if requested"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "Un incendie de forêt est hors de contrôle près de West Kelowna. La fumée cause un risque très élevé pour la santé dans le secteur.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Se préparer à partir si demandé"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 17, 2023, 7 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 683 ha (estimated between agency reports); its approximate edge is 4.7 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 51 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 4.7 km (30.8 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Area of uncontained fires within 150 km: 683 ha (5.7 points).",
+    "Smoke: AQHI+ 10+ (very high health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km).",
+    "Reported on 2023-08-16: Evacuation alerts for 4,800 properties in West Kelowna and on Westbank First Nation land.",
+    "Reported on 2023-08-17: First evacuation orders (already in place by a 7 p.m. news conference).",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/8",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 8,
+   "score": 53,
+   "level": "high",
+   "asOf": "2023-08-18T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "0d7a79e7d06c6938",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "a8bb017d-f235-545d-945e-a72374276a1e",
+    "title": "Preparedness Briefing: McDougall Creek Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 874 ha [F2]. Its approximate edge is 4.5 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 53 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare reception centres",
+      "rationale": "The risk level is high and reception centres such as Royal LePage Place, Kal Tire Place, and The Salvation Army are open [F3, F8]."
+     },
+     {
+      "priority": 2,
+      "action": "Organize transport and support for vulnerable people",
+      "rationale": "The risk level is high and the fire has crested the ridge toward Traders Cove and West Kelowna Estates [F3, F10]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for group lodging capacity",
+      "rationale": "Based on an assumption, group lodging should be planned for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave [F11, F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Coordinate with healthcare facilities",
+      "rationale": "The risk level is high and hospitals are located in Kelowna, Summerland, and Penticton [F3, F15]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control and is located approximately 4.5 km from West Kelowna.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Be ready to leave if requested"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se situe à environ 4,5 km de West Kelowna.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Être prêt à partir si demandé"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 18, 2023, 1 AM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 874 ha (estimated between agency reports); its approximate edge is 4.5 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 53 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 4.5 km (31.6 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Area of uncontained fires within 150 km: 874 ha (5.9 points).",
+    "Smoke: AQHI+ 2 (low health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km).",
+    "Reported on 2023-08-17: First evacuation orders (already in place by a 7 p.m. news conference).",
+    "Reported on 2023-08-17: Fire crests the ridge toward Traders Cove and West Kelowna Estates.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/10",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 10,
+   "score": 76,
+   "level": "critical",
+   "asOf": "2023-08-18T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "12997b793392defe",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "c6304ba1-1128-5d8b-87e8-25c61717d735",
+    "title": "Preparedness Briefing: West Kelowna Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 8,070 ha [F2]. Its approximate edge is 1.1 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 76 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate now with the local emergency operations centre",
+      "rationale": "The risk score is level critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Verify capacity and readiness of open reception centres",
+      "rationale": "Reception centres are open at Royal LePage Place, The Salvation Army, Prospera Place, and Kal Tire Place [F8]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for potential group lodging for about 8,055 people",
+      "rationale": "This is an assumption based on 20% of the 40,274 residents if all leave [F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Monitor air quality and health impacts",
+      "rationale": "Smoke is reported at AQHI+ 7, which is a high health risk, 8 km away [F7]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://www.princegeorgecitizen.com/latest/timeline-of-a-bc-wildfire-as-it-grew-from-spot-fire-to-monster-7485592"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control and is approximately 1.1 km from West Kelowna. Smoke is causing a high health risk in the area.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Be aware of open reception centres at Royal LePage Place, The Salvation Army, Prospera Place, and Kal Tire Place"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se trouve à environ 1,1 km de West Kelowna. La fumée cause un risque élevé pour la santé dans la région.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Prendre note des centres d'accueil ouverts à Royal LePage Place, The Salvation Army, Prospera Place et Kal Tire Place"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 18, 2023, 1 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 8,070 ha; its approximate edge is 1.1 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 76 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 1.1 km (39.1 points).",
+    "Score factor - Uncontained fire edge within 5 km: 1.1 km (15.6 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Smoke: AQHI+ 7 (high health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km); Prospera Place, Kelowna (7 km).",
+    "Reported on 2023-08-17: Fire crests the ridge toward Traders Cove and West Kelowna Estates.",
+    "Reported on 2023-08-18: Homes lost overnight; fire estimated at 10,500 ha.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/14",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 14,
+   "score": 80,
+   "level": "critical",
+   "asOf": "2023-08-19T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "1e5bf95b9cd3218a",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "d1c70dec-e780-5a3c-9f1a-a23346ba7e17",
+    "title": "Preparedness Briefing: McDougall Creek Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and estimated at about 10,835 ha [F2]. The approximate edge of the fire is 0.3 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 80 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate immediately with the local emergency operations centre",
+      "rationale": "The risk level is critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare reception centres, transport, and support for vulnerable people",
+      "rationale": "The risk level is critical [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for group lodging for about 20% of evacuees, which is about 8,055 people if all 40,274 residents leave",
+      "rationale": "This is a planning assumption [F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Monitor air quality and health risks",
+      "rationale": "Smoke is AQHI+ 10+ at Kelowna KLO Road, 8 km away [F7]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://globalnews.ca/news/9904497/west-kelowna-fire-evacuation-order-structures-lost"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control and near West Kelowna. Smoke is causing a very high health risk in the area.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Follow directions from local officials"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se trouve près de West Kelowna. La fumée cause un risque très élevé pour la santé dans le secteur.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Suivre les directives des autorités locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Aug 19, 2023, 1 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 10,835 ha (estimated between agency reports); its approximate edge is 0.3 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 80 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.3 km (39.9 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.3 km (18.8 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Smoke: AQHI+ 10+ (very high health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km); Prospera Place, Kelowna (7 km).",
+    "Reported on 2023-08-18: Homes lost overnight; fire estimated at 10,500 ha.",
+    "Reported on 2023-08-19: At least 35,000 people under evacuation orders.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/142",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 142,
+   "score": 82,
+   "level": "critical",
+   "asOf": "2023-09-20T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "2cd64642d814df1d",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "e53a6925-01e6-5a70-901e-7bf7baa96be6",
+    "title": "Preparedness Briefing: McDougall Creek Wildfire",
+    "situation": "The McDougall Creek wildfire is out of control and covers about 13,970 ha [F2]. The approximate edge of the fire is 0.0 km from West Kelowna, BC [F2, F4]. The replayed risk score is 82 out of 100, which is level critical [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Coordinate immediately with the local emergency operations centre",
+      "rationale": "The risk level is critical [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Prepare transport and reception services for vulnerable people",
+      "rationale": "The fire edge is 0.0 km from West Kelowna [F2, F4]."
+     },
+     {
+      "priority": 3,
+      "action": "Plan for group lodging for about 8,055 people",
+      "rationale": "This is an assumption based on 20% of the 40,274 residents if all leave [F17]."
+     },
+     {
+      "priority": 4,
+      "action": "Verify capacity at nearby healthcare facilities",
+      "rationale": "Kelowna General Hospital is 6.5 km away [F15]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://en.wikipedia.org/wiki/McDougall_Creek_fire"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is out of control and near West Kelowna. Reception centres are open at Royal LePage Place, ESS Reception Centre (Louie Drive), Prospera Place, The Salvation Army, and Kal Tire Place.",
+     "whatToDo": [
+      "Monitor local news for updates",
+      "Prepare your emergency kit"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est hors de contrôle et se situe près de West Kelowna. Des centres d'accueil sont ouverts à Royal LePage Place, au centre d'accueil ESS (Louie Drive), à Prospera Place, à l'Armée du Salut et à Kal Tire Place.",
+     "whatToDo": [
+      "Suivre les nouvelles locales pour les mises à jour",
+      "Préparer votre trousse d'urgence"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Sep 20, 2023, 1 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): out of control, about 13,970 ha (estimated between agency reports); its approximate edge is 0.0 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 82 out of 100, level critical (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (40.0 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.0 km (20.0 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Smoke: AQHI+ 2 (low health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km); Prospera Place, Kelowna (7 km); ESS Reception Centre (Louie Drive), West Kelowna (3 km).",
+    "Reported on 2023-08-19: At least 35,000 people under evacuation orders.",
+    "Reported on 2023-09-20: BC Wildfire Service declares the fire held.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/144",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 144,
+   "score": 56,
+   "level": "high",
+   "asOf": "2023-09-21T08:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "30d8a7dca2df31bf",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "d3ed7f0f-7f58-54d8-ab36-35879518f306",
+    "title": "Preparedness Briefing: West Kelowna Wildfire",
+    "situation": "The McDougall Creek wildfire is being held and covers about 13,970 ha [F2, F10]. The approximate edge of the fire is 0.0 km from West Kelowna, BC [F2, F4]. The replayed wildfire risk score is 56 out of 100, which is level high [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Prepare reception centres and transport",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Identify and support vulnerable people",
+      "rationale": "The risk level is high [F3]."
+     },
+     {
+      "priority": 3,
+      "action": "Review capacity of open reception centres",
+      "rationale": "Multiple centres are open, including Royal LePage Place and the ESS Reception Centre (Louie Drive) [F8]."
+     },
+     {
+      "priority": 4,
+      "action": "Plan for group lodging for about 20% of evacuees",
+      "rationale": "This is an assumption for about 8,055 people if all 40,274 residents leave [F17]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://en.wikipedia.org/wiki/McDougall_Creek_fire"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Activity Near West Kelowna",
+     "body": "The McDougall Creek wildfire is being held. The fire edge is near West Kelowna.",
+     "whatToDo": [
+      "Monitor local updates",
+      "Be aware of open reception centres in West Kelowna, Kelowna, and Vernon"
+     ]
+    },
+    "fr": {
+     "headline": "Activité d'incendie de forêt près de West Kelowna",
+     "body": "L'incendie de forêt de McDougall Creek est maîtrisé. Le bord de l'incendie est près de West Kelowna.",
+     "whatToDo": [
+      "Suivre les mises à jour locales",
+      "Prendre connaissance des centres d'accueil ouverts à West Kelowna, Kelowna et Vernon"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Sep 21, 2023, 1 AM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): being held, about 13,970 ha; its approximate edge is 0.0 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 56 out of 100, level high (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (24.0 points).",
+    "Score factor - Uncontained fire edge within 5 km: 0.0 km (12.0 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Smoke: AQHI+ 1 (low health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km); Prospera Place, Kelowna (7 km); ESS Reception Centre (Louie Drive), West Kelowna (3 km).",
+    "Reported on 2023-08-19: At least 35,000 people under evacuation orders.",
+    "Reported on 2023-09-20: BC Wildfire Service declares the fire held.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  },
+  {
+   "key": "replay/2023_BC_2023-K52767/198",
+   "kind": "replay",
+   "fireId": "2023_BC_2023-K52767",
+   "regionId": "west-kelowna",
+   "hazard": "wildfire",
+   "step": 198,
+   "score": 19,
+   "level": "low",
+   "asOf": "2023-10-04T20:00:00Z",
+   "model": "google/gemma-4-31b-it",
+   "modelLabel": "Gemma 4 31B (Google)",
+   "provider": "open-weight model via OpenRouter",
+   "generatedAt": "2026-10-30T02:53:18Z",
+   "promptVersion": "2026-10-29.1",
+   "hash": "8b774db9996446a4",
+   "briefing": {
+    "contractVersion": "1.0",
+    "requestId": "8f2303b0-f731-5641-9881-a22d4d3ceb9a",
+    "title": "Preparedness Briefing: West Kelowna Wildfire Replay",
+    "situation": "This is a historical replay of an event on Oct 4, 2023, in West Kelowna, BC [F1]. The McDougall Creek wildfire is under control, covering about 13,970 ha, with its approximate edge 0.0 km from West Kelowna [F2]. The replayed wildfire risk score is 19 out of 100, which is level low [F3].",
+    "actions": [
+     {
+      "priority": 1,
+      "action": "Stay ready and monitor current conditions",
+      "rationale": "The replayed wildfire risk score is level low [F3]."
+     },
+     {
+      "priority": 2,
+      "action": "Monitor air quality reports",
+      "rationale": "The AQHI+ is 1, indicating a low health risk at Kelowna KLO Road [F7]."
+     },
+     {
+      "priority": 3,
+      "action": "Maintain awareness of existing reception centres",
+      "rationale": "Multiple centres are open, including Royal LePage Place and the ESS Reception Centre in West Kelowna [F8]."
+     }
+    ],
+    "confidence": "high",
+    "requiresHumanReview": true,
+    "citations": [
+     {
+      "title": "CWFIS reported fires (NRCan)",
+      "url": "https://cwfis.cfs.nrcan.gc.ca/"
+     },
+     {
+      "title": "BC Ministry of Environment air quality data",
+      "url": "https://www2.gov.bc.ca/gov/content/environment/air-land-water/air"
+     },
+     {
+      "title": "Reception centre announcements (EmergencyInfoBC, local news)",
+      "url": "https://www.emergencyinfobc.gov.bc.ca/17aug23a/"
+     },
+     {
+      "title": "News and official reports at the time",
+      "url": "https://en.wikipedia.org/wiki/McDougall_Creek_fire"
+     },
+     {
+      "title": "Statistics Canada population estimates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710015501"
+     },
+     {
+      "title": "Canadian Disaster Database",
+      "url": "https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/index-en.aspx"
+     },
+     {
+      "title": "Open Database of Healthcare Facilities (Statistics Canada)",
+      "url": "https://www.statcan.gc.ca/en/lode/databases/odhf"
+     }
+    ],
+    "generatedAt": "2026-10-30T02:53:18Z",
+    "disclaimer": "AI-assisted draft from automated screening data. Not an official warning or order. A person must review it before any use."
+   },
+   "publicAlert": {
+    "en": {
+     "headline": "Wildfire Update - West Kelowna",
+     "body": "The McDougall Creek wildfire is under control. The current risk level is low.",
+     "whatToDo": [
+      "Stay ready",
+      "Monitor local updates"
+     ]
+    },
+    "fr": {
+     "headline": "Mise à jour sur les feux de forêt - West Kelowna",
+     "body": "L'incendie de McDougall Creek est sous contrôle. Le niveau de risque actuel est faible.",
+     "whatToDo": [
+      "Restez prêt",
+      "Suivez les mises à jour locales"
+     ]
+    }
+   },
+   "facts": [
+    "Historical replay of a real event. Time: Oct 4, 2023, 1 PM PDT. Place: West Kelowna, BC.",
+    "McDougall Creek wildfire (2023-K52767): under control, about 13,970 ha; its approximate edge is 0.0 km from West Kelowna, BC.",
+    "Replayed wildfire risk score: 19 out of 100, level low (computed only from information available at that time).",
+    "Score factor - Most threatening fire: distance to its approximate edge: 0.0 km (10.0 points).",
+    "Score factor - Past fires over 1,000 ha within 150 km, last 10 years: 54 fires (8.7 points).",
+    "Score factor - Uncontained fire edge within 5 km: 5 km (0.0 points).",
+    "Smoke: AQHI+ 1 (low health risk) at Kelowna KLO Road, 8 km away.",
+    "Reception centres open at this time: Royal LePage Place, West Kelowna (0 km); Kal Tire Place, Vernon (51 km); The Salvation Army, Kelowna (9 km); Prospera Place, Kelowna (7 km); ESS Reception Centre (Louie Drive), West Kelowna (3 km).",
+    "Reported on 2023-08-19: At least 35,000 people under evacuation orders.",
+    "Reported on 2023-09-20: BC Wildfire Service declares the fire held.",
+    "West Kelowna has about 40,274 residents (Statistics Canada 2025 estimate).",
+    "In past wildfire disasters in BC with evacuations (17 events, last 30 years), the median number of people evacuated was 3,432; one in four evacuated 7,000 or more.",
+    "Similar past event: 1998, Salmon Arm BC: 7,000 people evacuated.",
+    "Similar past event: 2012, Peachland BC: 1,550 people evacuated.",
+    "Nearest hospitals in the 2020 Open Database of Healthcare Facilities (capacity not verified): Kelowna General Hospital, Kelowna (6.5 km); Summerland Health Centre, Summerland (29.7 km); Penticton Regional Hospital, Penticton (42.4 km).",
+    "Possible host communities for evacuees (10,000+ residents, 30-250 km away; not confirmed reception sites): Penticton (39,068 residents, 41 km); Vernon (49,527 residents, 45 km); Coldstream (11,380 residents, 51 km).",
+    "Assumption: plan group lodging for about 20% of evacuees, about 8,055 people if all 40,274 residents leave (an adjustable planning assumption, not data)."
+   ],
+   "reviewed": false
+  }
+ ]
+}

@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: read
-  # lets GITHUB_TOKEN call GitHub Models for the AI briefings (free, rate-limited; no API key)
-  models: read
 
 concurrency:
   group: refresh-live-hazard-data
@@ -105,14 +103,18 @@ jobs:
       - name: Rebuild risk index
         run: python data/build_risk_index.py
 
-      # AI briefings with GitHub Models. Reuses the published briefings and rewrites only what changed;
-      # if the model is unavailable, template briefings from the same facts are published instead.
+      # AI briefings with Gemma 4 on OpenRouter (key in the OPENROUTER_API_KEY secret). Reuses the published
+      # briefings and rewrites only what changed, one model call per refresh; saved replay briefings
+      # (data/scenarios/<fireId>/briefings.json) need no call. Without the key, or if an answer fails the
+      # checks, template briefings from the same facts are published instead.
       - name: Write AI briefings
         continue-on-error: true
+        timeout-minutes: 10
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
-          BRIEFING_MAX_CALLS: "12"
+          BRIEFING_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BRIEFING_MAX_CALLS: "1"
+          BRIEFING_TIME_BUDGET: "300"
         run: python data/build_briefings.py
 
       - name: Validate refreshed outputs
