@@ -23,8 +23,8 @@
    "briefing": {
     "contractVersion": "1.0",
     "requestId": "451e6ce3-b8fb-5ad1-b848-0cbcafd293e0",
-    "title": "Moderate wildfire risk (Jul 20): evacuation order for properties in the Pear Lake area",
-    "situation": "The Pear Lake wildfire is out of control at about 44 ha (estimated between agency reports); its approximate edge is 19.2 km from Clinton, BC [F2]. The SLRD has issued an evacuation order for properties in the Pear Lake area [F9]. The replayed wildfire risk score is 37 out of 100, level moderate [F3].",
+    "title": "Moderate wildfire risk for Clinton (Jul 20): evacuation order for the Pear Lake area",
+    "situation": "The SLRD has issued an evacuation order for properties in the Pear Lake area, near the fire [F9]. For the village of Clinton, the Pear Lake wildfire is out of control at about 44 ha (estimated between agency reports), with its approximate edge 19.2 km away [F1, F2], so the replayed wildfire risk score for Clinton is 37 out of 100, level moderate [F3].",
     "actions": [
      {
       "priority": 1,

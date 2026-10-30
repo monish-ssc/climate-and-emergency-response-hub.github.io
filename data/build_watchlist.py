@@ -103,7 +103,7 @@ def wildfire_screen(fires, lat, lon):
 def flood_screen(rivers, lat, lon):
     conds = []
     for r, d in within(rivers, lat, lon, RIVER_RADIUS_KM):
-        if d <= RIVER_RADIUS_KM:
+        if d <= RIVER_RADIUS_KM and flood.counts_for_place(d, r.get("drainage_area_km2")):  # small creeks: only close by
             conds.append({**r, "distance_km": round(d, 1)})
     if not conds:
         return None
