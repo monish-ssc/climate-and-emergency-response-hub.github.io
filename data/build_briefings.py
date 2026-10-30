@@ -12,11 +12,10 @@ Subjects
           replayed score, smoke, reception centres open at that time, what had really happened so far
 
 Model: Google Gemma 4 31B (open-weight), falling back to Gemma 4 26B, on OpenRouter, called with the
-OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The paid models are used because the free ones
-were rate-limited upstream; one briefing costs about a tenth of a cent and the key has a $1 credit limit.
-The key never appears in the repo or the page. (GitHub Models, used before, was retired on July 30, 2026.)
-BRIEFING_ENDPOINT and BRIEFING_MODELS point it at any other OpenAI-compatible service, such as a local
-Ollama (http://localhost:11434/v1/chat/completions, no key). To keep the cost to cents:
+OPENROUTER_API_KEY repository secret (BRIEFING_API_KEY). The key never appears in the repo or the page.
+(GitHub Models, used before, was retired on July 30, 2026.) BRIEFING_ENDPOINT and BRIEFING_MODELS point
+it at any other OpenAI-compatible service, such as a local Ollama
+(http://localhost:11434/v1/chat/completions, no key). To keep model calls few:
   - replay briefings never change once written, and saved ones (data/scenarios/<fireId>/briefings.json)
     are used as they are; live ones are rewritten only when the score or level changes or after
     MAX_AGE_HOURS
