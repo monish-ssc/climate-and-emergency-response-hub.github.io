@@ -35,6 +35,16 @@ MIN_YEARS = 5  # fewer years of history than this -> no percentile / flood peak
 FLOOD_MIN_YEARS = 10  # a station needs this many years of monthly history before it can be called "flood"
 LOW_FLOW_RATIO = 0.25  # flow below this share of the typical yearly peak is not flood-relevant, whatever its rank
 CRITICAL_PEAK_RATIO = 1.5  # without an alert or a rising river, "critical" needs a flow this far above the typical peak
+SMALL_BASIN_KM2 = 1000  # a creek with a smaller drainage basin (or an unknown one) only counts for places nearby
+SMALL_BASIN_RADIUS_KM = 15
+
+
+def counts_for_place(distance_km, drainage_km2):
+    """Whether a river station speaks for a place within RADIUS_KM: large rivers do, small creeks only close by
+    (05HB005-type creeks of 50 km2 were putting Kitchener, Cambridge and Guelph at "high")."""
+    if distance_km is not None and distance_km <= SMALL_BASIN_RADIUS_KM:
+        return True
+    return drainage_km2 is not None and drainage_km2 == drainage_km2 and drainage_km2 >= SMALL_BASIN_KM2
 CAPPED_SCORE = 74  # top of "high": where a score stops when it has no sign of escalation
 FLAT_MIN_READINGS = 6  # this many identical recent flow readings = placeholder/estimated value, not a measurement
 
@@ -326,9 +336,10 @@ def score_region(conds, alerts):
             "Highest river reading vs. history for this month",
             p if p is not None else 0,
             "percentile",
-            clamp((p - 50) / 50) * 50 if p is not None else 0,
+            clamp((p - 75) / 25) * 35 if p is not None else 0,
             (
-                "Last-24 h mean ranked against past monthly means for this month."
+                # a day's flow ranked against smoothed monthly means reads high, so only the top quarter counts
+                "Last-24 h mean ranked against past monthly means for this month; points from the 75th percentile."
                 if p is not None
                 else "No station with enough history."
             ),
@@ -338,7 +349,7 @@ def score_region(conds, alerts):
             "Highest flow as share of typical annual peak",
             round(prox * 100) if prox is not None else 0,
             "%",
-            clamp((prox - 0.5) / 0.5) * 30 if prox is not None else 0,
+            clamp((prox - 0.5) / 0.5) * 45 if prox is not None else 0,
             (
                 "100% = median yearly peak (~2-year flood)."
                 if prox is not None
@@ -404,7 +415,8 @@ def summarise(region_label, conds, alerts):
         else "no historical percentile"
     )
     return (
-        f"{len(conds)} river stations reporting within {RADIUS_KM} km. Highest: {top['station_name']} "
+        f"{len(conds)} river stations counted within {RADIUS_KM} km (creeks under {SMALL_BASIN_KM2:,} km2 only within "
+        f"{SMALL_BASIN_RADIUS_KM} km). Highest: {top['station_name']} "
         f"({top['status'].replace('_', ' ')}, {pct}, {top['trend']}). "
         f"{len(alerts)} flood-related weather alert(s) in effect."
     )
@@ -497,6 +509,7 @@ def run_region(region, now, since):
                 "station_name": s["STATION_NAME"],
                 "province": s["PROV_TERR_STATE_LOC"],
                 "distance_km": s["distance_km"],
+                "drainage_area_km2": None if pd.isna(s["DRAINAGE_AREA_GROSS"]) else float(s["DRAINAGE_AREA_GROSS"]),
                 **c,
                 "_lon": s["_lon"],
                 "_lat": s["_lat"],
@@ -536,7 +549,9 @@ def run_region(region, now, since):
             station_rows.append(r)
 
     # 4. risk-response contract
-    score, level, factors = score_region(conds, alerts)
+    # small creeks only count for places close to them (see counts_for_place); every station stays on the map
+    scored = [c for c in conds if counts_for_place(c["distance_km"], c.get("drainage_area_km2"))]
+    score, level, factors = score_region(scored, alerts)
     retrieved = iso(now)
     latest_obs = max((c["observed_at"] for c in conds), default=retrieved)
     latest_alert = max((a["publication_datetime"] for a in alerts), default=retrieved)
@@ -548,7 +563,7 @@ def run_region(region, now, since):
         "assessment": {
             "score": score,
             "level": level,
-            "summary": summarise(label, conds, alerts),
+            "summary": summarise(label, scored, alerts),
             "factors": factors,
         },
         "sources": [
